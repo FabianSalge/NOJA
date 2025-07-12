@@ -1,0 +1,119 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 27 27% 8%;
+    --foreground: 33 22% 95%;
+
+    --card: 27 27% 12%;
+    --card-foreground: 33 22% 95%;
+
+    --popover: 27 27% 12%;
+    --popover-foreground: 33 22% 95%;
+
+    --primary: 33 22% 76%;
+    --primary-foreground: 27 27% 8%;
+
+    --secondary: 33 22% 85%;
+    --secondary-foreground: 27 27% 8%;
+
+    --muted: 27 27% 15%;
+    --muted-foreground: 33 22% 70%;
+
+    --accent: 33 22% 76%;
+    --accent-foreground: 27 27% 8%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 27 27% 20%;
+    --input: 27 27% 20%;
+    --ring: 33 22% 76%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 27 27% 10%;
+    --sidebar-foreground: 33 22% 85%;
+    --sidebar-primary: 33 22% 95%;
+    --sidebar-primary-foreground: 27 27% 8%;
+    --sidebar-accent: 27 27% 15%;
+    --sidebar-accent-foreground: 33 22% 95%;
+    --sidebar-border: 27 27% 20%;
+    --sidebar-ring: 33 22% 76%;
+
+    --brand-brown: 27 27% 47%;
+    --brand-brown-foreground: 33 22% 95%;
+    
+    --brand-warm: 33 22% 76%;
+    --brand-warm-foreground: 27 27% 8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+  }
+}
+
+@layer utilities {
+  /* Text selection */
+  ::selection {
+    @apply bg-secondary/20 text-secondary;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-warm to-primary bg-clip-text text-transparent;
+  }
+
+  /* Backdrop blur utilities */
+  .backdrop-blur-subtle {
+    backdrop-filter: blur(4px);
+  }
+
+  /* Custom animations */
+  @keyframes slideInLeft {
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .marquee-content {
+    animation: marquee 80s linear infinite;
+  }
+}
