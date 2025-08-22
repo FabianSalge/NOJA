@@ -1,5 +1,6 @@
 import { Eye, Lightbulb, RefreshCcw } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
+import { containerVariants, itemVariants } from '@/lib/animations';
 import { useRef } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -67,24 +68,7 @@ const About = () => {
     `${import.meta.env.BASE_URL}images/im8.jpg`,
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-    },
-  };
+  
 
   return (
     <div className="min-h-screen bg-background text-foreground">

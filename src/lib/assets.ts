@@ -5,8 +5,6 @@ export const BRAND_LOGOS: string[] = [
   'Brands/logo_edited.png',
   'Brands/Logo_spacewhite.png',
   'Brands/maru_edited.png',
-  'Brands/maru.png',
-  'Brands/MARU+Logo+schwarz.png',
 ];
 
 export const HOME_IMAGES = {

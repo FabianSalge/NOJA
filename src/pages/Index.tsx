@@ -1,6 +1,7 @@
 import { ArrowRight, Play, Users, Award, Zap, ArrowDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { containerVariants, itemVariants } from '@/lib/animations';
 import { useRef } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -36,24 +37,7 @@ const Index = () => {
     { title: 'Post-Production & Editing', image: HOME_IMAGES.postProduction, link: '/services' },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-    },
-  };
+  
 
   return (
     <div className="min-h-screen bg-background text-foreground">
