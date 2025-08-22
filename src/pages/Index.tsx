@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import HaveProjectCTA from '@/components/HaveProjectCTA';
 import BrandCarousel from '@/components/BrandCarousel';
 import PackageCard from '@/components/PackageCard';
 import { HOME_IMAGES, LOGOS } from '@/lib/assets';
@@ -271,39 +272,7 @@ const Index = () => {
       {/* Transition: beige -> dark before CTA */}
       <section className="h-40 md:h-60 bg-gradient-to-b from-[hsl(var(--primary))] to-background" />
 
-      <section className="py-24 relative overflow-hidden" ref={servicesRef}>
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-background" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))]/0 via-[hsl(var(--primary))]/0 to-background" />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10">
-          <motion.div 
-            className="space-y-10 mb-4"
-            initial={{ opacity: 0, y: 50 }}
-            animate={servicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.h2 
-              className="text-5xl md:text-6xl font-black text-foreground tracking-tight"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={servicesInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Have a project in mind?
-            </motion.h2>
-            <div className="pt-2">
-              <Link 
-                to="/contact"
-                className="inline-flex items-center gap-3 bg-secondary text-secondary-foreground font-semibold text-lg md:text-xl px-8 py-4 rounded-full hover:shadow-lg hover:shadow-secondary/20 transition-all"
-              >
-                <span>Let's work together</span>
-                <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <HaveProjectCTA className="py-24" variant="dark" />
 
       <Footer />
     </div>

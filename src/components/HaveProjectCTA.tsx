@@ -2,10 +2,17 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-const PreFooterCTA = () => {
+type HaveProjectCTAProps = {
+  className?: string;
+  variant?: 'dark' | 'beige';
+};
+
+const HaveProjectCTA = ({ className = 'py-24', variant = 'dark' }: HaveProjectCTAProps) => {
+  const backgroundClass = variant === 'dark' ? 'bg-background' : 'bg-[hsl(var(--primary))]';
+
   return (
-    <div className="bg-background">
-      <div className="max-w-7xl mx-auto pt-64 pb-24 px-4 sm:px-6 lg:px-8 text-center">
+    <section className={`${backgroundClass} ${className} relative overflow-hidden`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.h2
           className="text-4xl md:text-5xl font-bold text-foreground mb-6"
           initial={{ opacity: 0, y: 20 }}
@@ -32,15 +39,17 @@ const PreFooterCTA = () => {
         >
           <Link
             to="/contact"
-            className="group inline-flex items-center gap-3 bg-secondary text-secondary-foreground font-semibold text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="group inline-flex items-center gap-3 bg-secondary text-secondary-foreground font-semibold text-lg md:text-xl px-8 py-4 rounded-full hover:shadow-lg hover:shadow-secondary/20 transition-all"
           >
             <span>Let's work together</span>
-            <ArrowRight size={20} className="transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default PreFooterCTA; 
+export default HaveProjectCTA;
+
+
