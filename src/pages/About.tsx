@@ -1,4 +1,3 @@
-
 import { Users, Target, Award, Heart, Camera, Radio, Clapperboard, Monitor } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
@@ -38,35 +37,35 @@ const About = () => {
     {
       name: 'Naomi Ross',
       role: 'Content Producer',
-      image: '/images/naomi.avif',
+      image: `${import.meta.env.BASE_URL}images/naomi.avif`,
       description: "Multimedia roots and a natural eye for social-media-savvy, clever transitions.",
       funFact: "Animal hoarder."
     },
     {
       name: 'Talia Persis Jenny',
       role: 'Operations & Management',
-      image: '/images/talia.avif',
+      image: `${import.meta.env.BASE_URL}images/talia.avif`,
       description: "Versed in design & project management, leading team through the details.",
       funFact: "People pleaser."
     },
     {
       name: 'Jamilla Metzger',
       role: 'Content Producer',
-      image: '/images/jamilla.avif',
+      image: `${import.meta.env.BASE_URL}images/jamilla.avif`,
       description: "Background in multimedia with a gift for bringing out the fullest potential behind lenses.",
       funFact: "Drives a motorcycle..."
     }
   ];
 
   const actionImages = [
-    '/images/im1.png',
-    '/images/im2.png',
-    '/images/im3.jpg',
-    '/images/im4.png',
-    '/images/im5.png',
-    '/images/im6.png',
-    '/images/im7.jpg',
-    '/images/im8.jpg',
+    `${import.meta.env.BASE_URL}images/im1.png`,
+    `${import.meta.env.BASE_URL}images/im2.png`,
+    `${import.meta.env.BASE_URL}images/im3.jpg`,
+    `${import.meta.env.BASE_URL}images/im4.png`,
+    `${import.meta.env.BASE_URL}images/im5.png`,
+    `${import.meta.env.BASE_URL}images/im6.png`,
+    `${import.meta.env.BASE_URL}images/im7.jpg`,
+    `${import.meta.env.BASE_URL}images/im8.jpg`,
   ];
 
   const containerVariants = {
@@ -89,11 +88,15 @@ const About = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-to-br from-secondary/20 via-brand-brown/20 to-secondary/30 relative overflow-hidden" ref={storyRef}>
+      <section className="pt-24 pb-16 relative overflow-hidden" ref={storyRef}>
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
+        </div>
         {/* Animated background elements */}
         <div className="absolute inset-0">
           {[...Array(4)].map((_, i) => (
@@ -126,7 +129,7 @@ const About = () => {
             transition={{ duration: 0.8 }}
           >
             <motion.h1 
-              className="text-5xl md:text-6xl font-bold text-gray-100"
+              className="text-5xl md:text-6xl font-bold text-foreground uppercase tracking-wide"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -148,7 +151,7 @@ const About = () => {
             </motion.h1>
             <div className="space-y-6">
               <motion.p 
-                className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
+                className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -156,7 +159,7 @@ const About = () => {
                 Run by three women from diverse corners of the media industry.
               </motion.p>
               <motion.p 
-                className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
+                className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.7 }}
@@ -164,7 +167,7 @@ const About = () => {
                 Bringing together our unique strengths to deliver seamless, bold production.
               </motion.p>
               <motion.p 
-                className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
+                className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.9 }}
@@ -177,8 +180,8 @@ const About = () => {
       </section>
 
       {/* Story Section */}
-      <section className="py-20 bg-gray-900 relative overflow-hidden" ref={storyRef}>
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-secondary/20 to-gray-900/80" />
+      <section className="py-20 bg-background relative overflow-hidden" ref={storyRef}>
+        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-brand-brown/60 to-background/80" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
@@ -192,13 +195,13 @@ const About = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <motion.h2 
-                className="text-4xl font-bold text-gray-100"
+                className="text-4xl font-bold text-foreground"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 Our Story
               </motion.h2>
-              <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
+              <div className="space-y-4 text-lg text-foreground/80 leading-relaxed">
                 <motion.p
                   initial={{ opacity: 0, x: -30 }}
                   animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
@@ -231,12 +234,12 @@ const About = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <motion.div 
-                className="aspect-square bg-gradient-to-br from-secondary/20 to-brand-brown/20 rounded-3xl overflow-hidden border border-secondary/20 shadow-2xl"
+                className="aspect-square bg-gradient-to-br from-brand-brown/60 to-brand-brown/80 rounded-3xl overflow-hidden border border-secondary/20 shadow-2xl"
                 whileHover={{ scale: 1.02, rotate: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 <motion.img 
-                  src="/uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png" 
+                  src={`${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} 
                   alt="Team collaboration" 
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
@@ -254,7 +257,7 @@ const About = () => {
                 transition={{ duration: 3, repeat: Infinity }}
               />
               <motion.div
-                className="absolute -bottom-6 -left-6 w-20 h-20 bg-brand-brown/20 rounded-full blur-lg"
+                className="absolute -bottom-6 -left-6 w-20 h-20 bg-brand-brown/50 rounded-full blur-lg"
                 animate={{ 
                   scale: [1.2, 1, 1.2],
                   opacity: [0.3, 0.6, 0.3] 
@@ -267,7 +270,7 @@ const About = () => {
       </section>
 
       {/* Equipment & Expertise Section */}
-      <section className="py-20 bg-gradient-to-b from-secondary/5 to-gray-900 relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-b from-brand-brown/70 via-brand-brown/50 to-brand-brown/80 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
@@ -284,12 +287,12 @@ const About = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <motion.div 
-                className="aspect-[4/3] bg-gradient-to-br from-brand-brown/20 to-secondary/20 rounded-3xl overflow-hidden border border-secondary/20 shadow-2xl"
+                className="aspect-[4/3] bg-gradient-to-br from-brand-brown/60 to-brand-brown/80 rounded-3xl overflow-hidden border border-secondary/20 shadow-2xl"
                 whileHover={{ scale: 1.02, y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img 
-                  src="/lovable-uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png" 
+                  src={`${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} 
                   alt="Professional lighting equipment" 
                   className="w-full h-full object-cover"
                 />
@@ -302,8 +305,8 @@ const About = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <h2 className="text-4xl font-bold text-gray-100">Professional Equipment & Expertise</h2>
-              <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
+              <h2 className="text-4xl font-bold text-foreground">Professional Equipment & Expertise</h2>
+              <div className="space-y-4 text-lg text-foreground/80 leading-relaxed">
                 <p className="border-l-2 border-secondary/30 pl-4">
                   Our state-of-the-art equipment and technical expertise ensure that every project meets the highest production standards.
                 </p>
@@ -320,10 +323,10 @@ const About = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 bg-gradient-to-br from-secondary/30 via-brand-brown/20 to-secondary/20 relative overflow-hidden" ref={valuesRef}>
+      <section className="py-20 bg-gradient-to-br from-brand-brown/70 via-brand-brown/50 to-brand-brown/80 relative overflow-hidden" ref={valuesRef}>
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-secondary/15 rounded-full blur-2xl" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-brown/15 rounded-full blur-2xl" />
+          <div className="absolute top-0 left-0 w-64 h-64 bg-brand-brown/30 rounded-full blur-2xl" />
+          <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-brown/40 rounded-full blur-2xl" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -332,14 +335,14 @@ const About = () => {
             animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-100">Our Values</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground">Our Values</h2>
             <motion.div 
               className="w-24 h-1 bg-gradient-to-r from-brand-brown to-brand-warm mx-auto rounded-full"
               initial={{ width: 0 }}
               animate={valuesInView ? { width: 96 } : { width: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
             />
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
               The principles that guide everything we do.
             </p>
           </motion.div>
@@ -363,12 +366,12 @@ const About = () => {
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <value.icon size={32} className="text-gray-900" />
+                  <value.icon size={32} className="text-background" />
                 </motion.div>
-                <h3 className="text-xl font-bold text-gray-100 group-hover:text-secondary transition-colors duration-300">
+                <h3 className="text-xl font-bold text-foreground group-hover:text-secondary transition-colors duration-300">
                   {value.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed border-l-2 border-secondary/20 pl-3">
+                <p className="text-foreground/80 leading-relaxed border-l-2 border-secondary/20 pl-3">
                   {value.description}
                 </p>
               </motion.div>
@@ -378,18 +381,16 @@ const About = () => {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-20 bg-gradient-to-b from-secondary/10 via-brand-brown/10 to-transparent relative" ref={teamRef}>
+      <section className="py-20 bg-gradient-to-b from-brand-brown/40 via-brand-brown/20 to-transparent relative" ref={teamRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
-            animate={teamInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
+            animate={teamInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-100 drop-shadow-lg">
-              Meet the{' '}
-              <span className="text-secondary">Team</span>
-            </h2>
+            <h2 className="text-4xl font-bold text-foreground">Meet the Team</h2>
+            <p className="mt-4 text-lg text-foreground/60">The creative minds behind NOJA.</p>
           </motion.div>
 
           <motion.div
@@ -414,8 +415,8 @@ const About = () => {
                 <div className="absolute bottom-0 left-0 right-0 p-6 space-y-1 text-white">
                   <p className="text-secondary font-semibold">{member.role}</p>
                   <h3 className="text-3xl font-bold">{member.name}</h3>
-                  <p className="text-gray-200 mt-2 text-sm max-w-xs">{member.description}</p>
-                  <p className="text-gray-400 text-sm pt-2 italic">{member.funFact}</p>
+                  <p className="text-foreground mt-2 text-sm max-w-xs">{member.description}</p>
+                  <p className="text-foreground/70 text-sm pt-2 italic">"{member.funFact}"</p>
                 </div>
               </motion.div>
             ))}
@@ -424,7 +425,7 @@ const About = () => {
       </section>
 
       {/* In Action Marquee */}
-      <section className="py-20 bg-gray-900 overflow-hidden">
+      <section className="py-20 bg-gradient-to-t from-brand-brown/80 to-background overflow-hidden">
         <div className="relative w-full">
           <div className="flex w-max marquee-content">
             {[...actionImages, ...actionImages].map((src, index) => (

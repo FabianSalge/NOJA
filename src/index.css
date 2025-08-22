@@ -9,50 +9,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 27 27% 8%;
-    --foreground: 33 22% 95%;
+    /* Brand-aligned tokens (HSL) */
+    --background: 0 0% 12%; /* #202020 */
+    --foreground: 25 37% 97%; /* #FBF8F6 */
 
-    --card: 27 27% 12%;
-    --card-foreground: 33 22% 95%;
+    --card: 0 0% 14%;
+    --card-foreground: 25 37% 97%;
 
-    --popover: 27 27% 12%;
-    --popover-foreground: 33 22% 95%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 25 37% 97%;
 
-    --primary: 33 22% 76%;
-    --primary-foreground: 27 27% 8%;
+    --primary: 28 35% 82%; /* #E1D0C1 */
+    --primary-foreground: 0 0% 12%;
 
-    --secondary: 33 22% 85%;
-    --secondary-foreground: 27 27% 8%;
+    --secondary: 240 5% 96%; /* #F4F4F5 */
+    --secondary-foreground: 0 0% 12%;
 
-    --muted: 27 27% 15%;
-    --muted-foreground: 33 22% 70%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 75%;
 
-    --accent: 33 22% 76%;
-    --accent-foreground: 27 27% 8%;
+    --accent: 28 35% 82%;
+    --accent-foreground: 0 0% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 27 27% 20%;
-    --input: 27 27% 20%;
-    --ring: 33 22% 76%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 28 35% 82%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 27 27% 10%;
-    --sidebar-foreground: 33 22% 85%;
-    --sidebar-primary: 33 22% 95%;
-    --sidebar-primary-foreground: 27 27% 8%;
-    --sidebar-accent: 27 27% 15%;
-    --sidebar-accent-foreground: 33 22% 95%;
-    --sidebar-border: 27 27% 20%;
-    --sidebar-ring: 33 22% 76%;
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 25 37% 97%;
+    --sidebar-primary: 28 35% 82%;
+    --sidebar-primary-foreground: 0 0% 12%;
+    --sidebar-accent: 0 0% 20%;
+    --sidebar-accent-foreground: 25 37% 97%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 28 35% 82%;
 
-    --brand-brown: 27 27% 47%;
-    --brand-brown-foreground: 33 22% 95%;
-    
-    --brand-warm: 33 22% 76%;
-    --brand-warm-foreground: 27 27% 8%;
+    --brand-brown: 28 35% 82%; /* Warm beige */
+    --brand-brown-foreground: 0 0% 12%;
+
+    --brand-warm: 25 37% 97%; /* Off-white warm */
+    --brand-warm-foreground: 0 0% 12%;
   }
 }
 
@@ -115,5 +116,49 @@ All colors MUST be HSL.
 
   .marquee-content {
     animation: marquee 80s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-reverse {
+    animation-direction: reverse;
+  }
+
+  .marquee-fast {
+    animation-duration: 50s;
+  }
+
+  @keyframes marquee-right {
+    from { transform: translateX(0); }
+    to { transform: translateX(50%); }
+  }
+
+  .marquee-right {
+    animation: marquee-right 80s linear infinite;
+    will-change: transform;
+  }
+
+  /* Left-to-right seamless track (duplicate content twice) */
+  @keyframes marquee-ltr {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+
+  .marquee-ltr {
+    animation: marquee-ltr 35s linear infinite;
+    will-change: transform;
+  }
+
+  /* Section edge fade utilities using mask-image for seamless blends */
+  .fade-bottom {
+    -webkit-mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 48px), transparent 100%);
+            mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 48px), transparent 100%);
+  }
+  .fade-top {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 48px, #000 100%);
+            mask-image: linear-gradient(180deg, transparent 0, #000 48px, #000 100%);
+  }
+  .fade-y {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+            mask-image: linear-gradient(180deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
   }
 }

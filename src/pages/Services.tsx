@@ -27,7 +27,7 @@ const Services = () => {
         'Post-production editing',
         'Final delivery'
       ],
-      image: '/images/full_package.avif',
+      image: `${import.meta.env.BASE_URL}images/full_package.avif`,
     },
     'content-strategy': {
       title: 'Content Strategy & Creative Direction',
@@ -43,7 +43,7 @@ const Services = () => {
         'Performance metrics',
         'Strategic recommendations'
       ],
-      image: '/images/concept.avif',
+      image: `${import.meta.env.BASE_URL}images/concept.avif`,
     },
     'video-photography': {
       title: 'Video & Photography Production',
@@ -59,7 +59,7 @@ const Services = () => {
         'Drone footage',
         'Studio sessions'
       ],
-      image: '/images/video_production.avif',
+      image: `${import.meta.env.BASE_URL}images/video_production.avif`,
     },
     'post-production': {
       title: 'Post-Production & Editing',
@@ -75,7 +75,7 @@ const Services = () => {
         'Format optimization',
         'Quality assurance'
       ],
-      image: '/images/editing.avif',
+      image: `${import.meta.env.BASE_URL}images/editing.avif`,
     }
   };
 
@@ -109,8 +109,8 @@ const Services = () => {
           <div className="p-4 bg-secondary/10 rounded-xl inline-block border border-secondary/20">
             {service.icon}
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-100">{service.title}</h2>
-          <p className="text-gray-300 leading-relaxed text-lg">{service.description}</p>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">{service.title}</h2>
+          <p className="text-foreground/80 leading-relaxed text-lg">{service.description}</p>
           <div className="grid sm:grid-cols-2 gap-4 pt-4">
             {service.features.map((feature, index) => (
               <motion.div
@@ -121,7 +121,7 @@ const Services = () => {
                 transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
               >
                 <Check className="w-5 h-5 text-secondary flex-shrink-0" />
-                <span className="text-gray-200 font-medium">{feature}</span>
+                <span className="text-foreground/80 font-medium">{feature}</span>
               </motion.div>
             ))}
           </div>
@@ -147,11 +147,15 @@ const Services = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-to-br from-secondary/30 via-brand-brown/20 to-secondary/20 relative overflow-hidden" ref={heroRef}>
+      <section className="pt-24 pb-16 relative overflow-hidden" ref={heroRef}>
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
+        </div>
         <div className="absolute inset-0">
           {[...Array(5)].map((_, i) => (
             <motion.div
@@ -183,7 +187,7 @@ const Services = () => {
             variants={containerVariants}
           >
             <motion.h1 
-              className="text-5xl md:text-6xl font-bold text-gray-100"
+              className="text-5xl md:text-6xl font-bold text-foreground"
               variants={itemVariants}
             >
               Our{' '}
@@ -202,7 +206,7 @@ const Services = () => {
               </motion.span>
             </motion.h1>
             <motion.p 
-              className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
+              className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
               variants={itemVariants}
             >
               From concept to completion, we provide comprehensive content creation services 
@@ -214,7 +218,7 @@ const Services = () => {
 
       {/* Services Content */}
       <section className="py-20 relative overflow-hidden" ref={servicesRef}>
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-brown/10 via-secondary/10 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-brown/50 via-brand-brown/30 to-background" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-28">
           {Object.values(services).map((service, index) => (

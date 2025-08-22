@@ -26,7 +26,7 @@ const Projects = () => {
       title: 'OASG 25\'',
       category: 'Event Recap',
       description: 'A dynamic recap of the OASG 25\' event, capturing the energy and key moments of the celebration.',
-      image: '/images/oasg.avif',
+      image: `${import.meta.env.BASE_URL}images/oasg.avif`,
       tags: ['Event Coverage', 'Videography', 'Recap'],
       year: '2024',
     },
@@ -34,7 +34,7 @@ const Projects = () => {
       title: 'LE CLÉ MARIE',
       category: 'Brand Film',
       description: 'An elegant brand film for LE CLÉ MARIE, showcasing their new collection with a cinematic touch.',
-      image: '/images/leclemarie.avif',
+      image: `${import.meta.env.BASE_URL}images/leclemarie.avif`,
       tags: ['Brand Film', 'Fashion', 'Storytelling'],
       year: '2024',
     },
@@ -42,7 +42,7 @@ const Projects = () => {
       title: 'PLAZA',
       category: 'Promotional Content',
       description: 'Engaging promotional video for PLAZA, designed to boost brand visibility and drive customer engagement.',
-      image: '/images/plaza.avif',
+      image: `${import.meta.env.BASE_URL}images/plaza.avif`,
       tags: ['Promotion', 'Social Media', 'Marketing'],
       year: '2023',
     },
@@ -85,11 +85,15 @@ const Projects = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-to-br from-secondary/30 via-brand-brown/20 to-secondary/30 relative overflow-hidden" ref={heroRef}>
+      <section className="pt-24 pb-16 relative overflow-hidden" ref={heroRef}>
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
+        </div>
         <div className="absolute inset-0">
           {[...Array(4)].map((_, i) => (
             <motion.div
@@ -121,7 +125,7 @@ const Projects = () => {
             variants={containerVariants}
           >
             <motion.h1 
-              className="text-5xl md:text-6xl font-bold text-gray-100"
+              className="text-5xl md:text-6xl font-bold text-foreground"
               variants={itemVariants}
             >
               Our{' '}
@@ -140,7 +144,7 @@ const Projects = () => {
               </motion.span>
             </motion.h1>
             <motion.p 
-              className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
+              className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
               variants={itemVariants}
             >
               We've had the privilege of working with a diverse range of clients to create content that captivates, inspires, and drives results.
@@ -159,10 +163,10 @@ const Projects = () => {
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-100 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Featured Projects
             </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
               A glimpse into the stories we've helped shape. Each project is a partnership forged in creativity and driven by results.
             </p>
           </motion.div>
