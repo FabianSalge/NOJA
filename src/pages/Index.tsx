@@ -2,13 +2,15 @@ import { ArrowRight, Play, Users, Award, Zap, ArrowDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import BrandCarousel from '@/components/BrandCarousel';
 import PackageCard from '@/components/PackageCard';
 import { HOME_IMAGES, LOGOS } from '@/lib/assets';
+import { fetchHome, type CmsHome } from '@/lib/cms';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 // Removed PreFooterCTA from Index per new section flow
 
 const Index = () => {
@@ -20,6 +22,13 @@ const Index = () => {
   const heroInView = useInView(heroRef, { once: true });
   const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
   const servicesInView = useInView(servicesRef, { once: true, margin: "-100px" });
+
+  const [home, setHome] = useState<CmsHome | undefined>(undefined);
+  useEffect(() => {
+    fetchHome().then(setHome).catch(() => {
+      console.warn('Failed to fetch Home data from Contentful. Falling back to static content.');
+    });
+  }, []);
   
   const yRange = useTransform(scrollY, [0, 1000], [0, -200]);
   const opacityRange = useTransform(scrollY, [0, 300], [1, 0]);
@@ -31,11 +40,17 @@ const Index = () => {
     }
   };
 
-  const packages = [
+  const defaultPackages = [
     { title: 'Content Strategy & Creative Direction', image: HOME_IMAGES.contentStrategy, link: '/services' },
     { title: 'Video & Photography Production', image: HOME_IMAGES.videoPhotography, link: '/services' },
     { title: 'Post-Production & Editing', image: HOME_IMAGES.postProduction, link: '/services' },
   ];
+
+  const packages = (home?.whatYouNeedCards?.length ? home.whatYouNeedCards : undefined)?.map((c) => ({
+    title: c.title || 'What you need',
+    image: c.imageUrl || HOME_IMAGES.contentStrategy,
+    link: '/services',
+  })) || defaultPackages;
 
   
 
@@ -193,9 +208,15 @@ const Index = () => {
                   What we do best
                 </h2>
               </div>
-              <p className="text-foreground/80 text-lg md:text-xl max-w-prose">
-                Intro Text. vIntro Text,Intro Text,Intro, Text,Intro Text,Intro Text,Intro, Text,Intro Text,Intro Text,Intro Text.
-              </p>
+              <div className="text-foreground/80 text-lg md:text-xl max-w-prose">
+                {home?.whatWeDoBestText ? (
+                  documentToReactComponents(home.whatWeDoBestText)
+                ) : (
+                  <p>
+                    Intro Text. vIntro Text,Intro Text,Intro, Text,Intro Text,Intro Text,Intro, Text,Intro Text,Intro Text,Intro Text.
+                  </p>
+                )}
+              </div>
             </motion.div>
 
             <motion.div
@@ -214,7 +235,7 @@ const Index = () => {
           </div>
 
           {/* Brand logos marquee */}
-          <BrandCarousel className="mt-16" />
+          <BrandCarousel className="mt-16" brands={home?.brands} />
         </div>
       </section>
 

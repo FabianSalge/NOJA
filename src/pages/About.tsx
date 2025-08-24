@@ -1,10 +1,12 @@
 import { Eye, Lightbulb, RefreshCcw } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
+import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
 const About = () => {
   const storyRef = useRef(null);
@@ -14,6 +16,13 @@ const About = () => {
   const storyInView = useInView(storyRef, { once: true, margin: "-100px" });
   const valuesInView = useInView(valuesRef, { once: true, margin: "-100px" });
   const teamInView = useInView(teamRef, { once: true, margin: "-100px" });
+
+  const [about, setAbout] = useState<CmsAboutPage | undefined>(undefined);
+  useEffect(() => {
+    fetchAbout().then(setAbout).catch(() => {
+      console.warn('Failed to fetch About page content from Contentful. Falling back to static copy.');
+    });
+  }, []);
 
   const values = [
     {
@@ -99,38 +108,44 @@ const About = () => {
                 Our Story
               </motion.h2>
               <div className="space-y-4 text-lg text-background/80 leading-relaxed">
-                <motion.p
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="border-l-2 border-background/30 pl-4"
-                >
-                  NOJA was born from a shared vision between three creatives with backgrounds in Design Management and Multimedia.
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="border-l-2 border-background/30 pl-4"
-                >
-                  We saw the gap between great ideas and flawless execution — so we built an agency that does both.
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="border-l-2 border-background/30 pl-4"
-                >
-                  From concept to delivery, we combine strategy, project management, and production to create content that stands out and performs.
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
-                  className="border-l-2 border-background/30 pl-4"
-                >
-                  Based in Zurich, working worldwide.
-                </motion.p>
+                {about?.ourStoryText ? (
+                  documentToReactComponents(about.ourStoryText)
+                ) : (
+                  <>
+                    <motion.p
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className="border-l-2 border-background/30 pl-4"
+                    >
+                      NOJA was born from a shared vision between three creatives with backgrounds in Design Management and Multimedia.
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                      className="border-l-2 border-background/30 pl-4"
+                    >
+                      We saw the gap between great ideas and flawless execution — so we built an agency that does both.
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className="border-l-2 border-background/30 pl-4"
+                    >
+                      From concept to delivery, we combine strategy, project management, and production to create content that stands out and performs.
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+                      transition={{ duration: 0.6, delay: 0.8 }}
+                      className="border-l-2 border-background/30 pl-4"
+                    >
+                      Based in Zurich, working worldwide.
+                    </motion.p>
+                  </>
+                )}
               </div>
             </motion.div>
             <motion.div 
@@ -144,7 +159,7 @@ const About = () => {
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 <motion.img 
-                  src={`${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} 
+                  src={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`}
                   alt="Team collaboration" 
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
