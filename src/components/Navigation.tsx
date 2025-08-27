@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles, Stars } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +43,7 @@ const Navigation = () => {
               <img 
                 src={`${import.meta.env.BASE_URL}Logos/${scrolled ? 'NJ_beige.png' : 'NJ_white.png'}`} 
                 alt="NOJA" 
-                className={`h-8 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-sm`}
+                className={`h-7 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-sm`}
               />
             </div>
           </Link>
@@ -96,9 +96,9 @@ const Navigation = () => {
                 <img 
                   src={`${import.meta.env.BASE_URL}Logos/${scrolled ? 'NJ_beige.png' : 'NJ_white.png'}`} 
                   alt="NOJA" 
-                  className={`h-8 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-sm`}
+                  className={`h-7 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-sm`}
                 />
-                <Sparkles className={`absolute -top-2 -right-2 h-4 w-4 transition-opacity duration-300 ${scrolled ? 'text-[hsl(var(--background))]' : 'text-foreground'} opacity-70`} />
+                
               </div>
             </Link>
 

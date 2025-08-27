@@ -1,19 +1,31 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
+ 
 import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import type { Document } from '@contentful/rich-text-types';
 
 const Projects = () => {
-  const heroRef = useRef(null);
-  const projectsRef = useRef(null);
+  const featuredRef = useRef(null);
+  const allProjectsRef = useRef(null);
   const [featured, setFeatured] = useState<CmsProjectSummary[]>([]);
   const [allProjects, setAllProjects] = useState<CmsProjectSummary[]>([]);
   const [subtext, setSubtext] = useState<Document | undefined>(undefined);
+
+  const featuredInView = useInView(featuredRef, { once: true, margin: "-100px" });
+  const allProjectsInView = useInView(allProjectsRef, { once: true, margin: "-100px" });
+
+  // Hero-style scroll transitions for sections
+  const { scrollYProgress: featuredProgress } = useScroll({
+    target: featuredRef,
+    offset: ["start center", "end start"]
+  });
+  const featuredY = useTransform(featuredProgress, [0.3, 1], [0, -150]);
+  const featuredOpacity = useTransform(featuredProgress, [0.5, 0.95], [1, 0.1]);
 
   useEffect(() => {
     fetchProjectsPage()
@@ -70,41 +82,34 @@ const Projects = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 relative overflow-hidden" ref={heroRef}>
-        <div className="absolute inset-0">
+      {/* Featured Projects Section */}
+      <section className="min-h-screen flex items-center relative overflow-hidden bg-background" ref={featuredRef}>
+        {/* Hero-style background transition */}
+        <motion.div 
+          className="absolute inset-0"
+          style={{ y: featuredY, opacity: featuredOpacity }}
+        >
           <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
-        </div>
+        </motion.div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div 
-            className="text-center space-y-8"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <motion.div
+            className="text-center mb-16 space-y-8"
             initial="hidden"
-            animate="visible"
+            animate={featuredInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
-            <motion.h1 
-              className="text-5xl md:text-6xl font-bold text-foreground"
-              variants={itemVariants}
-            >
-              Our{' '}
-              <motion.span 
-                className="text-secondary"
-                animate={{ 
-                  textShadow: [
-                    '0 0 10px hsl(var(--secondary) / 0.5)',
-                    '0 0 20px hsl(var(--secondary) / 0.8)',
-                    '0 0 10px hsl(var(--secondary) / 0.5)'
-                  ]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                Work
-              </motion.span>
-            </motion.h1>
+            <motion.div variants={itemVariants}>
+              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
+                Portfolio
+              </span>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
+                Featured Projects
+              </h1>
+            </motion.div>
             <motion.div 
-              className="text-xl text-background/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-background/30 pl-6"
+              className="text-lg md:text-xl text-background/80 max-w-3xl mx-auto leading-relaxed"
               variants={itemVariants}
             >
               {subtext ? (
@@ -116,31 +121,11 @@ const Projects = () => {
               )}
             </motion.div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Projects */}
-      <section className="py-20 relative" ref={projectsRef}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Featured Projects
-            </h2>
-            <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-              A curated selection of recent collaborations. Click into any project to see the story and outcomes.
-            </p>
-          </motion.div>
 
           <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
             initial="hidden"
-            animate="visible"
+            animate={featuredInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
             {featured.map((project, index) => (
@@ -148,18 +133,58 @@ const Projects = () => {
             ))}
           </motion.div>
 
-          {/* All Projects */}
+          {/* All Projects - Compact Display */}
           {allProjects.length > 0 && (
             <div className="mt-20">
-              <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-6">All Projects</h3>
               <motion.div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+                className="text-center mb-12 space-y-4"
+                initial={{ opacity: 0, y: 30 }}
+                animate={featuredInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={featuredInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                >
+                  <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
+                    More Work
+                  </span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-background text-center leading-[0.9]">
+                    All Projects
+                  </h2>
+                </motion.div>
+              </motion.div>
+
+              {/* Compact grid for all projects */}
+              <motion.div
+                className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6"
                 initial="hidden"
-                animate="visible"
+                animate={featuredInView ? "visible" : "hidden"}
                 variants={containerVariants}
               >
                 {allProjects.map((project, index) => (
-                  <ProjectCard key={`all-${index}`} project={project} />
+                  <Link key={`all-${index}`} to={`/projects/${project.slug}`} className="block">
+                    <motion.div
+                      variants={itemVariants}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
+                      className="group relative overflow-hidden rounded-xl shadow-md bg-background/5 border border-background/10"
+                      whileHover={{ y: -4, scale: 1.02 }}
+                    >
+                      <img
+                        src={project.coverImageUrl}
+                        alt={project.title}
+                        className="w-full h-full object-cover aspect-square transition-transform duration-500 ease-in-out group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute bottom-0 left-0 p-3 w-full">
+                        <p className="text-xs text-white/80 mb-1">{new Date(project.dateISO).getFullYear()}</p>
+                        <h3 className="text-sm font-bold text-white leading-tight line-clamp-2">
+                          {project.title}
+                        </h3>
+                      </div>
+                    </motion.div>
+                  </Link>
                 ))}
               </motion.div>
             </div>
@@ -167,7 +192,7 @@ const Projects = () => {
         </div>
       </section>
 
-      <HaveProjectCTA className="py-24" variant="dark" />
+      <HaveProjectCTA className="py-20" variant="dark" />
       <Footer />
     </div>
   );

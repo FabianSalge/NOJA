@@ -55,6 +55,24 @@ export type CmsAboutPage = {
 	ourStoryImageUrl?: string;
 };
 
+export type CmsServiceItem = {
+	title: string;
+	subtitle?: string;
+	description: string;
+	features: string[];
+	serviceMediaUrl?: string;
+	iconType: string;
+	order: number;
+	alternateLayout?: boolean;
+};
+
+export type CmsServicesPage = {
+	heroTitle: string;
+	heroSubtitle: string;
+	heroBackgroundImageUrl?: string;
+	services: CmsServiceItem[];
+};
+
 // Helpers to safely read fields
 function getField<T>(obj: any, key: string): T | undefined {
 	return obj && obj[key] !== undefined ? (obj[key] as T) : undefined;
@@ -178,5 +196,38 @@ export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
 	return {
 		ourStoryText: getField<Document>(fields, "ourStoryText"),
 		ourStoryImageUrl: assetUrlFromField(getField<any>(fields, "ourStoryImage")),
+	};
+}
+
+export async function fetchServicesPage(): Promise<CmsServicesPage | undefined> {
+	const res = await contentfulClient.getEntries<any>({
+		content_type: "servicesPage",
+		include: 2,
+		limit: 1,
+	});
+	const entry = res.items?.[0];
+	if (!entry) return undefined;
+	const fields = entry.fields ?? {};
+	
+	// Get referenced services and sort by order
+	const servicesData = getField<any[]>(fields, "services") ?? [];
+	const services: CmsServiceItem[] = servicesData
+		.map((service: any) => ({
+			title: getField<string>(service.fields, "title") ?? "",
+			subtitle: getField<string>(service.fields, "subtitle"),
+			description: getField<string>(service.fields, "description") ?? "",
+			features: getField<string[]>(service.fields, "features") ?? [],
+			serviceMediaUrl: assetUrlFromField(getField<any>(service.fields, "serviceImage")),
+			iconType: getField<string>(service.fields, "iconType") ?? "lightbulb",
+			order: getField<number>(service.fields, "order") ?? 0,
+			alternateLayout: getField<boolean>(service.fields, "alternateLayout") ?? false,
+		}))
+		.sort((a, b) => a.order - b.order);
+	
+	return {
+		heroTitle: getField<string>(fields, "heroTitle") ?? "",
+		heroSubtitle: getField<string>(fields, "heroSubtitle") ?? "",
+		heroBackgroundImageUrl: assetUrlFromField(getField<any>(fields, "heroBackgroundImage")),
+		services,
 	};
 }

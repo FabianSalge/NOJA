@@ -81,9 +81,49 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  /* Static beige orbs backdrop (no animation) */
+  .beige-orbs {
+    background-image:
+      radial-gradient(700px 500px at 15% 18%, hsl(var(--primary)) / 12%, transparent 60%),
+      radial-gradient(800px 560px at 85% 24%, hsl(var(--primary)) / 10%, transparent 62%),
+      radial-gradient(760px 600px at 50% 70%, hsl(var(--primary)) / 8%, transparent 65%);
+    background-repeat: no-repeat;
+    background-color: hsl(var(--background));
+  }
+  /* Remove grid overlay utility (reverted) */
+  .bg-grid-beige { }
+
+  /* Beige bubbles backdrop like hero, reusable */
+  .bubbles-beige {
+    position: relative;
+  }
+  .bubbles-beige > .bubbles-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  /* Divider animated layer */
+  .divider-animated {
+    background-image: radial-gradient(100px 60px at 0% 50%, hsl(var(--primary))/12%, transparent 60%),
+                      radial-gradient(100px 60px at 100% 50%, hsl(var(--primary))/12%, transparent 60%);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    mix-blend-mode: overlay;
+  }
+
+  /* Edge fade to remove seams */
+  .divider-mask {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 20%, #000 80%, transparent 100%);
+            mask-image: linear-gradient(180deg, transparent 0, #000 20%, #000 80%, transparent 100%);
+  }
+  /* Global hover color for text links */
+  a:hover, .hover\:text-link-beige:hover {
+    color: hsl(var(--primary));
+  }
   /* Text selection */
   ::selection {
-    @apply bg-secondary/20 text-secondary;
+    @apply bg-[hsl(var(--primary))]/30 text-[hsl(var(--primary))];
   }
 
   /* Smooth scrolling */

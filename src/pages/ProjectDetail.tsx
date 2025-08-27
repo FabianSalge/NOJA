@@ -6,7 +6,7 @@ import { HOME_IMAGES } from '@/lib/assets';
 import { fetchProjectBySlug, type CmsProjectDetail, splitDocumentByParagraphs } from '@/lib/cms';
 import { useEffect, useState } from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { BLOCKS } from '@contentful/rich-text-types';
+import { BLOCKS, type TopLevelBlock } from '@contentful/rich-text-types';
 
 const ProjectDetail = () => {
   const { slug } = useParams();
@@ -60,41 +60,36 @@ const ProjectDetail = () => {
       {/* Image | Text */}
       <section className="pt-0 pb-0 bg-background -mt-px">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch">
-            {/* Left image column (no card) */}
-            <div className="min-h-[360px] md:min-h-[520px]">
+            {/* Left image column - Smart aspect ratio handling */}
+            <div className="relative">
               {project.secondImageUrl && (
-                <img src={project.secondImageUrl} alt="Project visual" className="block w-full h-full object-cover" />
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={project.secondImageUrl} 
+                    alt="Project visual" 
+                    className="block w-full h-auto min-h-[360px] md:min-h-[480px] max-h-[600px] object-cover"
+                    style={{
+                      aspectRatio: 'auto',
+                      objectFit: 'cover',
+                      objectPosition: 'center'
+                    }}
+                  />
+                </div>
               )}
             </div>
             {/* Right text column */}
-            <div className="px-6 md:px-10 lg:px-16 py-10 md:py-12">
-              <div className="space-y-4">
+            <div className="px-6 md:px-10 lg:px-16 py-10 md:py-12 flex items-center">
+              <div className="space-y-6 w-full">
                 <h2 className="text-3xl md:text-4xl font-black">{project.firstTextTitle}</h2>
-                {project.firstTextBody ? (() => {
-                  const [leftDoc, rightDoc] = splitDocumentByParagraphs(project.firstTextBody);
-                  return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-lg text-foreground/80">
-                      <div>
-                        {documentToReactComponents(leftDoc, {
-                          renderNode: {
-                            [BLOCKS.PARAGRAPH]: (_node, children) => (
-                              <p className="mb-4">{children}</p>
-                            ),
-                          },
-                        })}
-                      </div>
-                      <div>
-                        {documentToReactComponents(rightDoc, {
-                          renderNode: {
-                            [BLOCKS.PARAGRAPH]: (_node, children) => (
-                              <p className="mb-4">{children}</p>
-                            ),
-                          },
-                        })}
-                      </div>
-                    </div>
-                  );
-                })() : null}
+                <div className="text-lg text-foreground/80 leading-relaxed">
+                  {project.firstTextBody ? documentToReactComponents(project.firstTextBody, {
+                    renderNode: {
+                      [BLOCKS.PARAGRAPH]: (_node, children) => (
+                        <p className="mb-4">{children}</p>
+                      ),
+                    },
+                  }) : null}
+                </div>
               </div>
             </div>
           </div>
@@ -122,14 +117,55 @@ const ProjectDetail = () => {
         <div className="max-w-6xl mx-auto px-6">
           <h3 className="text-3xl md:text-4xl font-black">{project.secondTextTitle}</h3>
           <div className="h-[2px] w-24 bg-foreground/40 mt-4 mb-10" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-lg leading-relaxed text-foreground/85">
-            <div>
-              {project.secondTextBody ? documentToReactComponents(project.secondTextBody) : null}
+          {project.secondTextBody ? (() => {
+            // Get the raw text content from the document
+            const getTextFromDocument = (doc: any): string => {
+              return doc.content.map((node: any) => {
+                if (node.nodeType === BLOCKS.PARAGRAPH && node.content) {
+                  return node.content.map((textNode: any) => textNode.value || '').join('');
+                }
+                return '';
+              }).join(' ');
+            };
+
+            const fullText = getTextFromDocument(project.secondTextBody);
+            
+            if (fullText.length < 200) {
+              // Short content - single column
+              return (
+                <div className="text-lg leading-relaxed text-foreground/85">
+                  {documentToReactComponents(project.secondTextBody, {
+                    renderNode: {
+                      [BLOCKS.PARAGRAPH]: (_node, children) => (
+                        <p className="mb-4">{children}</p>
+                      ),
+                    },
+                  })}
+                </div>
+              );
+            }
+
+            // Split long text into sentences for better column balance
+            const sentences = fullText.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+            const midPoint = Math.ceil(sentences.length / 2);
+            const leftText = sentences.slice(0, midPoint).join(' ');
+            const rightText = sentences.slice(midPoint).join(' ');
+
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-lg leading-relaxed text-foreground/85">
+                <div>
+                  <p className="mb-4">{leftText}</p>
+                </div>
+                <div>
+                  <p className="mb-4">{rightText}</p>
+                </div>
+              </div>
+            );
+          })() : (
+            <div className="text-lg leading-relaxed text-foreground/85">
+              <p>No content available</p>
             </div>
-            <div>
-              {/* Optional space for additional copy or future content */}
-            </div>
-          </div>
+          )}
         </div>
       </section>
 

@@ -1,10 +1,11 @@
 import { Eye, Lightbulb, RefreshCcw } from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useEffect, useRef, useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
+ 
 import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
@@ -16,6 +17,28 @@ const About = () => {
   const storyInView = useInView(storyRef, { once: true, margin: "-100px" });
   const valuesInView = useInView(valuesRef, { once: true, margin: "-100px" });
   const teamInView = useInView(teamRef, { once: true, margin: "-100px" });
+
+  // Hero-style scroll transitions for each section
+  const { scrollYProgress: storyProgress } = useScroll({
+    target: storyRef,
+    offset: ["start center", "end start"]
+  });
+  const storyY = useTransform(storyProgress, [0.3, 1], [0, -150]);
+  const storyOpacity = useTransform(storyProgress, [0.5, 0.95], [1, 0.1]);
+
+  const { scrollYProgress: valuesProgress } = useScroll({
+    target: valuesRef,
+    offset: ["start center", "end start"]
+  });
+  const valuesY = useTransform(valuesProgress, [0.3, 1], [0, -150]);
+  const valuesOpacity = useTransform(valuesProgress, [0.5, 0.95], [1, 0.1]);
+
+  const { scrollYProgress: teamProgress } = useScroll({
+    target: teamRef,
+    offset: ["start center", "end start"]
+  });
+  const teamY = useTransform(teamProgress, [0.3, 1], [0, -150]);
+  const teamOpacity = useTransform(teamProgress, [0.5, 0.95], [1, 0.1]);
 
   const [about, setAbout] = useState<CmsAboutPage | undefined>(undefined);
   useEffect(() => {
@@ -80,15 +103,20 @@ const About = () => {
   
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]">
       <Navigation />
 
       {/* Our Story (Beige) */}
-      <section className="pt-28 md:pt-32 pb-20 relative overflow-hidden" ref={storyRef}>
-        <div className="absolute inset-0">
-          <div className="absolute inset-0" style={{ backgroundColor: 'hsl(var(--primary))' }} />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="min-h-screen flex items-center relative overflow-hidden bg-background" ref={storyRef}>
+        {/* Hero-style background transition */}
+        <motion.div 
+          className="absolute inset-0"
+          style={{ y: storyY, opacity: storyOpacity }}
+        >
+          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
+        </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <motion.div 
             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
             variants={containerVariants}
@@ -100,13 +128,18 @@ const About = () => {
               variants={itemVariants}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <motion.h2 
-                className="text-4xl font-bold text-background"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                Our Story
-              </motion.h2>
+              <div className="space-y-4">
+                <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60">
+                  About NOJA
+                </span>
+                <motion.h2 
+                  className="text-4xl md:text-5xl lg:text-6xl font-black text-background tracking-tight leading-[0.9]"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  Our Story
+                </motion.h2>
+              </div>
               <div className="space-y-4 text-lg text-background/80 leading-relaxed">
                 {about?.ourStoryText ? (
                   documentToReactComponents(about.ourStoryText)
@@ -154,72 +187,64 @@ const About = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <motion.div 
-                className="aspect-square bg-gradient-to-br from-[hsl(var(--primary))]/60 to-[hsl(var(--primary))]/80 rounded-3xl overflow-hidden border border-background/20 shadow-2xl"
-                whileHover={{ scale: 1.02, rotate: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="aspect-square bg-gradient-to-br from-[hsl(var(--primary))]/60 to-[hsl(var(--primary))]/80 rounded-3xl overflow-hidden border border-background/10 shadow-2xl max-w-md mx-auto"
+                whileHover={{ y: -8 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <motion.img 
+                <img 
                   src={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`}
                   alt="Team collaboration" 
                   className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
                 />
               </motion.div>
-              
-              {/* Floating accent elements */}
-              <motion.div
-                className="absolute -top-4 -right-4 w-16 h-16 bg-secondary/20 rounded-full blur-md"
-                animate={{ 
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 0.8, 0.5] 
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-              <motion.div
-                className="absolute -bottom-6 -left-6 w-20 h-20 bg-background/30 rounded-full blur-lg"
-                animate={{ 
-                  scale: [1.2, 1, 1.2],
-                  opacity: [0.3, 0.6, 0.3] 
-                }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-              />
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Transition: beige -> dark (between Story and Values) */}
-      <section className="h-8 md:h-12" style={{ backgroundColor: 'hsl(var(--primary))' }} />
-      <section className="h-40 md:h-60 bg-gradient-to-b from-[hsl(var(--primary))] to-background" />
-      <section className="h-10 md:h-12" style={{ backgroundColor: 'hsl(var(--background))' }} />
+      
 
       {/* Values Section */}
-      <section className="py-24 relative overflow-hidden" ref={valuesRef}>
-        <div className="absolute inset-0">
+      <section className="pt-12 pb-24 relative overflow-hidden bg-[hsl(var(--primary))]" ref={valuesRef}>
+        {/* Hero-style background transition */}
+        <motion.div 
+          className="absolute inset-0"
+          style={{ y: valuesY, opacity: valuesOpacity }}
+        >
           <div className="absolute inset-0 bg-background" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-transparent" />
+        </motion.div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <motion.div 
-            className="text-center space-y-4 mb-16"
+            className="text-center mb-12 space-y-4"
             initial={{ opacity: 0, y: 30 }}
             animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground">Our Values</h2>
-            <motion.div 
-              className="w-24 h-1 bg-foreground/60 mx-auto rounded-full"
-              initial={{ width: 0 }}
-              animate={valuesInView ? { width: 96 } : { width: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-            />
-            <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
-              The principles that guide everything we do.
-            </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-foreground/60 mb-4">
+                What We Believe
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground text-center leading-[0.9]">
+                Our Values
+              </h2>
+            </motion.div>
+            <motion.p 
+              className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              The principles that guide everything we do
+            </motion.p>
           </motion.div>
           
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
             variants={containerVariants}
             initial="hidden"
             animate={valuesInView ? "visible" : "hidden"}
@@ -227,24 +252,28 @@ const About = () => {
             {values.map((value, index) => (
               <motion.div 
                 key={index} 
-                className="text-center space-y-4 group bg-foreground/5 rounded-2xl p-6 border border-foreground/10"
+                className="group"
                 variants={itemVariants}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                whileHover={{ y: -10, scale: 1.02 }}
               >
                 <motion.div 
-                  className="w-16 h-16 bg-foreground text-background rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-foreground/20"
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
+                  className="bg-foreground/5 backdrop-blur-sm rounded-2xl p-6 h-full border border-foreground/10 hover:border-foreground/20 transition-all duration-300 text-center"
+                  whileHover={{ y: -4 }}
                 >
-                  <value.icon size={32} />
+                  <motion.div 
+                    className="w-12 h-12 bg-foreground text-[hsl(var(--primary))] rounded-xl flex items-center justify-center mx-auto mb-4"
+                    whileHover={{ rotate: 15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <value.icon size={24} />
+                  </motion.div>
+                  <h3 className="text-lg font-bold text-foreground mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-foreground/70 text-sm leading-relaxed">
+                    {value.description}
+                  </p>
                 </motion.div>
-                <h3 className="text-xl font-bold text-foreground">
-                  {value.title}
-                </h3>
-                <p className="text-foreground/80 leading-relaxed">
-                  {value.description}
-                </p>
               </motion.div>
             ))}
           </motion.div>
@@ -252,19 +281,38 @@ const About = () => {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-20 bg-gradient-to-b from-background to-[hsl(var(--primary))] relative" ref={teamRef}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="py-20 relative overflow-hidden bg-[hsl(var(--primary))]" ref={teamRef}>
+        {/* Hero-style background transition */}
+        <motion.div 
+          className="absolute inset-0"
+          style={{ y: teamY, opacity: teamOpacity }}
+        >
+          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
+        </motion.div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <motion.div
-            className="text-center mb-16"
+            className="text-center mb-12 space-y-4"
             initial={{ opacity: 0, y: 30 }}
             animate={teamInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-4xl font-bold text-foreground">Meet the Team</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={teamInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
+                The People
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-background text-center leading-[0.9]">
+                Meet the Team
+              </h2>
+            </motion.div>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             variants={containerVariants}
             initial="hidden"
             animate={teamInView ? 'visible' : 'hidden'}
@@ -279,7 +327,7 @@ const About = () => {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105 aspect-[4/5]"
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105 aspect-[2/3]"
                 />
                 <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 space-y-1 text-white">
@@ -292,8 +340,8 @@ const About = () => {
         </div>
       </section>
 
-      {/* In Action Marquee (beige -> dark) */}
-      <section className="py-20 bg-gradient-to-b from-[hsl(var(--primary))] to-background overflow-hidden">
+      {/* In Action Marquee */}
+      <section className="py-20 bg-[hsl(var(--primary))] overflow-hidden">
         <div className="relative w-full">
           <div className="flex w-max marquee-content">
             {[...actionImages, ...actionImages].map((src, index) => (

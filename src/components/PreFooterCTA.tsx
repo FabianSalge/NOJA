@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 const PreFooterCTA = () => {
   return (
     <div className="bg-background">
-      <div className="max-w-7xl mx-auto pt-64 pb-24 px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-7xl mx-auto pt-40 pb-16 px-4 sm:px-6 lg:px-8 text-center">
         <motion.h2
           className="text-4xl md:text-5xl font-bold text-foreground mb-6"
           initial={{ opacity: 0, y: 20 }}

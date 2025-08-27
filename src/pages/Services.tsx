@@ -1,104 +1,143 @@
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { Camera, Video, Edit3, Lightbulb, Check } from 'lucide-react';
-import PreFooterCTA from '@/components/PreFooterCTA';
+import { Camera, Video, Edit3, Lightbulb, Check, Users, Target, Award } from 'lucide-react';
+import HaveProjectCTA from '@/components/HaveProjectCTA';
+import { fetchServicesPage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
+ 
 
 const Services = () => {
-  const heroRef = useRef(null);
-  const servicesRef = useRef(null);
-  const isHeroInView = useInView(heroRef, { once: true, margin: "-100px" });
-  const areServicesInView = useInView(servicesRef, { once: true, margin: "-100px" });
+  const [servicesData, setServicesData] = useState<CmsServicesPage | undefined>(undefined);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const services = {
-    'full-production': {
-      title: 'Full Production',
-      description: 'End-to-end content creation from concept to delivery.',
-      icon: <Video className="h-8 w-8 text-secondary" />,
-      features: [
-        'Pre-production planning',
-        'Script development',
-        'Location scouting',
-        'Talent coordination',
-        'Full crew management',
-        'Equipment provision',
-        'Post-production editing',
-        'Final delivery'
-      ],
-      image: `${import.meta.env.BASE_URL}images/full_package.avif`,
-    },
-    'content-strategy': {
-      title: 'Content Strategy & Creative Direction',
-      description: 'Strategic planning and creative direction for your content needs.',
-      icon: <Lightbulb className="h-8 w-8 text-secondary" />,
-      features: [
-        'Content audit and analysis',
-        'Brand voice development',
-        'Content calendar creation',
-        'Platform optimization',
-        'Audience research',
-        'Competitive analysis',
-        'Performance metrics',
-        'Strategic recommendations'
-      ],
-      image: `${import.meta.env.BASE_URL}images/concept.avif`,
-    },
-    'video-photography': {
-      title: 'Video & Photography Production',
-      description: 'Professional visual content creation and production.',
-      icon: <Camera className="h-8 w-8 text-secondary" />,
-      features: [
-        'Corporate photography',
-        'Event documentation',
-        'Product photography',
-        'Promotional videos',
-        'Interview recordings',
-        'Live streaming',
-        'Drone footage',
-        'Studio sessions'
-      ],
-      image: `${import.meta.env.BASE_URL}images/video_production.avif`,
-    },
-    'post-production': {
-      title: 'Post-Production & Editing',
-      description: 'Professional editing and finishing services.',
-      icon: <Edit3 className="h-8 w-8 text-secondary" />,
-      features: [
-        'Video editing',
-        'Color correction',
-        'Audio mixing',
-        'Motion graphics',
-        'Visual effects',
-        'Title sequences',
-        'Format optimization',
-        'Quality assurance'
-      ],
-      image: `${import.meta.env.BASE_URL}images/editing.avif`,
+  useEffect(() => {
+    fetchServicesPage()
+      .then((data) => {
+        setServicesData(data);
+        setIsDataLoaded(true);
+      })
+      .catch(() => {
+        console.warn('Failed to fetch Services from Contentful.');
+        setIsDataLoaded(true); // Still set to true to prevent infinite loading
+      });
+  }, []);
+
+  // Icon mapping function
+  const getIconComponent = (iconType: string, isDark: boolean) => {
+    const iconProps = { className: `h-8 w-8 ${isDark ? 'text-foreground' : 'text-background'}` }; // Dark bg = light icon, Beige bg = dark icon
+    switch (iconType.toLowerCase()) {
+      case 'video': return <Video {...iconProps} />;
+      case 'camera': return <Camera {...iconProps} />;
+      case 'edit': return <Edit3 {...iconProps} />;
+      case 'lightbulb': return <Lightbulb {...iconProps} />;
+      case 'users': return <Users {...iconProps} />;
+      case 'target': return <Target {...iconProps} />;
+      case 'award': return <Award {...iconProps} />;
+      default: return <Lightbulb {...iconProps} />;
     }
   };
 
-  const ServiceSection = ({ service, reverse = false }: { service: typeof services[keyof typeof services], reverse?: boolean }) => {
-    const sectionRef = useRef(null);
+  // Media component that handles both images and videos
+  const ServiceMedia = ({ mediaUrl, alt, className }: { 
+    mediaUrl?: string; 
+    alt: string; 
+    className?: string; 
+  }) => {
+    const [hasVideoError, setHasVideoError] = useState(false);
+    const [isVideoLoading, setIsVideoLoading] = useState(true);
+
+    if (!mediaUrl) {
+      return (
+        <img
+          src={`${import.meta.env.BASE_URL}images/placeholder.svg`}
+          alt={alt}
+          className={className}
+        />
+      );
+    }
+
+    // Check if the media is a video based on file extension
+    const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(mediaUrl);
+
+    if (isVideo && !hasVideoError) {
+      return (
+        <div className="relative w-full h-full">
+          {isVideoLoading && (
+            <div className="absolute inset-0 bg-background/10 animate-pulse rounded-2xl" />
+          )}
+          <video
+            src={mediaUrl}
+            className={className}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            style={{ objectFit: 'cover' }}
+            onError={() => {
+              setHasVideoError(true);
+              setIsVideoLoading(false);
+            }}
+            onLoadStart={() => {
+              setHasVideoError(false);
+              setIsVideoLoading(true);
+            }}
+            onCanPlay={() => setIsVideoLoading(false)}
+            onLoadedData={() => setIsVideoLoading(false)}
+            aria-label={alt}
+          />
+        </div>
+      );
+    }
+
+    // Fallback to image if it's not a video or video failed to load
+    return (
+      <img
+        src={mediaUrl}
+        alt={alt}
+        className={className}
+        loading="lazy"
+      />
+    );
+  };
+
+  const ServiceSection = ({ service, isDark }: { 
+    service: CmsServiceItem; 
+    isDark: boolean;
+  }) => {
+    const sectionRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-150px" });
 
+    const isReverse = service.alternateLayout;
+    const textColor = isDark ? 'text-foreground' : 'text-background'; // Dark bg = light text, Beige bg = dark text
+    const subtleTextColor = isDark ? 'text-foreground/80' : 'text-background/80';
+
     return (
-      <motion.div
+      <section 
         ref={sectionRef}
+        className={`py-16 md:py-20 relative overflow-hidden ${
+          isDark ? 'bg-background' : 'bg-[hsl(var(--primary))]'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <motion.div
         className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center"
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8 }}
       >
         <motion.div
-          className={`aspect-[4/3] relative overflow-hidden rounded-2xl shadow-xl border border-secondary/20 ${reverse ? 'lg:order-last' : ''}`}
+              className={`aspect-[4/3] relative overflow-hidden rounded-2xl shadow-xl ${
+                isReverse ? 'lg:order-last' : ''
+              }`}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <img
-            src={service.image}
+              <ServiceMedia
+                mediaUrl={service.serviceMediaUrl}
             alt={service.title}
             className="w-full h-full object-cover"
           />
@@ -106,11 +145,36 @@ const Services = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="p-4 bg-secondary/10 rounded-xl inline-block border border-secondary/20">
-            {service.icon}
+              <div className={`p-4 rounded-xl inline-block ${
+                isDark ? 'bg-[hsl(var(--primary))]/20' : 'bg-background/20'
+              }`}>
+                {getIconComponent(service.iconType, isDark)}
+              </div>
+              
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  <span className={`block text-sm md:text-base font-semibold tracking-[0.35em] uppercase ${textColor}/70 mb-4`}>
+                    {service.subtitle || 'Service'}
+                  </span>
+                  <h2 className={`text-3xl md:text-4xl lg:text-5xl font-black ${textColor} leading-[0.9]`}>
+                    {service.title}
+                  </h2>
+                </motion.div>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">{service.title}</h2>
-          <p className="text-foreground/80 leading-relaxed text-lg">{service.description}</p>
+
+              <motion.p 
+                className={`${textColor}/80 leading-relaxed text-lg`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                {service.description}
+              </motion.p>
+
           <div className="grid sm:grid-cols-2 gap-4 pt-4">
             {service.features.map((feature, index) => (
               <motion.div
@@ -120,13 +184,17 @@ const Services = () => {
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
               >
-                <Check className="w-5 h-5 text-secondary flex-shrink-0" />
-                <span className="text-foreground/80 font-medium">{feature}</span>
+                    <Check className={`w-5 h-5 flex-shrink-0 ${
+                      isDark ? 'text-foreground' : 'text-background'
+                    }`} />
+                    <span className={`${textColor} font-medium`}>{feature}</span>
               </motion.div>
             ))}
           </div>
         </div>
       </motion.div>
+        </div>
+      </section>
     );
   };
 
@@ -146,88 +214,71 @@ const Services = () => {
     visible: { opacity: 1, y: 0 },
   };
 
+  // We'll create refs inside the ServiceSection component instead
+
+  if (!isDataLoaded || !servicesData) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <Navigation />
+        <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
+          <h1 className="text-4xl font-bold mb-4">Loading Services...</h1>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 relative overflow-hidden" ref={heroRef}>
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
-        </div>
-        <div className="absolute inset-0">
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-48 h-48 border-2 border-secondary/10 rounded-2xl"
-              style={{
-                left: `${(i * 20) + 5}%`,
-                top: `${20 + (i % 3) * 25}%`,
-              }}
-              animate={{
-                scale: [1, 1.05, 1],
-                opacity: [0.1, 0.15, 0.1],
-                rotate: [0, -45, 0],
-              }}
-              transition={{
-                duration: 12 + i * 3,
-                repeat: Infinity,
-                delay: i * 0.7,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Compact Header */}
+      <section className="pt-24 pb-16 bg-[hsl(var(--primary))] text-foreground">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center space-y-8"
-            initial="hidden"
-            animate={isHeroInView ? "visible" : "hidden"}
-            variants={containerVariants}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <motion.h1 
-              className="text-5xl md:text-6xl font-bold text-foreground"
-              variants={itemVariants}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
             >
-              Our{' '}
-              <motion.span 
-                className="text-secondary"
-                animate={{ 
-                  textShadow: [
-                    '0 0 10px hsl(var(--secondary) / 0.5)',
-                    '0 0 20px hsl(var(--secondary) / 0.8)',
-                    '0 0 10px hsl(var(--secondary) / 0.5)'
-                  ]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                Services
-              </motion.span>
-            </motion.h1>
+              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
+                What We Offer
+              </span>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
+                {servicesData.heroTitle}
+              </h1>
+            </motion.div>
+            
             <motion.p 
-              className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed border-l-4 border-secondary/30 pl-6"
-              variants={itemVariants}
+              className="text-lg md:text-xl text-background/80 max-w-2xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              From concept to completion, we provide comprehensive content creation services 
-              tailored to your brand's unique needs and objectives.
+              {servicesData.heroSubtitle}
             </motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* Services Content */}
-      <section className="py-20 relative overflow-hidden" ref={servicesRef}>
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-brown/50 via-brand-brown/30 to-background" />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-28">
-          {Object.values(services).map((service, index) => (
-            <ServiceSection key={service.title} service={service} reverse={index % 2 !== 0} />
-          ))}
-        </div>
-      </section>
+      {/* Services Sections */}
+      {servicesData.services.map((service, index) => {
+        const isDark = index % 2 === 0; // First service section (index 0) is dark, since hero is beige
+        return (
+          <ServiceSection 
+            key={service.title} 
+            service={service} 
+            isDark={isDark}
+          />
+        );
+      })}
 
-      <PreFooterCTA />
+      <HaveProjectCTA className="py-20" variant="dark" />
       <Footer />
     </div>
   );
