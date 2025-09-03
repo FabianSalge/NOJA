@@ -22,26 +22,30 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 
 	return (
 		<div className={`overflow-hidden w-screen relative left-1/2 -translate-x-1/2 ${className}`}>
-			<div className="relative h-16 md:h-20">
+			<div className="relative h-20 md:h-24">
 				{/* Enhanced visibility with full opacity and better contrast */}
-				<div className="absolute top-0 left-0 flex gap-14 opacity-90 marquee-ltr" style={{ width: '200%' }}>
-					<div className="flex gap-14 w-1/2 justify-around">
+				<div className="absolute top-0 left-0 flex gap-20 opacity-90 marquee-ltr" style={{ width: '200%' }}>
+					<div className="flex gap-20 w-1/2 justify-around">
 						{items.map((src, idx) => (
 							<img 
 								key={`brand-${idx}`} 
 								src={src} 
 								alt="brand logo" 
-								className="h-12 md:h-16 w-auto object-contain" 
+								className="h-14 md:h-20 w-auto object-contain" 
+								loading="lazy"
+								decoding="async"
 							/>
 						))}
 					</div>
-					<div className="flex gap-14 w-1/2 justify-around">
+					<div className="flex gap-20 w-1/2 justify-around">
 						{items.map((src, idx) => (
 							<img 
 								key={`dup-brand-${idx}`} 
 								src={src} 
 								alt="brand logo" 
-								className="h-12 md:h-16 w-auto object-contain" 
+								className="h-14 md:h-20 w-auto object-contain" 
+								loading="lazy"
+								decoding="async"
 							/>
 						))}
 					</div>

@@ -3,7 +3,7 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { Camera, Video, Edit3, Lightbulb, Check, Users, Target, Award } from 'lucide-react';
+import { Check } from 'lucide-react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { fetchServicesPage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
  
@@ -23,21 +23,6 @@ const Services = () => {
         setIsDataLoaded(true); // Still set to true to prevent infinite loading
       });
   }, []);
-
-  // Icon mapping function
-  const getIconComponent = (iconType: string, isDark: boolean) => {
-    const iconProps = { className: `h-8 w-8 ${isDark ? 'text-foreground' : 'text-background'}` }; // Dark bg = light icon, Beige bg = dark icon
-    switch (iconType.toLowerCase()) {
-      case 'video': return <Video {...iconProps} />;
-      case 'camera': return <Camera {...iconProps} />;
-      case 'edit': return <Edit3 {...iconProps} />;
-      case 'lightbulb': return <Lightbulb {...iconProps} />;
-      case 'users': return <Users {...iconProps} />;
-      case 'target': return <Target {...iconProps} />;
-      case 'award': return <Award {...iconProps} />;
-      default: return <Lightbulb {...iconProps} />;
-    }
-  };
 
   // Media component that handles both images and videos
   const ServiceMedia = ({ mediaUrl, alt, className }: { 
@@ -145,11 +130,7 @@ const Services = () => {
         </motion.div>
 
         <div className="space-y-6">
-              <div className={`p-4 rounded-xl inline-block ${
-                isDark ? 'bg-[hsl(var(--primary))]/20' : 'bg-background/20'
-              }`}>
-                {getIconComponent(service.iconType, isDark)}
-              </div>
+              {/* Icon removed per request */}
               
               <div className="space-y-4">
                 <motion.div
@@ -157,9 +138,6 @@ const Services = () => {
                   animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
-                  <span className={`block text-sm md:text-base font-semibold tracking-[0.35em] uppercase ${textColor}/70 mb-4`}>
-                    {service.subtitle || 'Service'}
-                  </span>
                   <h2 className={`text-3xl md:text-4xl lg:text-5xl font-black ${textColor} leading-[0.9]`}>
                     {service.title}
                   </h2>
@@ -246,9 +224,6 @@ const Services = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
-                What We Offer
-              </span>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
                 {servicesData.heroTitle}
               </h1>

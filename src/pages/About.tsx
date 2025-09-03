@@ -61,7 +61,7 @@ const About = () => {
     {
       icon: RefreshCcw,
       title: 'Adaptability',
-      description: 'Adjusting strategies to trends and client needs fast.',
+      description: 'Adjusting strategies to client needs fast.',
     }
   ];
 
@@ -76,7 +76,7 @@ const About = () => {
     {
       name: 'Talia Persis Jenny',
       role: 'Operations & Management',
-      image: `${import.meta.env.BASE_URL}images/talia.avif`,
+      image: `${import.meta.env.BASE_URL}images/talia.png`,
       description: "Versed in design & project management, leading team through the details.",
       funFact: "People pleaser."
     },
@@ -137,7 +137,7 @@ const About = () => {
                   whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  Our Story
+                  Why Us
                 </motion.h2>
               </div>
               <div className="space-y-4 text-lg text-background/80 leading-relaxed">
@@ -159,7 +159,7 @@ const About = () => {
                       transition={{ duration: 0.6, delay: 0.4 }}
                       className="border-l-2 border-background/30 pl-4"
                     >
-                      We saw the gap between great ideas and flawless execution — so we built an agency that does both.
+                      We saw the gap between great ideas and great execution — so we built an agency that does both.
                     </motion.p>
                     <motion.p
                       initial={{ opacity: 0, x: -30 }}
@@ -205,7 +205,7 @@ const About = () => {
       
 
       {/* Values Section */}
-      <section className="pt-12 pb-24 relative overflow-hidden bg-[hsl(var(--primary))]" ref={valuesRef}>
+      <section className="pt-24 pb-40 relative overflow-hidden bg-[hsl(var(--primary))]" ref={valuesRef}>
         {/* Hero-style background transition */}
         <motion.div 
           className="absolute inset-0"
@@ -226,21 +226,10 @@ const About = () => {
               animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-foreground/60 mb-4">
-                What We Believe
-              </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground text-center leading-[0.9]">
                 Our Values
               </h2>
             </motion.div>
-            <motion.p 
-              className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              The principles that guide everything we do
-            </motion.p>
           </motion.div>
           
           <motion.div 
@@ -302,11 +291,8 @@ const About = () => {
               animate={teamInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
-                The People
-              </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-background text-center leading-[0.9]">
-                Meet the Team
+                We are NOJA
               </h2>
             </motion.div>
           </motion.div>

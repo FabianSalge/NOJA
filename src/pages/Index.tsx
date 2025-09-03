@@ -10,7 +10,7 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
 import BrandCarousel from '@/components/BrandCarousel';
 import PackageCard from '@/components/PackageCard';
  
-import { HOME_IMAGES, LOGOS } from '@/lib/assets';
+import { HOME_IMAGES, LOGOS, HOME_VIDEOS } from '@/lib/assets';
 import { fetchHome, type CmsHome } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 // Removed PreFooterCTA from Index per new section flow
@@ -148,6 +148,8 @@ const Index = () => {
                   src={LOGOS.nojaWordmark} 
                   alt="NOJA" 
                   className="h-28 md:h-36 lg:h-44 w-auto mx-auto drop-shadow-2xl"
+                  loading="eager"
+                  decoding="async"
                   whileHover={{ scale: 1.08, y: -2, rotate: 0.4 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 />
@@ -179,9 +181,9 @@ const Index = () => {
                 </motion.h2>
                 {/* Minimal CTA */}
                 <div className="pt-1">
-                  <Link to="/projects" className="group inline-flex items-center gap-2 text-background font-semibold text-lg md:text-xl">
+                  <Link to="/projects" className="group inline-flex items-center gap-2 text-background hover:text-foreground font-semibold text-lg md:text-xl">
                     <span className="relative">
-                      Explore our work
+                      Tap into our work
                       <span className="absolute left-0 -bottom-0.5 h-[2px] w-full bg-background/60 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
                     </span>
                         <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -240,7 +242,7 @@ const Index = () => {
         
         
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10 w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <motion.div 
               className="space-y-8"
               initial={{ opacity: 0, y: 40 }}
@@ -249,11 +251,8 @@ const Index = () => {
               transition={{ duration: 0.6 }}
             >
               <div className="space-y-4">
-                <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-foreground/60">
-                  Creative Marketing
-                </span>
                 <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground tracking-tight leading-[0.9]">
-                  What we do best
+                  The Pulse Effect
                 </h2>
               </div>
               <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">
@@ -276,21 +275,36 @@ const Index = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="relative">
-                <img
-                  src={HOME_IMAGES.iphone}
-                  alt="iPhone showcase"
-                  className="w-full max-w-[200px] md:max-w-[260px] lg:max-w-[300px] mx-auto"
+              <div className="relative mx-auto w-full max-w-[140px] md:max-w-[180px] lg:max-w-[220px]">
+                <video
+                  src={HOME_VIDEOS.homePhone}
+                  className="w-full h-auto rounded-xl"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster={HOME_IMAGES.iphone}
                 />
                 {/* Visual enhancement */}
                 <div className="absolute -inset-8 bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent rounded-full blur-3xl opacity-60" />
+                {/* Halo shadow under phone */}
+                <div
+                  className="pointer-events-none absolute left-1/2 -translate-x-1/2 -bottom-5 w-[65%] h-5 md:h-6 lg:h-7 rounded-full"
+                  style={{
+                    background:
+                      'radial-gradient(50% 60% at 50% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.22) 40%, rgba(0,0,0,0.08) 70%, rgba(0,0,0,0) 100%)',
+                    filter: 'blur(5px)',
+                    opacity: 0.7,
+                  }}
+                />
               </div>
             </motion.div>
           </div>
 
           {/* Brand logos marquee */}
           <motion.div 
-            className="mt-12"
+            className="mt-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -341,18 +355,15 @@ const Index = () => {
             animate={statsInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            {/* Section header */}
+            {/* Section header without pre-heading */}
             <div className="text-center space-y-6">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
-                  Our Services
-                </span>
                 <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
-                  What you need
+                  Services
                 </h2>
               </motion.div>
               <motion.p 
@@ -361,13 +372,13 @@ const Index = () => {
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                Choose from our comprehensive suite of creative services designed to elevate your brand and engage your audience.
+                Concepts, creation, execution — turning ideas into scroll-stopping visuals.
               </motion.p>
             </div>
 
             {/* Service cards */}
             <motion.div 
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10"
+              className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8"
               variants={containerVariants}
               initial="hidden"
               animate={statsInView ? "visible" : "hidden"}

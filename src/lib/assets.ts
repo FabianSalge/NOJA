@@ -14,6 +14,10 @@ export const HOME_IMAGES = {
   postProduction: withBase('images/Home/post-production-bg.jpg'),
 };
 
+export const HOME_VIDEOS = {
+  homePhone: withBase('images/Home/HomePhoneCropped.mp4'),
+};
+
 export const LOGOS = {
   njWhite: withBase('Logos/NJ_white.png'),
   njBeige: withBase('Logos/NJ_beige.png'),

@@ -18,7 +18,7 @@ const Footer = () => {
             <img
               src={`${import.meta.env.BASE_URL}Logos/Noja_Productions.png`}
               alt="NOJA"
-              className="w-24 h-auto mx-auto md:mx-0"
+              className="w-32 md:w-40 h-auto mx-auto md:mx-0"
             />
             <p className="text-background/80 text-lg leading-relaxed">Creative Marketing Agency</p>
             <p className="text-background/80 text-lg leading-relaxed">Based in Zurich & available Worldwide</p>
@@ -39,7 +39,7 @@ const Footer = () => {
           <div className="space-y-3 text-center md:text-right pt-8 md:pt-0">
             <Link to="/about" className="block text-background/90 hover:text-[hsl(var(--primary))]">About us</Link>
             <Link to="/projects" className="block text-background/90 hover:text-[hsl(var(--primary))]">Projects</Link>
-            <Link to="/contact" className="block text-background/90 hover:text-[hsl(var(--primary))]">Contact</Link>
+            <Link to="/contact" className="block text-background/90 hover:text-[hsl(var(--primary))]">Start a Project</Link>
             <a 
               href={`${import.meta.env.BASE_URL}Footer/Terms & Conditions.pdf`} 
               target="_blank" 

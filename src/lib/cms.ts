@@ -57,11 +57,9 @@ export type CmsAboutPage = {
 
 export type CmsServiceItem = {
 	title: string;
-	subtitle?: string;
 	description: string;
 	features: string[];
 	serviceMediaUrl?: string;
-	iconType: string;
 	order: number;
 	alternateLayout?: boolean;
 };
@@ -214,11 +212,9 @@ export async function fetchServicesPage(): Promise<CmsServicesPage | undefined> 
 	const services: CmsServiceItem[] = servicesData
 		.map((service: any) => ({
 			title: getField<string>(service.fields, "title") ?? "",
-			subtitle: getField<string>(service.fields, "subtitle"),
 			description: getField<string>(service.fields, "description") ?? "",
 			features: getField<string[]>(service.fields, "features") ?? [],
 			serviceMediaUrl: assetUrlFromField(getField<any>(service.fields, "serviceImage")),
-			iconType: getField<string>(service.fields, "iconType") ?? "lightbulb",
 			order: getField<number>(service.fields, "order") ?? 0,
 			alternateLayout: getField<boolean>(service.fields, "alternateLayout") ?? false,
 		}))

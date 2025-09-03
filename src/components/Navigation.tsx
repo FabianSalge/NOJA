@@ -29,10 +29,10 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg transition-colors duration-300 border-b ${
         scrolled
-          ? 'bg-secondary shadow-lg shadow-black/10 border-b border-secondary-foreground/20'
-          : 'border-b border-transparent'
+          ? 'bg-white shadow-lg shadow-black/10 border-black/10'
+          : 'bg-[hsl(var(--primary))] shadow-none border-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,9 +53,9 @@ const Navigation = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={`relative p-3 focus:outline-none backdrop-blur-sm transition-all duration-300 group border ${
-                scrolled 
-                  ? 'text-secondary-foreground bg-secondary-foreground/10 hover:bg-secondary-foreground/20 border-secondary-foreground/20' 
-                  : 'text-foreground bg-primary/10 hover:bg-primary/20 border-primary/20'
+                scrolled
+                  ? 'text-secondary-foreground bg-secondary-foreground/10 hover:bg-secondary-foreground/20 border-secondary-foreground/20'
+                  : 'text-background bg-black/5 hover:bg-black/10 border-black/10'
               }`}
             >
               {isOpen ? (
@@ -128,7 +128,9 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className={`md:hidden absolute top-full left-0 right-0 backdrop-blur-xl border-b shadow-xl ${scrolled ? 'bg-secondary border-secondary-foreground/20' : 'bg-background border-primary/20'}`}>
+          <div className={`md:hidden absolute top-full left-0 right-0 backdrop-blur-xl border-b shadow-xl ${
+            scrolled ? 'bg-white border-black/10' : 'bg-[hsl(var(--primary))] border-background/10'
+          }`}>
             <div className="px-6 pt-6 pb-8 space-y-3">
               {navItems.map((item, index) => (
                 <Link
@@ -137,8 +139,8 @@ const Navigation = () => {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center px-4 py-3 text-base font-medium transition-colors duration-300 rounded-lg ${
                     isActive(item.path)
-                      ? (scrolled ? 'text-brand-brown bg-black/10' : 'text-primary bg-primary/10')
-                      : (scrolled ? 'text-secondary-foreground hover:bg-black/10' : 'text-foreground hover:bg-primary/10 hover:text-primary')
+                      ? (scrolled ? 'text-brand-brown bg-black/10' : 'text-background bg-black/10')
+                      : (scrolled ? 'text-secondary-foreground hover:bg-black/10' : 'text-background hover:bg-black/10')
                   }`}
                   style={{
                     transform: 'translateX(-30px)',

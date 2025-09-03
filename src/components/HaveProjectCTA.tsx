@@ -27,15 +27,7 @@ const HaveProjectCTA = ({ className = 'py-20', variant = 'dark' }: HaveProjectCT
         >
           Have a project in mind?
         </motion.h2>
-        <motion.p
-          className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          From concept to delivery, we combine strategy, project management, and production to create content that stands out and performs.
-        </motion.p>
+        {/* Subtext removed per request */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}

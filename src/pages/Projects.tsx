@@ -66,6 +66,8 @@ const Projects = () => {
           src={project.coverImageUrl}
           alt={project.title}
           className="w-full h-full object-cover aspect-[3/4] transition-transform duration-500 ease-in-out group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full">
@@ -116,7 +118,7 @@ const Projects = () => {
                 documentToReactComponents(subtext)
               ) : (
                 <p>
-                  We've had the privilege of working with a diverse range of clients to create content that captivates, inspires, and drives results.
+                  The Pulse Effect in Action
                 </p>
               )}
             </motion.div>
@@ -175,6 +177,8 @@ const Projects = () => {
                         src={project.coverImageUrl}
                         alt={project.title}
                         className="w-full h-full object-cover aspect-square transition-transform duration-500 ease-in-out group-hover:scale-105"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       <div className="absolute bottom-0 left-0 p-3 w-full">

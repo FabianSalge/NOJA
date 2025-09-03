@@ -52,8 +52,21 @@ const Contact = () => {
         ref={formRef}
         className="min-h-screen flex items-center py-24 relative"
       >
+        {/* Background video */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <video
+            src={`${import.meta.env.BASE_URL}videos/contact.mp4`}
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+          <div className="absolute inset-0 bg-black/20" />
+        </div>
 
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <motion.div 
             className="bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg"
             initial={{ opacity: 0, y: 30 }}
