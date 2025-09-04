@@ -1,3 +1,4 @@
+import { buildContentfulSrcSet } from '@/lib/images';
 import { Link } from 'react-router-dom';
 
 type PackageCardProps = {
@@ -11,7 +12,7 @@ const PackageCard = ({ title, image, link }: PackageCardProps) => {
     <div className="group relative overflow-hidden rounded-2xl shadow-md bg-background">
       <img
         src={image}
-        srcSet={[480, 768, 1024, 1366].map(w => `${image}${image.includes('?') ? '&' : '?'}w=${w} ${w}w`).join(', ')}
+        srcSet={buildContentfulSrcSet(image, [480, 768, 1024, 1366])}
         sizes="(min-width: 1024px) 33vw, 50vw"
         alt={title}
         className="w-full h-80 md:h-96 lg:h-[26rem] object-cover"

@@ -6,8 +6,10 @@ import { buildCanonical } from '@/lib/seo';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { HOME_IMAGES } from '@/lib/assets';
+import ResponsiveImage from '@/components/ResponsiveImage';
 import { fetchProjectBySlug, type CmsProjectDetail, splitDocumentByParagraphs } from '@/lib/cms';
 import { useEffect, useState } from 'react';
+import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, type TopLevelBlock } from '@contentful/rich-text-types';
 
@@ -79,18 +81,13 @@ const ProjectDetail = () => {
       <section className="pt-20 md:pt-20 relative overflow-hidden bg-[hsl(var(--primary))]">
         <div className="relative h-[48vh] md:h-[60vh]">
           {project.coverImageUrl && (
-            <img
+            <ResponsiveImage
               src={project.coverImageUrl}
-              srcSet={(() => {
-                const u = project.coverImageUrl;
-                const w = [640, 1024, 1366, 1600, 1920];
-                return w.map((x) => `${u}${u.includes('?') ? '&' : '?'}w=${x} ${x}w`).join(', ');
-              })()}
+              widths={[640, 1024, 1366, 1600, 1920]}
               sizes="100vw"
-              alt={project.title}
+              alt={`${project.title} cover image`}
               className="absolute inset-0 w-full h-full object-cover"
-              loading="eager"
-              decoding="async"
+              eager
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
@@ -114,23 +111,17 @@ const ProjectDetail = () => {
             <div className="relative">
               {project.secondImageUrl && (
                 <div className="relative overflow-hidden">
-                  <img 
+                  <ResponsiveImage
                     src={project.secondImageUrl}
-                    srcSet={(() => {
-                      const u = project.secondImageUrl!;
-                      const w = [640, 1024, 1366, 1600];
-                      return w.map((x) => `${u}${u.includes('?') ? '&' : '?'}w=${x} ${x}w`).join(', ');
-                    })()}
+                    widths={[640, 1024, 1366, 1600]}
                     sizes="(min-width: 768px) 50vw, 100vw"
-                    alt="Project visual" 
+                    alt={`${project.title} visual`}
                     className="block w-full h-auto min-h-[360px] md:min-h-[480px] max-h-[600px] object-cover"
                     style={{
                       aspectRatio: 'auto',
                       objectFit: 'cover',
                       objectPosition: 'center'
                     }}
-                    loading="lazy"
-                    decoding="async"
                   />
                 </div>
               )}
@@ -158,18 +149,12 @@ const ProjectDetail = () => {
         <section className="relative overflow-hidden">
           <div className="relative h-[36vh] md:h-[44vh]">
             {project.quoteImageUrl ? (
-              <img
+              <ResponsiveImage
                 src={project.quoteImageUrl}
-                srcSet={(() => {
-                  const u = project.quoteImageUrl!;
-                  const w = [640, 1024, 1366, 1600];
-                  return w.map((x) => `${u}${u.includes('?') ? '&' : '?'}w=${x} ${x}w`).join(', ');
-                })()}
+                widths={[640, 1024, 1366, 1600]}
                 sizes="100vw"
-                alt="Background"
+                alt={`${project.title} background`}
                 className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
               />
             ) : null}
             <div className="absolute inset-0 bg-black/25" />
@@ -240,17 +225,7 @@ const ProjectDetail = () => {
         </div>
       </section>
 
-      {/* Image-based CTA */}
-      <section className="relative overflow-hidden">
-        <div className="relative h-[36vh] md:h-[46vh]">
-          <img src={HOME_IMAGES.postProduction} alt="CTA background" className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/35" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h4 className="text-3xl md:text-5xl font-semibold text-white mb-6">Like what you see?</h4>
-            <Link to="/contact" className="px-6 py-3 rounded-full bg-white/90 text-black font-semibold hover:bg-white transition">Let's work together</Link>
-          </div>
-        </div>
-      </section>
+      <HaveProjectCTA className="py-20" variant="dark" />
 
       {/* Footer */}
       <Footer />

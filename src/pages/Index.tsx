@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useEffect, useRef, useState } from 'react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import BrandCarousel from '@/components/BrandCarousel';

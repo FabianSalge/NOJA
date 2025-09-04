@@ -5,12 +5,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import RouteFallback from "@/components/RouteFallback";
 import { HelmetProvider } from "react-helmet-async";
 import Analytics from "./components/Analytics";
 
 // Prefetch route chunks when idle
 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-  (window as any).requestIdleCallback(() => {
+  (window as Window & { requestIdleCallback: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number })
+    .requestIdleCallback(() => {
     import('./pages/About');
     import('./pages/Projects');
     import('./pages/Services');
@@ -38,7 +40,7 @@ const App = () => (
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ScrollToTop />
           <Analytics />
-          <Suspense fallback={null}>
+          <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />

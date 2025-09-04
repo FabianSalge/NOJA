@@ -2,8 +2,8 @@ import { buildContentfulSrcSet } from '@/lib/images';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';

@@ -9,6 +9,7 @@ import { fetchServicesPage, type CmsServicesPage, type CmsServiceItem } from '@/
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
+import ResponsiveImage from '@/components/ResponsiveImage';
  
 
 const Services = () => {
@@ -82,14 +83,12 @@ const Services = () => {
 
     // Fallback to image if it's not a video or video failed to load
     return (
-      <img
+      <ResponsiveImage
         src={mediaUrl}
-        srcSet={[640, 1024, 1366, 1600].map(w => `${mediaUrl}${mediaUrl.includes('?') ? '&' : '?'}w=${w} ${w}w`).join(', ')}
+        widths={[640, 1024, 1366, 1600]}
         sizes="(min-width: 1024px) 50vw, 100vw"
         alt={alt}
         className={className}
-        loading="lazy"
-        decoding="async"
       />
     );
   };

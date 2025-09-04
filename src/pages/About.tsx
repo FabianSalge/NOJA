@@ -2,13 +2,14 @@ import { Eye, Lightbulb, RefreshCcw } from 'lucide-react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useEffect, useRef, useState } from 'react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Helmet } from 'react-helmet-async';
+import { buildCanonical } from '@/lib/seo';
 
 const About = () => {
   const storyRef = useRef(null);
@@ -108,7 +109,7 @@ const About = () => {
       <Helmet>
         <title>About NOJA — Why Us</title>
         <meta name="description" content="We blend concept, production, and project management to deliver strategic creative content." />
-        <link rel="canonical" href="https://nojaagency.com/about" />
+        <link rel="canonical" href={buildCanonical('/about')} />
       </Helmet>
       <Navigation />
 
