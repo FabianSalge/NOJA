@@ -5,6 +5,7 @@ import { Send } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { useToast } from '@/hooks/use-toast';
+import { Helmet } from 'react-helmet-async';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -45,6 +46,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground">
+      <Helmet>
+        <title>Contact — NOJA</title>
+        <meta name="description" content="Start a project with NOJA. We like bold briefs." />
+        <link rel="canonical" href="https://nojaagency.com/contact" />
+      </Helmet>
       <Navigation />
       
       {/* Contact Form Section */}

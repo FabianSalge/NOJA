@@ -8,6 +8,7 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { Helmet } from 'react-helmet-async';
 
 const About = () => {
   const storyRef = useRef(null);
@@ -104,6 +105,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]">
+      <Helmet>
+        <title>About NOJA — Why Us</title>
+        <meta name="description" content="We blend concept, production, and project management to deliver strategic creative content." />
+        <link rel="canonical" href="https://nojaagency.com/about" />
+      </Helmet>
       <Navigation />
 
       {/* Our Story (Beige) */}

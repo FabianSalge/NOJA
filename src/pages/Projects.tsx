@@ -1,3 +1,4 @@
+import { buildContentfulSrcSet } from '@/lib/images';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
@@ -7,6 +8,9 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { Helmet } from 'react-helmet-async';
+import SEOJsonLd from '@/components/SEOJsonLd';
+import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import type { Document } from '@contentful/rich-text-types';
 
 const Projects = () => {
@@ -64,6 +68,8 @@ const Projects = () => {
       >
         <img
           src={project.coverImageUrl}
+          srcSet={buildContentfulSrcSet(project.coverImageUrl)}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt={project.title}
           className="w-full h-full object-cover aspect-[3/4] transition-transform duration-500 ease-in-out group-hover:scale-105"
           loading="lazy"
@@ -82,6 +88,27 @@ const Projects = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Helmet>
+        <title>Projects — NOJA</title>
+        <meta name="description" content="Featured and recent creative projects by NOJA." />
+        <link rel="canonical" href={buildCanonical('/projects')} />
+      </Helmet>
+      <SEOJsonLd
+        json={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem', position: 1,
+              name: 'Home', item: getSiteUrl()
+            },
+            {
+              '@type': 'ListItem', position: 2,
+              name: 'Projects', item: buildCanonical('/projects')
+            }
+          ]
+        }}
+      />
       <Navigation />
       
       {/* Featured Projects Section */}
@@ -175,6 +202,8 @@ const Projects = () => {
                     >
                       <img
                         src={project.coverImageUrl}
+                        srcSet={buildContentfulSrcSet(project.coverImageUrl)}
+                        sizes="(min-width: 1024px) 16vw, (min-width: 768px) 25vw, 50vw"
                         alt={project.title}
                         className="w-full h-full object-cover aspect-square transition-transform duration-500 ease-in-out group-hover:scale-105"
                         loading="lazy"

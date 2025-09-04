@@ -1,5 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
+import SEOJsonLd from '@/components/SEOJsonLd';
+import { buildCanonical } from '@/lib/seo';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { HOME_IMAGES } from '@/lib/assets';
@@ -35,6 +38,25 @@ const ProjectDetail = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Helmet>
+        <title>{project.title} — NOJA</title>
+        <meta name="description" content={project.subtitle} />
+        <link rel="canonical" href={buildCanonical(`/projects/${project.slug}`)} />
+        <meta property="og:title" content={`${project.title} — NOJA`} />
+        <meta property="og:description" content={project.subtitle} />
+        {project.coverImageUrl && <meta property="og:image" content={project.coverImageUrl} />}
+      </Helmet>
+      <SEOJsonLd
+        json={{
+          '@context': 'https://schema.org',
+          '@type': 'CreativeWork',
+          name: project.title,
+          datePublished: project.dateISO,
+          image: project.coverImageUrl,
+          headline: project.title,
+          description: project.subtitle
+        }}
+      />
       <Navigation />
 
       {/* Header Image with title overlay */}
@@ -119,10 +141,11 @@ const ProjectDetail = () => {
           <div className="h-[2px] w-24 bg-foreground/40 mt-4 mb-10" />
           {project.secondTextBody ? (() => {
             // Get the raw text content from the document
-            const getTextFromDocument = (doc: any): string => {
-              return doc.content.map((node: any) => {
-                if (node.nodeType === BLOCKS.PARAGRAPH && node.content) {
-                  return node.content.map((textNode: any) => textNode.value || '').join('');
+            const getTextFromDocument = (doc: import('@contentful/rich-text-types').Document): string => {
+              return doc.content.map((node: TopLevelBlock) => {
+                if (node.nodeType === BLOCKS.PARAGRAPH && 'content' in node) {
+                  // @ts-expect-error content is present on paragraph nodes
+                  return node.content.map((textNode: { value?: string }) => textNode.value || '').join('');
                 }
                 return '';
               }).join(' ');
@@ -146,7 +169,7 @@ const ProjectDetail = () => {
             }
 
             // Split long text into sentences for better column balance
-            const sentences = fullText.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+            const sentences = fullText.split(/(?<=[.!?])\s+/).filter((s: string) => s.trim().length > 0);
             const midPoint = Math.ceil(sentences.length / 2);
             const leftText = sentences.slice(0, midPoint).join(' ');
             const rightText = sentences.slice(midPoint).join(' ');

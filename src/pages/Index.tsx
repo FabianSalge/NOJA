@@ -13,6 +13,9 @@ import PackageCard from '@/components/PackageCard';
 import { HOME_IMAGES, LOGOS, HOME_VIDEOS } from '@/lib/assets';
 import { fetchHome, type CmsHome } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { Helmet } from 'react-helmet-async';
+import SEOJsonLd from '@/components/SEOJsonLd';
+import { buildCanonical, getSiteUrl } from '@/lib/seo';
 // Removed PreFooterCTA from Index per new section flow
 
 const Index = () => {
@@ -77,6 +80,40 @@ const Index = () => {
 
   return (
     <div className="min-h-screen beige-orbs text-foreground relative">
+      <Helmet>
+        <title>NOJA — Content With A Pulse</title>
+        <meta name="description" content="Creative marketing agency crafting scroll-stopping content that drives impact." />
+        <link rel="canonical" href={buildCanonical('/')} />
+        <meta property="og:title" content="NOJA — Content With A Pulse" />
+        <meta property="og:description" content="Creative marketing agency crafting scroll-stopping content that drives impact." />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <SEOJsonLd
+        json={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'NOJA',
+            url: getSiteUrl(),
+            logo: `${getSiteUrl()}/Logos/Noja_Productions.png`,
+            sameAs: [
+              'https://instagram.com/nojaagency',
+              'https://tiktok.com/@nojaagency'
+            ]
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'NOJA',
+            url: getSiteUrl(),
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: `${getSiteUrl()}/?q={search_term_string}`,
+              'query-input': 'required name=search_term_string'
+            }
+          }
+        ]}
+      />
       <Navigation />
       
       {/* Hero Section */}
