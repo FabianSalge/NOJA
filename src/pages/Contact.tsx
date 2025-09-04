@@ -1,10 +1,11 @@
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, useInView, useScroll, useTransform, Variants } from 'framer-motion';
-import { Send } from 'lucide-react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import { useState, useRef } from 'react';
+import { motion, useInView, Variants } from 'framer-motion';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
+import { Helmet } from 'react-helmet-async';
+import { buildCanonical } from '@/lib/seo';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -45,6 +46,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground">
+      <Helmet>
+        <title>Contact — NOJA</title>
+        <meta name="description" content="Start a project with NOJA. We like bold briefs." />
+        <link rel="canonical" href={buildCanonical('/contact')} />
+      </Helmet>
       <Navigation />
       
       {/* Contact Form Section */}
