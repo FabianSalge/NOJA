@@ -8,6 +8,7 @@ import { lazy, Suspense } from "react";
 import RouteFallback from "@/components/RouteFallback";
 import { HelmetProvider } from "react-helmet-async";
 import Analytics from "./components/Analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 
 // Prefetch route chunks when idle
 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
@@ -40,6 +41,7 @@ const App = () => (
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ScrollToTop />
           <Analytics />
+          <VercelAnalytics />
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
