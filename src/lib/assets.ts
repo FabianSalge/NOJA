@@ -15,7 +15,7 @@ export const HOME_IMAGES = {
 };
 
 export const HOME_VIDEOS = {
-  homePhone: withBase('images/Home/HomePhoneCropped.mp4'),
+  homePhone: withBase('images/Home/HomePhoneVideo.gif'),
 };
 
 export const LOGOS = {
