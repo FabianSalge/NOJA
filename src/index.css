@@ -131,6 +131,16 @@ All colors MUST be HSL.
     scroll-behavior: smooth;
   }
 
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   /* Custom gradient text */
   .gradient-text {
     @apply bg-gradient-to-r from-brand-warm to-primary bg-clip-text text-transparent;

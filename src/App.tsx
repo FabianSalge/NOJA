@@ -7,6 +7,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import Analytics from "./components/Analytics";
+
+// Prefetch route chunks when idle
+if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+  (window as any).requestIdleCallback(() => {
+    import('./pages/About');
+    import('./pages/Projects');
+    import('./pages/Services');
+    import('./pages/Contact');
+  });
+}
 import ScrollToTop from "./components/ScrollToTop";
 
 const Index = lazy(() => import("./pages/Index"));

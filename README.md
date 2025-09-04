@@ -83,3 +83,33 @@ On Vercel/Netlify:
 - JSON-LD added for Organization (home), Services, Projects breadcrumbs, and Project details.
 - SPA routing is supported via BrowserRouter with appropriate rewrites.
 - Images use lazy loading and responsive `srcset/sizes` where applicable.
+
+## Analytics (GA4) Setup
+
+This project has built-in GA4 support via `src/components/Analytics.tsx`. It only activates when `VITE_GA_ID` is set.
+
+1) Create a GA4 property and Web stream
+- Go to analytics.google.com → Admin → Create Account/Property → Data Streams → Web
+- Enter your site URL (temporary Vercel URL is fine), then create the stream
+- Copy the Measurement ID (format: `G-XXXXXXXXXX`)
+
+2) Configure environment variables
+- On Vercel/Netlify (Project → Settings → Environment Variables):
+  - `VITE_GA_ID=G-XXXXXXXXXX` (from step 1)
+  - Optional: `VITE_SITE_URL=https://your-domain.com` (canonical URLs)
+  - Optional (Search Console HTML tag verification): `VITE_GSC_VERIFICATION=YOUR_TOKEN`
+- Redeploy the app after saving variables
+
+3) Validate GA is working
+- Open your site and check GA Realtime and DebugView
+- You can also use the GA4 Debugger Chrome extension or network tab for `collect` requests
+
+4) (Optional) Consent mode
+- Depending on your region, implement a Consent UI and call `gtag('consent', ...)` before `config`
+- The current setup anonymizes IP by default (`anonymize_ip: true`)
+
+Search Console (optional but recommended)
+- Visit search.google.com/search-console → Add property (use your final domain)
+- If you pick URL prefix → choose “HTML tag” → copy token into `VITE_GSC_VERIFICATION`
+- Alternatively, verify via DNS (no env var needed)
+- Submit your `sitemap.xml` in Search Console

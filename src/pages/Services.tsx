@@ -84,9 +84,12 @@ const Services = () => {
     return (
       <img
         src={mediaUrl}
+        srcSet={[640, 1024, 1366, 1600].map(w => `${mediaUrl}${mediaUrl.includes('?') ? '&' : '?'}w=${w} ${w}w`).join(', ')}
+        sizes="(min-width: 1024px) 50vw, 100vw"
         alt={alt}
         className={className}
         loading="lazy"
+        decoding="async"
       />
     );
   };

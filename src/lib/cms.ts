@@ -1,6 +1,9 @@
 import { Document, BLOCKS, TopLevelBlock } from "@contentful/rich-text-types";
 import type { Asset, Entry } from "contentful";
-import { contentfulClient, getAssetUrl } from "./contentful";
+import { contentfulClient, getAssetUrl, cachedGetEntries } from "./contentful";
+
+// Minimal helper types for Contentful results
+type EntriesResult = { items?: Entry[] };
 
 // Basic types mapped to UI needs
 export type CmsBrand = {
@@ -102,7 +105,7 @@ export function splitDocumentByParagraphs(doc: Document): [Document, Document] {
 
 // Queries
 export async function fetchHome(): Promise<CmsHome | undefined> {
-	const res = await contentfulClient.getEntries({
+	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "homePage",
 		include: 2,
 		limit: 1,
@@ -133,14 +136,14 @@ export async function fetchHome(): Promise<CmsHome | undefined> {
 
 export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 	// Fetch settings entry
-	const settingsRes = await contentfulClient.getEntries({
+	const settingsRes = await cachedGetEntries<EntriesResult>({
 		content_type: "projectsPageSettings",
 		limit: 1,
 	});
 	const settings = settingsRes.items?.[0]?.fields ?? {};
 
 	// Fetch projects ordered by date desc
-	const projRes = await contentfulClient.getEntries({
+	const projRes = await cachedGetEntries<EntriesResult>({
 		content_type: "project",
 		order: ["-fields.date"],
 		include: 1,
@@ -154,14 +157,14 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 		coverImageUrl: assetUrlFromField(getField<Asset>(p.fields as Record<string, unknown>, "coverImage")),
 	}));
 	return {
-		ourWorkSubtext: getField<Document>(settings, "ourWorkSubtext"),
+		ourWorkSubtext: getField<Document>(settings as Record<string, unknown>, "ourWorkSubtext"),
 		featured: allSummaries.slice(0, 3),
 		all: allSummaries.slice(3),
 	};
 }
 
 export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail | undefined> {
-	const res = await contentfulClient.getEntries({
+	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "project",
 		"fields.slug": slug,
 		include: 2,
@@ -187,20 +190,20 @@ export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail
 }
 
 export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
-	const res = await contentfulClient.getEntries({
+	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "aboutPageSettings",
 		include: 1,
 		limit: 1,
 	});
 	const fields = res.items?.[0]?.fields ?? {};
 	return {
-		ourStoryText: getField<Document>(fields, "ourStoryText"),
+		ourStoryText: getField<Document>(fields as Record<string, unknown>, "ourStoryText"),
 		ourStoryImageUrl: assetUrlFromField(getField<Asset>(fields as Record<string, unknown>, "ourStoryImage")),
 	};
 }
 
 export async function fetchServicesPage(): Promise<CmsServicesPage | undefined> {
-	const res = await contentfulClient.getEntries({
+	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "servicesPage",
 		include: 2,
 		limit: 1,

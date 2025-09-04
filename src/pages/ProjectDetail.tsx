@@ -14,13 +14,29 @@ import { BLOCKS, type TopLevelBlock } from '@contentful/rich-text-types';
 const ProjectDetail = () => {
   const { slug } = useParams();
   const [project, setProject] = useState<CmsProjectDetail | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!slug) return;
-    fetchProjectBySlug(slug).then(setProject).catch(() => {
-      console.warn('Failed to fetch project detail from Contentful.');
-    });
+    fetchProjectBySlug(slug)
+      .then(setProject)
+      .catch(() => {
+        console.warn('Failed to fetch project detail from Contentful.');
+      })
+      .finally(() => setIsLoading(false));
   }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <Navigation />
+        <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
+          <h1 className="text-4xl font-bold mb-4">Loading…</h1>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -63,7 +79,19 @@ const ProjectDetail = () => {
       <section className="pt-20 md:pt-20 relative overflow-hidden bg-[hsl(var(--primary))]">
         <div className="relative h-[48vh] md:h-[60vh]">
           {project.coverImageUrl && (
-            <img src={project.coverImageUrl} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />
+            <img
+              src={project.coverImageUrl}
+              srcSet={(() => {
+                const u = project.coverImageUrl;
+                const w = [640, 1024, 1366, 1600, 1920];
+                return w.map((x) => `${u}${u.includes('?') ? '&' : '?'}w=${x} ${x}w`).join(', ');
+              })()}
+              sizes="100vw"
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
           <div className="absolute left-6 md:left-10 bottom-8 md:bottom-10">
@@ -87,7 +115,13 @@ const ProjectDetail = () => {
               {project.secondImageUrl && (
                 <div className="relative overflow-hidden">
                   <img 
-                    src={project.secondImageUrl} 
+                    src={project.secondImageUrl}
+                    srcSet={(() => {
+                      const u = project.secondImageUrl!;
+                      const w = [640, 1024, 1366, 1600];
+                      return w.map((x) => `${u}${u.includes('?') ? '&' : '?'}w=${x} ${x}w`).join(', ');
+                    })()}
+                    sizes="(min-width: 768px) 50vw, 100vw"
                     alt="Project visual" 
                     className="block w-full h-auto min-h-[360px] md:min-h-[480px] max-h-[600px] object-cover"
                     style={{
@@ -95,6 +129,8 @@ const ProjectDetail = () => {
                       objectFit: 'cover',
                       objectPosition: 'center'
                     }}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               )}
@@ -122,7 +158,19 @@ const ProjectDetail = () => {
         <section className="relative overflow-hidden">
           <div className="relative h-[36vh] md:h-[44vh]">
             {project.quoteImageUrl ? (
-              <img src={project.quoteImageUrl} alt="Background" className="absolute inset-0 w-full h-full object-cover" />
+              <img
+                src={project.quoteImageUrl}
+                srcSet={(() => {
+                  const u = project.quoteImageUrl!;
+                  const w = [640, 1024, 1366, 1600];
+                  return w.map((x) => `${u}${u.includes('?') ? '&' : '?'}w=${x} ${x}w`).join(', ');
+                })()}
+                sizes="100vw"
+                alt="Background"
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
             ) : null}
             <div className="absolute inset-0 bg-black/25" />
             <div className="absolute inset-0 flex items-center justify-center px-6">
