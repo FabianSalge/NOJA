@@ -30,7 +30,7 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 							<img 
 								key={`brand-${idx}`} 
 								src={src} 
-								alt="brand logo" 
+								alt={useCms ? (brands?.[idx]?.name || 'brand') : 'brand logo'} 
 								className="h-14 md:h-20 w-auto object-contain" 
 								loading="lazy"
 								decoding="async"
@@ -42,7 +42,7 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 							<img 
 								key={`dup-brand-${idx}`} 
 								src={src} 
-								alt="brand logo" 
+								alt={useCms ? (brands?.[idx]?.name || 'brand') : 'brand logo'} 
 								className="h-14 md:h-20 w-auto object-contain" 
 								loading="lazy"
 								decoding="async"

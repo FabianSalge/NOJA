@@ -6,6 +6,10 @@ import Footer from '@/components/Footer';
 import { Check } from 'lucide-react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { fetchServicesPage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
+import { Helmet } from 'react-helmet-async';
+import SEOJsonLd from '@/components/SEOJsonLd';
+import { buildCanonical, getSiteUrl } from '@/lib/seo';
+import ResponsiveImage from '@/components/ResponsiveImage';
  
 
 const Services = () => {
@@ -79,11 +83,12 @@ const Services = () => {
 
     // Fallback to image if it's not a video or video failed to load
     return (
-      <img
+      <ResponsiveImage
         src={mediaUrl}
+        widths={[640, 1024, 1366, 1600]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
         alt={alt}
         className={className}
-        loading="lazy"
       />
     );
   };
@@ -208,6 +213,26 @@ const Services = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Helmet>
+        <title>Services — NOJA</title>
+        <meta name="description" content="Concepts, creation, and execution — services that turn ideas into scroll-stopping visuals." />
+        <link rel="canonical" href={buildCanonical('/services')} />
+      </Helmet>
+      <SEOJsonLd
+        json={{
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          provider: {
+            '@type': 'Organization',
+            name: 'NOJA',
+            url: getSiteUrl(),
+            logo: `${getSiteUrl()}/Logos/Noja_Productions.png`
+          },
+          name: 'Creative Marketing Services',
+          areaServed: 'Worldwide',
+          serviceType: 'Content strategy, production, post-production'
+        }}
+      />
       <Navigation />
       
       {/* Compact Header */}

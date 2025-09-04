@@ -10,9 +10,8 @@ const accessToken = usePreview ? previewToken : deliveryToken;
 
 if (!spaceId || !accessToken) {
 	// Fail fast to make missing configuration obvious during development
-	// eslint-disable-next-line no-console
 	console.warn(
-		"Contentful is not fully configured. Please set VITE_CONTENTFUL_SPACE_ID and VITE_CONTENTFUL_ACCESS_TOKEN in your .env file."
+		"Contentful is not fully configured."
 	);
 }
 
@@ -24,11 +23,32 @@ export const contentfulClient = createClient({
 });
 
 export function getAssetUrl(asset: Asset | undefined): string | undefined {
-	const url = asset && (asset.fields as any)?.file?.url;
+	const fields = asset?.fields as unknown as { file?: { url?: string } } | undefined;
+	const url = fields?.file?.url;
 	if (!url) return undefined;
 	return url.startsWith("http") ? url : `https:${url}`;
 }
 
 export function isContentfulConfigured(): boolean {
 	return Boolean(spaceId && accessToken);
+}
+
+// Lightweight SWR-style cache wrapper for GET-only methods
+const swrCache = new Map<string, unknown>();
+
+export async function cachedGetEntries<T = unknown>(params: Record<string, unknown>): Promise<T> {
+  const key = JSON.stringify(params);
+  if (swrCache.has(key)) {
+    // return cached response immediately; refresh in background
+    const cached = swrCache.get(key) as T;
+    const getEntriesFn = contentfulClient.getEntries as unknown as (p: Record<string, unknown>) => Promise<unknown>;
+    getEntriesFn(params).then((fresh) => {
+      swrCache.set(key, fresh);
+    }).catch(() => {});
+    return cached;
+  }
+  const getEntriesFn = contentfulClient.getEntries as unknown as (p: Record<string, unknown>) => Promise<unknown>;
+  const res = await getEntriesFn(params);
+  swrCache.set(key, res as T);
+  return res as T;
 }
