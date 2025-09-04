@@ -312,27 +312,46 @@ const Index = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="relative mx-auto w-full max-w-[140px] md:max-w-[180px] lg:max-w-[220px]">
-                <video
-                  src={HOME_VIDEOS.homePhone}
-                  className="w-full h-auto rounded-xl"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster={HOME_IMAGES.iphone}
-                />
+              <div className="relative mx-auto w-full max-w-[400px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] lg:scale-110 xl:scale-125 2xl:scale-[1.4]">
+                {/\.gif$/i.test(HOME_VIDEOS.homePhone) ? (
+                  <img
+                    src={HOME_VIDEOS.homePhone}
+                    alt="Phone preview animation"
+                    className="w-full h-auto rounded-xl"
+                    loading="eager"
+                    decoding="async"
+                  />
+                ) : (
+                  <video
+                    src={HOME_VIDEOS.homePhone}
+                    className="w-full h-auto rounded-xl"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={HOME_IMAGES.iphone}
+                  />
+                )}
                 {/* Visual enhancement */}
-                <div className="absolute -inset-8 bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent rounded-full blur-3xl opacity-60" />
-                {/* Halo shadow under phone */}
+                <div className="absolute -inset-10 bg-gradient-to-br from-[hsl(var(--primary))]/25 via-[hsl(var(--primary))]/8 to-transparent rounded-full blur-2xl opacity-60" />
                 <div
-                  className="pointer-events-none absolute left-1/2 -translate-x-1/2 -bottom-5 w-[65%] h-5 md:h-6 lg:h-7 rounded-full"
+                  className="absolute -inset-16 rounded-full pointer-events-none"
                   style={{
                     background:
-                      'radial-gradient(50% 60% at 50% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.22) 40%, rgba(0,0,0,0.08) 70%, rgba(0,0,0,0) 100%)',
-                    filter: 'blur(5px)',
-                    opacity: 0.7,
+                      'radial-gradient(50% 50% at 50% 50%, rgba(225,208,193,0.20) 0%, rgba(225,208,193,0.12) 35%, rgba(225,208,193,0) 70%)',
+                    filter: 'blur(20px)',
+                    opacity: 0.6,
+                  }}
+                />
+                {/* Halo shadow under phone */}
+                <div
+                  className="pointer-events-none absolute left-1/2 -translate-x-1/2 -bottom-6 w-[80%] h-8 md:h-10 lg:h-12 rounded-full"
+                  style={{
+                    background:
+                      'radial-gradient(50% 60% at 50% 50%, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.10) 70%, rgba(0,0,0,0) 100%)',
+                    filter: 'blur(6px)',
+                    opacity: 0.75,
                   }}
                 />
               </div>
@@ -341,7 +360,7 @@ const Index = () => {
 
           {/* Brand logos marquee */}
           <motion.div 
-            className="mt-16"
+            className="mt-24 md:mt-28 lg:mt-32"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
