@@ -1,6 +1,7 @@
 
 import { Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { LOGOS } from '@/lib/assets';
 
 const Footer = () => {
   return (
@@ -16,7 +17,7 @@ const Footer = () => {
           {/* Left content block */}
           <div className="space-y-2 text-center md:text-left">
             <img
-              src={`${import.meta.env.BASE_URL}Logos/Noja_Productions.png`}
+              src={LOGOS.productions}
               alt="NOJA"
               className="w-32 md:w-40 h-auto mx-auto md:mx-0"
             />

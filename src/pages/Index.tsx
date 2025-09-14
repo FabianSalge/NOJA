@@ -1,32 +1,27 @@
-import { ArrowRight, Play, ArrowDown } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useEffect, useRef, useState } from 'react';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import BrandCarousel from '@/components/BrandCarousel';
 import PackageCard from '@/components/PackageCard';
  
-import { HOME_IMAGES, LOGOS, HOME_VIDEOS } from '@/lib/assets';
+import { HOME_IMAGES, HOME_VIDEOS } from '@/lib/assets';
 import { fetchHome, type CmsHome } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
-// Removed PreFooterCTA from Index per new section flow
+import Hero from '@/components/home/Hero';
 
 const Index = () => {
-  const { scrollY } = useScroll();
-  const heroRef = useRef(null);
   const whatWeDoRef = useRef(null);
   const statsRef = useRef(null);
   const servicesRef = useRef(null);
   const ctaRef = useRef(null);
   
-  const heroInView = useInView(heroRef, { once: true });
   const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
   const servicesInView = useInView(servicesRef, { once: true, margin: "-100px" });
 
@@ -52,9 +47,6 @@ const Index = () => {
     });
   }, []);
   
-  const yRange = useTransform(scrollY, [0, 1000], [0, -200]);
-  const opacityRange = useTransform(scrollY, [0, 300], [1, 0]);
-
   
 
   const handleScroll = () => {
@@ -114,139 +106,7 @@ const Index = () => {
           }
         ]}
       />
-      <Navigation />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <motion.div 
-          className="absolute inset-0"
-          style={{ y: yRange, opacity: opacityRange }}
-        >
-          <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
-        </motion.div>
-        
-        {/* Floating particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-secondary/30 rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [-20, 20],
-                opacity: [0.3, 0.8, 0.3],
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-        
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 pt-16" ref={heroRef}>
-          <motion.div 
-            className="space-y-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate={heroInView ? "visible" : "hidden"}
-          >
-            {/* Logo */}
-            <motion.div 
-              className="space-y-4" 
-              variants={itemVariants}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <motion.div 
-                className="inline-block relative"
-                animate={{
-                  y: [-8, 8],
-                }}
-                transition={{
-                  duration: 4.5,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut",
-                }}
-              >
-                <motion.div
-                  className="absolute -inset-6 rounded-full bg-gradient-to-b from-[hsl(var(--primary))]/40 to-transparent blur-xl"
-                  animate={{ opacity: [0.2, 0.35, 0.2], scale: [0.98, 1.02, 0.98] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  aria-hidden
-                />
-                <motion.img 
-                  src={LOGOS.nojaWordmark} 
-                  alt="NOJA" 
-                  className="h-28 md:h-36 lg:h-44 w-auto mx-auto drop-shadow-2xl"
-                  loading="eager"
-                  decoding="async"
-                  whileHover={{ scale: 1.08, y: -2, rotate: 0.4 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                />
-              </motion.div>
-              
-              <motion.div 
-                className="space-y-6" 
-                variants={itemVariants}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                <motion.h2 
-                  className="text-2xl md:text-3xl lg:text-4xl font-semibold text-background tracking-[0.25em] uppercase"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
-                >
-                  CONTENT WITH A <motion.span 
-                    className="text-secondary"
-                    animate={{ 
-                      opacity: [1, 0.8, 1],
-                      textShadow: [
-                        '0 0 0 hsl(var(--secondary))',
-                        '0 0 12px hsl(var(--secondary) / 0.4)',
-                        '0 0 0 hsl(var(--secondary))'
-                      ]
-                    }}
-                    transition={{ duration: 2.2, repeat: Infinity }}
-                  >PULSE</motion.span>
-                </motion.h2>
-                {/* Minimal CTA */}
-                <div className="pt-1">
-                  <Link to="/projects" className="group inline-flex items-center gap-2 text-background hover:text-foreground font-semibold text-lg md:text-xl">
-                    <span className="relative">
-                      Tap into our work
-                      <span className="absolute left-0 -bottom-0.5 h-[2px] w-full bg-background/60 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
-                    </span>
-                        <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Enhanced scroll indicator */}
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-          <motion.button 
-            className="inline-flex items-center p-3 rounded-full border backdrop-blur-sm transition-colors"
-            style={{
-              borderColor: 'rgba(255,255,255,0.5)',
-              color: 'rgba(255,255,255,0.95)'
-            }}
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            onClick={handleScroll}
-          >
-            <ArrowDown className="w-4 h-4" />
-          </motion.button>
-        </div>
-      </section>
+      <Hero onScrollIndicatorClick={handleScroll} />
 
       {/* Creative Marketing - What we do best (dark) */}
       <section id="content" className="min-h-screen flex items-center relative overflow-hidden bg-[hsl(var(--primary))]" ref={whatWeDoRef}>
@@ -312,7 +172,7 @@ const Index = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="relative mx-auto w-full max-w-[400px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] lg:scale-110 xl:scale-125 2xl:scale-[1.4]">
+              <div className="relative mx-auto w-full max-w-[520px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] sm:scale-110 lg:scale-110 xl:scale-125 2xl:scale-[1.4] rotate-[4deg]">
                 {/\.gif$/i.test(HOME_VIDEOS.homePhone) ? (
                   <img
                     src={HOME_VIDEOS.homePhone}
@@ -360,7 +220,7 @@ const Index = () => {
 
           {/* Brand logos marquee */}
           <motion.div 
-            className="mt-24 md:mt-28 lg:mt-32"
+            className="mt-28 md:mt-32 lg:mt-36 mb-0 relative z-0"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -373,7 +233,7 @@ const Index = () => {
       </section>
 
       {/* What you need - Beige section */}
-      <section className="min-h-screen flex items-center relative overflow-hidden bg-background" ref={statsRef}>
+      <section className="min-h-screen flex items-start relative overflow-hidden bg-background pt-6 md:pt-8 lg:pt-10" ref={statsRef}>
         {/* Static beige background (primary state) */}
         <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
         {/* Hero-style background transition (peels away to reveal dark) */}
@@ -471,7 +331,7 @@ const Index = () => {
                 </Link>
                 <Link 
                   to="/contact" 
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-background text-[hsl(var(--primary))] font-semibold hover:bg-background/90 transition-all duration-300 hover:scale-105"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-background text-[hsl(var(--primary))] font-semibold hover:bg-background/90 transition-all duration-300 hover:scale-105 mb-6 sm:mb-0"
                 >
                   Start a Project
                   <Play size={16} />
@@ -486,7 +346,7 @@ const Index = () => {
 
       <HaveProjectCTA className="py-20" variant="dark" />
 
-      <Footer />
+      
     </div>
   );
 };

@@ -19,7 +19,7 @@ const HaveProjectCTA = ({ className = 'py-20', variant = 'dark' }: HaveProjectCT
           </div>
         )}
         <motion.h2
-          className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+          className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -38,7 +38,7 @@ const HaveProjectCTA = ({ className = 'py-20', variant = 'dark' }: HaveProjectCT
             to="/contact"
             className="group inline-flex items-center gap-3 bg-secondary text-secondary-foreground font-semibold text-lg md:text-xl px-8 py-4 rounded-full hover:shadow-lg hover:shadow-secondary/20 transition-all"
           >
-            <span>We like Bold Breifs</span>
+            <span>We like Bold BRIEFS</span>
             <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </motion.div>
