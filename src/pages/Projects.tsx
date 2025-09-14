@@ -2,8 +2,6 @@ import { buildContentfulSrcSet } from '@/lib/images';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';
@@ -109,10 +107,9 @@ const Projects = () => {
           ]
         }}
       />
-      <Navigation />
       
       {/* Featured Projects Section */}
-      <section className="min-h-screen flex items-center relative overflow-hidden bg-background" ref={featuredRef}>
+      <section className="min-h-screen flex items-start md:items-center relative overflow-hidden bg-background pb-24 md:pb-0" ref={featuredRef}>
         {/* Hero-style background transition */}
         <motion.div 
           className="absolute inset-0"
@@ -130,9 +127,7 @@ const Projects = () => {
             variants={containerVariants}
           >
             <motion.div variants={itemVariants}>
-              <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
-                Portfolio
-              </span>
+             
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
                 Featured Projects
               </h1>
@@ -152,7 +147,7 @@ const Projects = () => {
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 pb-6"
             initial="hidden"
             animate={featuredInView ? "visible" : "hidden"}
             variants={containerVariants}
@@ -223,10 +218,11 @@ const Projects = () => {
             </div>
           )}
         </div>
+        {/* Mobile-only spacer to prevent visual overlap with next dark section without affecting desktop */}
+        <div className="md:hidden" style={{ height: '3.5rem' }} />
       </section>
 
       <HaveProjectCTA className="py-20" variant="dark" />
-      <Footer />
     </div>
   );
 };

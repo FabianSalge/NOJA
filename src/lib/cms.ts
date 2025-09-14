@@ -1,78 +1,33 @@
 import { Document, BLOCKS, TopLevelBlock } from "@contentful/rich-text-types";
 import type { Asset, Entry } from "contentful";
-import { contentfulClient, getAssetUrl, cachedGetEntries } from "./contentful";
+import { contentfulClient, getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./contentful";
+import type {
+    CmsAboutPage,
+    CmsHome,
+    CmsProjectDetail,
+    CmsProjectsPage,
+    CmsProjectSummary,
+    CmsServiceItem,
+    CmsServicesPage,
+    CmsWhatYouNeedCard,
+    CmsBrand,
+} from "./cms.types";
+export type {
+    CmsAboutPage,
+    CmsHome,
+    CmsProjectDetail,
+    CmsProjectsPage,
+    CmsProjectSummary,
+    CmsServiceItem,
+    CmsServicesPage,
+    CmsWhatYouNeedCard,
+    CmsBrand,
+} from "./cms.types";
 
 // Minimal helper types for Contentful results
 type EntriesResult = { items?: Entry[] };
 
-// Basic types mapped to UI needs
-export type CmsBrand = {
-	name: string;
-	logoUrl?: string;
-	websiteUrl?: string;
-};
-
-export type CmsWhatYouNeedCard = {
-	title: string;
-	imageUrl?: string;
-	order?: number;
-};
-
-export type CmsHome = {
-	whatWeDoBestText?: Document;
-	brands: CmsBrand[];
-	whatYouNeedCards: CmsWhatYouNeedCard[];
-};
-
-export type CmsProjectSummary = {
-	slug: string;
-	title: string;
-	subtitle: string;
-	dateISO: string; // ISO string to derive year on UI
-	coverImageUrl?: string;
-};
-
-export type CmsProjectsPage = {
-	ourWorkSubtext?: Document;
-	featured: CmsProjectSummary[];
-	all: CmsProjectSummary[];
-};
-
-export type CmsProjectDetail = {
-	slug: string;
-	title: string;
-	subtitle: string;
-	dateISO: string;
-	coverImageUrl?: string;
-	secondImageUrl?: string;
-	firstTextTitle: string;
-	firstTextBody?: Document;
-	quoteImageUrl?: string;
-	quote: string;
-	secondTextTitle: string;
-	secondTextBody?: Document;
-};
-
-export type CmsAboutPage = {
-	ourStoryText?: Document;
-	ourStoryImageUrl?: string;
-};
-
-export type CmsServiceItem = {
-	title: string;
-	description: string;
-	features: string[];
-	serviceMediaUrl?: string;
-	order: number;
-	alternateLayout?: boolean;
-};
-
-export type CmsServicesPage = {
-	heroTitle: string;
-	heroSubtitle: string;
-	heroBackgroundImageUrl?: string;
-	services: CmsServiceItem[];
-};
+// Types moved to cms.types.ts
 
 // Helpers to safely read fields
 function getField<T>(obj: Record<string, unknown> | undefined, key: string): T | undefined {
@@ -105,6 +60,7 @@ export function splitDocumentByParagraphs(doc: Document): [Document, Document] {
 
 // Queries
 export async function fetchHome(): Promise<CmsHome | undefined> {
+	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "homePage",
 		include: 2,
@@ -135,6 +91,9 @@ export async function fetchHome(): Promise<CmsHome | undefined> {
 }
 
 export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
+	if (!isContentfulConfigured()) {
+		return { ourWorkSubtext: undefined, featured: [], all: [] };
+	}
 	// Fetch settings entry
 	const settingsRes = await cachedGetEntries<EntriesResult>({
 		content_type: "projectsPageSettings",
@@ -164,6 +123,7 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 }
 
 export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail | undefined> {
+	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "project",
 		"fields.slug": slug,
@@ -190,6 +150,7 @@ export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail
 }
 
 export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
+	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "aboutPageSettings",
 		include: 1,
@@ -203,6 +164,7 @@ export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
 }
 
 export async function fetchServicesPage(): Promise<CmsServicesPage | undefined> {
+	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "servicesPage",
 		include: 2,

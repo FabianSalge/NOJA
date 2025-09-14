@@ -1,8 +1,6 @@
 
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import { Check } from 'lucide-react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { fetchServicesPage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
@@ -202,11 +200,9 @@ const Services = () => {
   if (!isDataLoaded || !servicesData) {
     return (
       <div className="min-h-screen bg-background text-foreground">
-        <Navigation />
         <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-4xl font-bold mb-4">Loading Services...</h1>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -233,7 +229,6 @@ const Services = () => {
           serviceType: 'Content strategy, production, post-production'
         }}
       />
-      <Navigation />
       
       {/* Compact Header */}
       <section className="pt-24 pb-16 bg-[hsl(var(--primary))] text-foreground">
@@ -279,7 +274,6 @@ const Services = () => {
       })}
 
       <HaveProjectCTA className="py-20" variant="dark" />
-      <Footer />
     </div>
   );
 };

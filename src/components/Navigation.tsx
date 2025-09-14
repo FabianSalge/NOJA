@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { LOGOS } from '@/lib/assets';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,10 +30,10 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg transition-colors duration-300 border-b ${
+      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg transition-colors duration-300 border-b border-transparent ${
         scrolled
-          ? 'bg-white shadow-lg shadow-black/10 border-black/10'
-          : 'bg-[hsl(var(--primary))] shadow-none border-transparent'
+          ? 'bg-white shadow-lg shadow-black/10'
+          : 'bg-[hsl(var(--primary))] shadow-none'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,7 +42,7 @@ const Navigation = () => {
           <Link to="/" className="flex items-center group relative md:hidden">
             <div className="relative">
               <img 
-                src={`${import.meta.env.BASE_URL}Logos/${scrolled ? 'NJ_beige.png' : 'NJ_white.png'}`} 
+                src={scrolled ? LOGOS.njBeige : LOGOS.njWhite} 
                 alt="NOJA" 
                 className={`h-7 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-sm`}
               />
@@ -94,7 +95,7 @@ const Navigation = () => {
             <Link to="/" className="group relative mx-4">
               <div className="relative">
                 <img 
-                  src={`${import.meta.env.BASE_URL}Logos/${scrolled ? 'NJ_beige.png' : 'NJ_white.png'}`} 
+                  src={scrolled ? LOGOS.njBeige : LOGOS.njWhite} 
                   alt="NOJA" 
                   className={`h-7 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-sm`}
                 />

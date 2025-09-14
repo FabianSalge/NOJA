@@ -1,8 +1,6 @@
 
 import { useState, useRef } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
 import { Helmet } from 'react-helmet-async';
 import { buildCanonical } from '@/lib/seo';
@@ -20,14 +18,44 @@ const Contact = () => {
     email: '',
     project: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Honeypot field to deter bots
+  const [company, setCompany] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message sent successfully!",
-      description: "Thanks for reaching out! We'll be in touch soon.",
-    });
-    setFormData({ firstName: '', lastName: '', email: '', project: '' });
+    if (isSubmitting) return;
+    // If honeypot filled, silently ignore
+    if (company.trim().length > 0) return;
+    const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID as string | undefined;
+    if (!FORMSPREE_ID) {
+      toast({ title: 'Contact temporarily unavailable', description: "Please configure VITE_FORMSPREE_ID to enable the form.", });
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      const endpoint = `https://formspree.io/f/${FORMSPREE_ID}`;
+      const form = new FormData();
+      form.append('firstName', formData.firstName);
+      form.append('lastName', formData.lastName);
+      form.append('email', formData.email);
+      form.append('message', formData.project);
+      // Useful metadata
+      form.append('_subject', 'NOJA Contact Form');
+      form.append('_gotcha', '');
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        body: form,
+        headers: { 'Accept': 'application/json' },
+      });
+      if (!res.ok) throw new Error('Failed to submit');
+      toast({ title: 'Message sent successfully!', description: "Thanks for reaching out! We'll be in touch soon.", });
+      setFormData({ firstName: '', lastName: '', email: '', project: '' });
+    } catch {
+      toast({ title: 'Something went wrong', description: 'Please try again in a moment.', });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -51,7 +79,6 @@ const Contact = () => {
         <meta name="description" content="Start a project with NOJA. We like bold briefs." />
         <link rel="canonical" href={buildCanonical('/contact')} />
       </Helmet>
-      <Navigation />
       
       {/* Contact Form Section */}
       <section 
@@ -90,7 +117,9 @@ const Contact = () => {
               </h1>
             </motion.div>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+              {/* Honeypot */}
+              <input type="text" name="company" value={company} onChange={(e) => setCompany(e.target.value)} className="hidden" aria-hidden tabIndex={-1} autoComplete="off" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
                 <div>
                   <label htmlFor="firstName" className="block text-base font-normal text-black/80 mb-4">First name *</label>
@@ -149,19 +178,19 @@ const Contact = () => {
               <div className="text-center pt-6">
                 <motion.button
                   type="submit"
-                  className="bg-black text-white px-10 py-3 rounded-full font-bold text-base transition-all duration-300 hover:bg-black/90"
+                  disabled={isSubmitting}
+                  className="bg-black text-white px-10 py-3 rounded-full font-bold text-base transition-all duration-300 hover:bg-black/90 disabled:opacity-60 disabled:cursor-not-allowed"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  Thanks
+                  {isSubmitting ? 'Sending…' : 'Thanks'}
                 </motion.button>
               </div>
             </form>
           </motion.div>
         </div>
       </section>
-
-      <Footer />
+      
     </div>
   );
 };

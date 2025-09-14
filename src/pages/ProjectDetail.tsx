@@ -3,11 +3,8 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical } from '@/lib/seo';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
-import { HOME_IMAGES } from '@/lib/assets';
 import ResponsiveImage from '@/components/ResponsiveImage';
-import { fetchProjectBySlug, type CmsProjectDetail, splitDocumentByParagraphs } from '@/lib/cms';
+import { fetchProjectBySlug, type CmsProjectDetail } from '@/lib/cms';
 import { useEffect, useState } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
@@ -31,11 +28,9 @@ const ProjectDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground">
-        <Navigation />
         <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-4xl font-bold mb-4">Loading…</h1>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -43,13 +38,11 @@ const ProjectDetail = () => {
   if (!project) {
     return (
       <div className="min-h-screen bg-background text-foreground">
-        <Navigation />
         <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-4xl font-bold mb-4">Project not found</h1>
           <p className="text-foreground/80 mb-8">The project you're looking for doesn't exist or has been moved.</p>
           <Link to="/projects" className="underline">Back to Projects</Link>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -75,7 +68,6 @@ const ProjectDetail = () => {
           description: project.subtitle
         }}
       />
-      <Navigation />
 
       {/* Header Image with title overlay */}
       <section className="pt-20 md:pt-20 relative overflow-hidden bg-[hsl(var(--primary))]">
@@ -226,9 +218,6 @@ const ProjectDetail = () => {
       </section>
 
       <HaveProjectCTA className="py-20" variant="dark" />
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

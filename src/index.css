@@ -58,12 +58,16 @@ All colors MUST be HSL.
 }
 
 @layer base {
+  html {
+    background-color: hsl(var(--primary));
+  }
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply text-foreground font-sans antialiased;
+    background-color: hsl(var(--primary));
   }
 
   /* Custom scrollbar */
@@ -123,7 +127,7 @@ All colors MUST be HSL.
   }
   /* Text selection */
   ::selection {
-    @apply bg-[hsl(var(--primary))]/30 text-[hsl(var(--primary))];
+    @apply bg-[hsl(var(--primary))]/30 text-foreground;
   }
 
   /* Smooth scrolling */
@@ -167,6 +171,7 @@ All colors MUST be HSL.
   .marquee-content {
     animation: marquee 80s linear infinite;
     will-change: transform;
+    contain: layout paint;
   }
 
   .marquee-reverse {
