@@ -201,6 +201,16 @@ All colors MUST be HSL.
   .marquee-ltr {
     animation: marquee-ltr 35s linear infinite;
     will-change: transform;
+    contain: layout paint;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Slow the marquee on small screens to reduce CPU/GPU load */
+  @media (max-width: 640px) {
+    .marquee-ltr {
+      animation-duration: 35s;
+    }
   }
 
   /* Section edge fade utilities using mask-image for seamless blends */
