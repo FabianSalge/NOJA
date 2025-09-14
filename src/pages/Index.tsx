@@ -112,14 +112,19 @@ const Index = () => {
       <section id="content" className="min-h-screen flex items-center relative overflow-hidden bg-[hsl(var(--primary))]" ref={whatWeDoRef}>
         {/* Hero-style background transition */}
         <motion.div 
-          className="absolute inset-0"
+          className="absolute inset-0 hidden md:block"
           style={{ y: whatWeDoY, opacity: whatWeDoOpacity }}
         >
           <div className="absolute inset-0 bg-background" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-transparent" />
         </motion.div>
+        {/* Static dark background for mobile to keep section dark without parallax */}
+        <div className="absolute inset-0 md:hidden">
+          <div className="absolute inset-0 bg-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-transparent" />
+        </div>
         {/* Section particles (subtle) */}
-        <div className="absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute inset-0 overflow-hidden hidden md:block" aria-hidden>
           {[...Array(8)].map((_, i) => (
             <motion.div
               key={`wd-${i}`}
