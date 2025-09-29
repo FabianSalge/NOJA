@@ -177,7 +177,7 @@ const Index = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="relative mx-auto w-full max-w-[520px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] sm:scale-110 lg:scale-110 xl:scale-125 2xl:scale-[1.4] rotate-[4deg]">
+              <div className="relative mx-auto w-full max-w-[520px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] sm:scale-[1.15] lg:scale-[1.15] xl:scale-[1.3] 2xl:scale-[1.45] rotate-[4deg]">
                 {/\.gif$/i.test(HOME_VIDEOS.homePhone) ? (
                   <img
                     src={HOME_VIDEOS.homePhone}

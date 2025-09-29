@@ -2,9 +2,11 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import RouteFallback from "@/components/RouteFallback";
 import Layout from "@/components/Layout";
+import Maintenance from "@/components/Maintenance";
+import { isContentfulConfigured } from "@/lib/contentful";
 
 // Prefetch route chunks when idle
-if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+if (typeof window !== 'undefined' && 'requestIdleCallback' in window && isContentfulConfigured()) {
   (window as Window & { requestIdleCallback: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number })
     .requestIdleCallback(() => {
       import('./pages/About');
@@ -22,20 +24,26 @@ const Services = lazy(() => import("./pages/Services"));
 const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-const AppRoutes = () => (
-  <Suspense fallback={<RouteFallback />}> 
-    <Routes>
-      <Route path="/" element={<Layout><Index /></Layout>} />
-      <Route path="/about" element={<Layout><About /></Layout>} />
-      <Route path="/projects" element={<Layout><Projects /></Layout>} />
-      <Route path="/projects/:slug" element={<Layout><ProjectDetail /></Layout>} />
-      <Route path="/services" element={<Layout><Services /></Layout>} />
-      <Route path="/contact" element={<Layout><Contact /></Layout>} />
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-      <Route path="*" element={<Layout><NotFound /></Layout>} />
-    </Routes>
-  </Suspense>
-);
+const AppRoutes = () => {
+  const configured = isContentfulConfigured();
+  if (!configured) {
+    return <Maintenance />;
+  }
+  return (
+    <Suspense fallback={<RouteFallback />}> 
+      <Routes>
+        <Route path="/" element={<Layout><Index /></Layout>} />
+        <Route path="/about" element={<Layout><About /></Layout>} />
+        <Route path="/projects" element={<Layout><Projects /></Layout>} />
+        <Route path="/projects/:slug" element={<Layout><ProjectDetail /></Layout>} />
+        <Route path="/services" element={<Layout><Services /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<Layout><NotFound /></Layout>} />
+      </Routes>
+    </Suspense>
+  );
+};
 
 export default AppRoutes;
 
