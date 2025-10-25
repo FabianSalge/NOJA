@@ -85,7 +85,7 @@ const Projects = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground pt-20">
       <Helmet>
         <title>Projects — NOJA</title>
         <meta name="description" content="Featured and recent creative projects by NOJA." />

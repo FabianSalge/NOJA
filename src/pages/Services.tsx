@@ -208,7 +208,7 @@ const Services = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground pt-20">
       <Helmet>
         <title>Services — NOJA</title>
         <meta name="description" content="Concepts, creation, and execution — services that turn ideas into scroll-stopping visuals." />

@@ -73,7 +73,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground">
+    <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground pt-20">
       <Helmet>
         <title>Contact — NOJA</title>
         <meta name="description" content="Start a project with NOJA. We like bold briefs." />
