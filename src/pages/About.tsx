@@ -78,7 +78,7 @@ const About = () => {
   
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]">
+    <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] pt-20">
       <Helmet>
         <title>About NOJA — Why Us</title>
         <meta name="description" content="We blend concept, production, and project management to deliver strategic creative content." />
