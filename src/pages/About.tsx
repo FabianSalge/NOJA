@@ -1,4 +1,4 @@
-import { Eye, Lightbulb, RefreshCcw } from 'lucide-react';
+import { Eye, Lightbulb, Users } from 'lucide-react';
  
  
 import { useEffect, useState } from 'react';
@@ -11,9 +11,10 @@ import { buildCanonical } from '@/lib/seo';
 import Story from '@/components/about/Story';
 import Values from '@/components/about/Values';
 import Team from '@/components/about/Team';
+import { useTranslation } from '@/i18n';
 
 const About = () => {
-  
+  const { t, language } = useTranslation();
 
   const [about, setAbout] = useState<CmsAboutPage | undefined>(undefined);
   useEffect(() => {
@@ -25,54 +26,64 @@ const About = () => {
   const values = [
     {
       icon: Eye,
-      title: 'Transparency',
-      description: 'Open communication and expectations.',
+      title: t.about.values.transparency.title,
+      description: t.about.values.transparency.description,
     },
     {
       icon: Lightbulb,
-      title: 'Strategic Creativity',
-      description: 'Blending concept development, production, and project management for end-to-end solutions.',
+      title: t.about.values.strategicCreativity.title,
+      description: t.about.values.strategicCreativity.description,
     },
     {
-      icon: RefreshCcw,
-      title: 'Adaptability',
-      description: 'Adjusting strategies to client needs fast.',
+      icon: Users,
+      title: t.about.values.community.title,
+      description: t.about.values.community.description,
     }
   ];
 
   const team = [
     {
-      name: 'Naomi Ross',
-      role: 'Content Producer',
-      image: `${import.meta.env.BASE_URL}images/naomi.avif`,
-      description: "Multimedia roots and a natural eye for social-media-savvy, clever transitions.",
-      funFact: "Animal hoarder."
+      name: t.about.team.naomi.name,
+      role: t.about.team.naomi.role,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Naomi_NOJA.jpeg`,
+      description: t.about.team.naomi.description,
+      funFact: t.about.team.naomi.funFact,
     },
     {
-      name: 'Talia Persis Jenny',
-      role: 'Operations & Management',
-      image: `${import.meta.env.BASE_URL}images/talia.png`,
-      description: "Versed in design & project management, leading team through the details.",
-      funFact: "People pleaser."
+      name: t.about.team.talia.name,
+      role: t.about.team.talia.role,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Talia_NOJA.jpeg`,
+      description: t.about.team.talia.description,
+      funFact: t.about.team.talia.funFact,
     },
     {
-      name: 'Jamilla Metzger',
-      role: 'Content Producer',
-      image: `${import.meta.env.BASE_URL}images/jamilla.avif`,
-      description: "Background in multimedia with a gift for bringing out the fullest potential behind lenses.",
-      funFact: "Drives a motorcycle..."
+      name: t.about.team.jamilla.name,
+      role: t.about.team.jamilla.role,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Jamilla_NOJA.jpg`,
+      description: t.about.team.jamilla.description,
+      funFact: t.about.team.jamilla.funFact,
     }
   ];
 
   const actionImages = [
-    `${import.meta.env.BASE_URL}images/im1.png`,
-    `${import.meta.env.BASE_URL}images/im2.png`,
-    `${import.meta.env.BASE_URL}images/im3.jpg`,
-    `${import.meta.env.BASE_URL}images/im4.png`,
-    `${import.meta.env.BASE_URL}images/im5.png`,
-    `${import.meta.env.BASE_URL}images/im6.png`,
-    `${import.meta.env.BASE_URL}images/im7.jpg`,
-    `${import.meta.env.BASE_URL}images/im8.jpg`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-01.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-02.jpg`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-03.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-04.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-05.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-06.jpg`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-07.jpg`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-08.jpg`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-09.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-10.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-11.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-12-lecle.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-13-naomi.jpg`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-14-talia.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-15.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-16.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-17.png`,
+    `${import.meta.env.BASE_URL}images/action-slider/slide-18.png`,
   ];
 
   
@@ -85,7 +96,11 @@ const About = () => {
         <link rel="canonical" href={buildCanonical('/about')} />
       </Helmet>
 
-      <Story text={about?.ourStoryText} imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} />
+      <Story 
+        text={language === 'en' ? about?.ourStoryText : undefined} 
+        fallbackText={t.about.story.text}
+        imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} 
+      />
 
       
 

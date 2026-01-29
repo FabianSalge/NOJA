@@ -2,6 +2,7 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useRef } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
 type ValueItem = { icon: LucideIcon; title: string; description: string };
 
@@ -10,6 +11,7 @@ type ValuesProps = {
 };
 
 const Values = ({ items }: ValuesProps) => {
+  const { t } = useTranslation();
   const valuesRef = useRef(null);
   const valuesInView = useInView(valuesRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({ target: valuesRef, offset: ["start center", "end start"] });
@@ -25,7 +27,7 @@ const Values = ({ items }: ValuesProps) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <motion.div className="text-center mb-8 sm:mb-12 space-y-4" initial={{ opacity: 0, y: 30 }} animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} transition={{ duration: 0.8 }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground text-center leading-[0.9]">Our Values</h2>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground text-center leading-[0.9]">{t.about.values.title}</h2>
           </motion.div>
         </motion.div>
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6" variants={containerVariants} initial="hidden" animate={valuesInView ? 'visible' : 'hidden'}>

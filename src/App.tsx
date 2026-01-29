@@ -4,28 +4,28 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import Analytics from "./components/Analytics";
-import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 import AppRoutes from "./routes";
-
+import { LanguageProvider } from "./i18n";
 import ScrollToTop from "./components/ScrollToTop";
+import ConditionalAnalytics from "./components/ConditionalAnalytics";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <HelmetProvider>
-      <TooltipProvider>
-        <Toaster />
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <ScrollToTop />
-          <Analytics />
-          <VercelAnalytics />
-          <SpeedInsights />
-          <AppRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
+      <LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <BrowserRouter basename={import.meta.env.BASE_URL}>
+            <ScrollToTop />
+            <ConditionalAnalytics />
+            <AppRoutes />
+            <CookieConsent />
+          </BrowserRouter>
+        </TooltipProvider>
+      </LanguageProvider>
     </HelmetProvider>
   </QueryClientProvider>
 );

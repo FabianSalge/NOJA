@@ -45,7 +45,8 @@
     "@tanstack/react-query": "^5.56.2",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "caniuse-lite": "^1.0.30001727",
+    "baseline-browser-mapping": "^2.9.19",
+    "caniuse-lite": "^1.0.30001766",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -56,7 +57,6 @@
     "framer-motion": "^12.23.3",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
-    
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",

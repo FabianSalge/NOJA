@@ -15,8 +15,10 @@ import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import Hero from '@/components/home/Hero';
+import { useTranslation } from '@/i18n';
 
 const Index = () => {
+  const { t, language } = useTranslation();
   const whatWeDoRef = useRef(null);
   const statsRef = useRef(null);
   const servicesRef = useRef(null);
@@ -154,15 +156,15 @@ const Index = () => {
             >
               <div className="space-y-4">
                 <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground tracking-tight leading-[0.9]">
-                  The Pulse Effect
+                  {t.home.pulseEffect.title}
                 </h2>
               </div>
               <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">
-                {home?.whatWeDoBestText ? (
+                {language === 'en' && home?.whatWeDoBestText ? (
                   documentToReactComponents(home.whatWeDoBestText)
                 ) : (
                   <p>
-                    We craft bold visual stories that capture attention and drive results. From concept to execution, our creative marketing approach ensures your brand stands out in the digital landscape.
+                    {t.home.pulseEffect.description}
                   </p>
                 )}
               </div>
@@ -284,7 +286,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
                 <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
-                  Services
+                  {t.home.services.title}
                 </h2>
               </motion.div>
               <motion.p 
@@ -293,7 +295,7 @@ const Index = () => {
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                Concepts, creation, execution — turning ideas into scroll-stopping visuals.
+                {t.home.services.subtitle}
               </motion.p>
             </div>
 
@@ -331,14 +333,14 @@ const Index = () => {
                   to="/services" 
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 border-background/40 text-background font-semibold hover:bg-background/10 transition-all duration-300 hover:scale-105"
                 >
-                  Explore all Services
+                  {t.home.services.exploreAll}
                   <ArrowRight size={18} />
                 </Link>
                 <Link 
                   to="/contact" 
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-background text-[hsl(var(--primary))] font-semibold hover:bg-background/90 transition-all duration-300 hover:scale-105 mb-6 sm:mb-0"
                 >
-                  Start a Project
+                  {t.home.services.startProject}
                   <Play size={16} />
                 </Link>
               </div>

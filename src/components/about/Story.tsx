@@ -2,13 +2,16 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useRef } from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { useTranslation } from '@/i18n';
 
 type StoryProps = {
   text?: import('@contentful/rich-text-types').Document;
+  fallbackText?: string;
   imageUrl?: string;
 };
 
-const Story = ({ text, imageUrl }: StoryProps) => {
+const Story = ({ text, fallbackText, imageUrl }: StoryProps) => {
+  const { t } = useTranslation();
   const storyRef = useRef(null);
   const storyInView = useInView(storyRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({ target: storyRef, offset: ["start center", "end start"] });
@@ -25,11 +28,11 @@ const Story = ({ text, imageUrl }: StoryProps) => {
         <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center" variants={containerVariants} initial="hidden" animate={storyInView ? 'visible' : 'hidden'}>
           <motion.div className="space-y-6" variants={itemVariants} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <div className="space-y-4">
-              <span className="block text-xs sm:text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60">About NOJA</span>
-              <motion.h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-background tracking-tight leading-[0.95]" whileHover={{ scale: 1.02 }} transition={{ type: 'spring', stiffness: 300 }}>Why Us</motion.h2>
+              <span className="block text-xs sm:text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60">{t.about.title}</span>
+              <motion.h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-background tracking-tight leading-[0.95]" whileHover={{ scale: 1.02 }} transition={{ type: 'spring', stiffness: 300 }}>{t.about.subtitle}</motion.h2>
             </div>
             <div className="space-y-4 text-lg text-background/80 leading-relaxed">
-              {text ? documentToReactComponents(text) : null}
+              {text ? documentToReactComponents(text) : <p>{fallbackText}</p>}
             </div>
           </motion.div>
           <motion.div className="relative" variants={itemVariants} transition={{ duration: 0.6, ease: 'easeOut' }}>
