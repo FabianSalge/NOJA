@@ -2,8 +2,10 @@
 import { Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LOGOS } from '@/lib/assets';
+import { useTranslation } from '@/i18n';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="relative overflow-hidden" style={{ backgroundColor: '#FBF8F6' }}>
       {/* Decorative background elements */}
@@ -21,8 +23,8 @@ const Footer = () => {
               alt="NOJA"
               className="w-32 md:w-40 h-auto mx-auto md:mx-0"
             />
-            <p className="text-background/80 text-lg leading-relaxed">Creative Marketing Agency</p>
-            <p className="text-background/80 text-lg leading-relaxed">Based in Zurich & available Worldwide</p>
+            <p className="text-background/80 text-lg leading-relaxed">{t.footer.tagline}</p>
+            <p className="text-background/80 text-lg leading-relaxed">{t.footer.location}</p>
             <a href="mailto:team@nojaagency.com" className="inline-block text-background font-semibold underline underline-offset-4 break-words mx-auto md:mx-0">team@nojaagency.com</a>
             <div className="pt-6 flex items-center gap-4 justify-center md:justify-start">
               <a href="https://instagram.com/nojaagency" target="_blank" rel="noreferrer" aria-label="Instagram" className="p-3 bg-background/10 hover:bg-brand-warm rounded-full transition-colors">
@@ -38,16 +40,16 @@ const Footer = () => {
 
           {/* Right links block */}
           <div className="space-y-3 text-center md:text-right pt-8 md:pt-0">
-            <Link to="/about" className="block text-background/90 hover:text-[hsl(var(--primary))]">About us</Link>
-            <Link to="/projects" className="block text-background/90 hover:text-[hsl(var(--primary))]">Projects</Link>
-            <Link to="/contact" className="block text-background/90 hover:text-[hsl(var(--primary))]">Start a Project</Link>
+            <Link to="/about" className="block text-background/90 hover:text-[hsl(var(--primary))]">{t.footer.aboutUs}</Link>
+            <Link to="/projects" className="block text-background/90 hover:text-[hsl(var(--primary))]">{t.footer.projects}</Link>
+            <Link to="/contact" className="block text-background/90 hover:text-[hsl(var(--primary))]">{t.footer.startProject}</Link>
             <a 
               href={`${import.meta.env.BASE_URL}Footer/Terms & Conditions.pdf`} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="block text-background/90 hover:text-[hsl(var(--primary))]"
             >
-              Terms and Conditions
+              {t.footer.terms}
             </a>
             <a 
               href={`${import.meta.env.BASE_URL}Footer/Data Protection and Security.pdf`} 
@@ -55,7 +57,7 @@ const Footer = () => {
               rel="noopener noreferrer" 
               className="block text-background/90 hover:text-[hsl(var(--primary))]"
             >
-              Data Protection and Security
+              {t.footer.privacy}
             </a>
             <a 
               href={`${import.meta.env.BASE_URL}Footer/Impressum 2025.pdf`} 
@@ -63,7 +65,7 @@ const Footer = () => {
               rel="noopener noreferrer" 
               className="block text-background/90 hover:text-[hsl(var(--primary))]"
             >
-              Impressum
+              {t.footer.impressum}
             </a>
           </div>
         </div>

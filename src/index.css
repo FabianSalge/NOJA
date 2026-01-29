@@ -169,7 +169,7 @@ All colors MUST be HSL.
   }
 
   .marquee-content {
-    animation: marquee 80s linear infinite;
+    animation: marquee 40s linear infinite;
     will-change: transform;
     contain: layout paint;
   }

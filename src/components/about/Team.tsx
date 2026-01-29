@@ -1,6 +1,7 @@
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 import { useRef } from 'react';
+import { useTranslation } from '@/i18n';
 
 type TeamMember = { name: string; role: string; image: string };
 
@@ -9,6 +10,7 @@ type TeamProps = {
 };
 
 const Team = ({ members }: TeamProps) => {
+  const { t } = useTranslation();
   const teamRef = useRef(null);
   const teamInView = useInView(teamRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({ target: teamRef, offset: ["start center", "end start"] });
@@ -24,7 +26,7 @@ const Team = ({ members }: TeamProps) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <motion.div className="text-center mb-12 space-y-4" initial={{ opacity: 0, y: 30 }} animate={teamInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} transition={{ duration: 0.6, delay: 0.2 }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-background text-center leading-[0.9]">We are NOJA</h2>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-background text-center leading-[0.9]">{t.about.team.title}</h2>
           </motion.div>
         </motion.div>
         <motion.div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6" variants={containerVariants} initial="hidden" animate={teamInView ? 'visible' : 'hidden'}>

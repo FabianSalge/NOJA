@@ -10,8 +10,10 @@ import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import type { Document } from '@contentful/rich-text-types';
+import { useTranslation } from '@/i18n';
 
 const Projects = () => {
+  const { t, language } = useTranslation();
   const featuredRef = useRef(null);
   const allProjectsRef = useRef(null);
   const [featured, setFeatured] = useState<CmsProjectSummary[]>([]);
@@ -129,18 +131,18 @@ const Projects = () => {
             <motion.div variants={itemVariants}>
              
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
-                Featured Projects
+                {t.projects.title}
               </h1>
             </motion.div>
             <motion.div 
               className="text-lg md:text-xl text-background/80 max-w-3xl mx-auto leading-relaxed"
               variants={itemVariants}
             >
-              {subtext ? (
+              {language === 'en' && subtext ? (
                 documentToReactComponents(subtext)
               ) : (
                 <p>
-                  The Pulse Effect in Action
+                  {t.projects.subtitle}
                 </p>
               )}
             </motion.div>
@@ -172,10 +174,10 @@ const Projects = () => {
                   transition={{ duration: 0.6, delay: 0.7 }}
                 >
                   <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
-                    More Work
+                    {t.projects.moreWork}
                   </span>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-background text-center leading-[0.9]">
-                    All Projects
+                    {t.projects.allProjects}
                   </h2>
                 </motion.div>
               </motion.div>

@@ -8,9 +8,11 @@ import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import ResponsiveImage from '@/components/ResponsiveImage';
+import { useTranslation } from '@/i18n';
  
 
 const Services = () => {
+  const { t, language } = useTranslation();
   const [servicesData, setServicesData] = useState<CmsServicesPage | undefined>(undefined);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
@@ -197,11 +199,54 @@ const Services = () => {
 
   // We'll create refs inside the ServiceSection component instead
 
-  if (!isDataLoaded || !servicesData) {
+  // German static services data - we'll merge with CMS images
+  const germanServicesBase = [
+    {
+      title: t.services.fullService.title,
+      description: t.services.fullService.description,
+      features: t.services.fullService.features as unknown as string[],
+      order: 0,
+      alternateLayout: false,
+    },
+    {
+      title: t.services.strategy.title,
+      description: t.services.strategy.description,
+      features: t.services.strategy.features as unknown as string[],
+      order: 1,
+      alternateLayout: true,
+    },
+    {
+      title: t.services.videoPhoto.title,
+      description: t.services.videoPhoto.description,
+      features: t.services.videoPhoto.features as unknown as string[],
+      order: 2,
+      alternateLayout: false,
+    },
+    {
+      title: t.services.postProduction.title,
+      description: t.services.postProduction.description,
+      features: t.services.postProduction.features as unknown as string[],
+      order: 3,
+      alternateLayout: true,
+    },
+  ];
+
+  // Merge German text with CMS images
+  const germanServices: CmsServiceItem[] = germanServicesBase.map((service, index) => ({
+    ...service,
+    serviceMediaUrl: servicesData?.services?.[index]?.serviceMediaUrl,
+  }));
+
+  // Use German static data when language is German, otherwise use CMS data
+  const displayServices = language === 'de' ? germanServices : (servicesData?.services || []);
+  const displayTitle = language === 'de' ? t.services.title : (servicesData?.heroTitle || t.services.title);
+  const displaySubtitle = language === 'de' ? t.services.subtitle : (servicesData?.heroSubtitle || t.services.subtitle);
+
+  if (!isDataLoaded || (!servicesData && language === 'en')) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-4xl font-bold mb-4">Loading Services...</h1>
+          <h1 className="text-4xl font-bold mb-4">{t.common.loading}</h1>
         </div>
       </div>
     );
@@ -245,7 +290,7 @@ const Services = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
-                {servicesData.heroTitle}
+                {displayTitle}
               </h1>
             </motion.div>
             
@@ -255,14 +300,14 @@ const Services = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {servicesData.heroSubtitle}
+              {displaySubtitle}
             </motion.p>
           </motion.div>
         </div>
       </section>
 
       {/* Services Sections */}
-      {servicesData.services.map((service, index) => {
+      {displayServices.map((service, index) => {
         const isDark = index % 2 === 0; // First service section (index 0) is dark, since hero is beige
         return (
           <ServiceSection 

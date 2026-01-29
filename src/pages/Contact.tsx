@@ -6,8 +6,10 @@ import { Helmet } from 'react-helmet-async';
 import { buildCanonical } from '@/lib/seo';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from '@/i18n';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const formRef = useRef<HTMLDivElement>(null);
   const isFormInView = useInView(formRef, { once: true, margin: "-100px" });
@@ -49,10 +51,10 @@ const Contact = () => {
         headers: { 'Accept': 'application/json' },
       });
       if (!res.ok) throw new Error('Failed to submit');
-      toast({ title: 'Message sent successfully!', description: "Thanks for reaching out! We'll be in touch soon.", });
+      toast({ title: t.contact.successTitle, description: t.contact.successDescription, });
       setFormData({ firstName: '', lastName: '', email: '', project: '' });
     } catch {
-      toast({ title: 'Something went wrong', description: 'Please try again in a moment.', });
+      toast({ title: t.contact.errorTitle, description: t.contact.errorDescription, });
     } finally {
       setIsSubmitting(false);
     }
@@ -113,7 +115,7 @@ const Contact = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-black leading-tight tracking-tight">
-                WE LIKE BOLD BRIEFS
+                {t.contact.title}
               </h1>
             </motion.div>
             
@@ -122,7 +124,7 @@ const Contact = () => {
               <input type="text" name="company" value={company} onChange={(e) => setCompany(e.target.value)} className="hidden" aria-hidden tabIndex={-1} autoComplete="off" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
                 <div>
-                  <label htmlFor="firstName" className="block text-base font-normal text-black/80 mb-4">First name *</label>
+                  <label htmlFor="firstName" className="block text-base font-normal text-black/80 mb-4">{t.contact.firstName} *</label>
                   <Input 
                     id="firstName" 
                     name="firstName" 
@@ -135,7 +137,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-base font-normal text-black/80 mb-4">Last name</label>
+                  <label htmlFor="lastName" className="block text-base font-normal text-black/80 mb-4">{t.contact.lastName}</label>
                   <Input 
                     id="lastName" 
                     name="lastName" 
@@ -147,7 +149,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-base font-normal text-black/80 mb-4">Email *</label>
+                  <label htmlFor="email" className="block text-base font-normal text-black/80 mb-4">{t.contact.email} *</label>
                   <Input 
                     id="email" 
                     name="email" 
@@ -162,7 +164,7 @@ const Contact = () => {
               </div>
               
               <div>
-                <label htmlFor="project" className="block text-base font-normal text-black/80 mb-4">Tell us about your project.</label>
+                <label htmlFor="project" className="block text-base font-normal text-black/80 mb-4">{t.contact.projectLabel}</label>
                 <Textarea 
                   id="project" 
                   name="project" 
@@ -183,7 +185,7 @@ const Contact = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {isSubmitting ? 'Sending…' : 'Thanks'}
+                  {isSubmitting ? t.contact.sending : t.contact.submit}
                 </motion.button>
               </div>
             </form>

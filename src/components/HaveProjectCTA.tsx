@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
 type HaveProjectCTAProps = {
   className?: string;
@@ -8,6 +9,7 @@ type HaveProjectCTAProps = {
 };
 
 const HaveProjectCTA = ({ className = 'py-20', variant = 'dark' }: HaveProjectCTAProps) => {
+  const { t } = useTranslation();
   const backgroundClass = variant === 'dark' ? 'bg-background relative' : 'bg-[hsl(var(--primary))]';
 
   return (
@@ -25,7 +27,7 @@ const HaveProjectCTA = ({ className = 'py-20', variant = 'dark' }: HaveProjectCT
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          Have a project in mind?
+          {t.cta.haveProject}
         </motion.h2>
         {/* Subtext removed per request */}
         <motion.div
@@ -38,7 +40,7 @@ const HaveProjectCTA = ({ className = 'py-20', variant = 'dark' }: HaveProjectCT
             to="/contact"
             className="group inline-flex items-center gap-3 bg-secondary text-secondary-foreground font-semibold text-lg md:text-xl px-8 py-4 rounded-full hover:shadow-lg hover:shadow-secondary/20 transition-all"
           >
-            <span>We like Bold BRIEFS</span>
+            <span>{t.cta.boldBriefs}</span>
             <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </motion.div>
