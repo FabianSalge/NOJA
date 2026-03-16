@@ -1,9 +1,9 @@
 
 import { useState, useRef } from 'react';
-import { motion, useInView, Variants } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { Helmet } from 'react-helmet-async';
-import { buildCanonical } from '@/lib/seo';
+import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/i18n';
@@ -64,22 +64,15 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.2 } },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
-  };
-
   return (
     <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground pt-20">
       <Helmet>
         <title>Contact — NOJA</title>
         <meta name="description" content="Start a project with NOJA. We like bold briefs." />
         <link rel="canonical" href={buildCanonical('/contact')} />
+        <meta property="og:title" content="Contact — NOJA" />
+        <meta property="og:description" content="Start a project with NOJA. We like bold briefs." />
+        <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
       
       {/* Contact Form Section */}

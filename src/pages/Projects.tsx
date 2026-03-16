@@ -6,6 +6,7 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { richTextOptions } from '@/lib/richtext';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
@@ -15,14 +16,11 @@ import { useTranslation } from '@/i18n';
 const Projects = () => {
   const { t, language } = useTranslation();
   const featuredRef = useRef(null);
-  const allProjectsRef = useRef(null);
   const [featured, setFeatured] = useState<CmsProjectSummary[]>([]);
   const [allProjects, setAllProjects] = useState<CmsProjectSummary[]>([]);
   const [subtext, setSubtext] = useState<Document | undefined>(undefined);
 
   const featuredInView = useInView(featuredRef, { once: true, margin: "-100px" });
-  const allProjectsInView = useInView(allProjectsRef, { once: true, margin: "-100px" });
-
   // Hero-style scroll transitions for sections
   const { scrollYProgress: featuredProgress } = useScroll({
     target: featuredRef,
@@ -87,11 +85,14 @@ const Projects = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-20">
+    <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground pt-28">
       <Helmet>
         <title>Projects — NOJA</title>
         <meta name="description" content="Featured and recent creative projects by NOJA." />
         <link rel="canonical" href={buildCanonical('/projects')} />
+        <meta property="og:title" content="Projects — NOJA" />
+        <meta property="og:description" content="Featured and recent creative projects by NOJA." />
+        <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
       <SEOJsonLd
         json={{
@@ -130,7 +131,7 @@ const Projects = () => {
           >
             <motion.div variants={itemVariants}>
              
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9] px-2">
                 {t.projects.title}
               </h1>
             </motion.div>
@@ -139,7 +140,7 @@ const Projects = () => {
               variants={itemVariants}
             >
               {language === 'en' && subtext ? (
-                documentToReactComponents(subtext)
+                documentToReactComponents(subtext, richTextOptions)
               ) : (
                 <p>
                   {t.projects.subtitle}

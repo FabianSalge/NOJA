@@ -5,15 +5,18 @@ import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical } from '@/lib/seo';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { fetchProjectBySlug, type CmsProjectDetail } from '@/lib/cms';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { richTextOptions } from '@/lib/richtext';
 import { BLOCKS, type TopLevelBlock } from '@contentful/rich-text-types';
 
 const ProjectDetail = () => {
   const { slug } = useParams();
   const [project, setProject] = useState<CmsProjectDetail | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [videoError, setVideoError] = useState(false);
+  const handleVideoError = useCallback(() => setVideoError(true), []);
 
   useEffect(() => {
     if (!slug) return;
@@ -123,13 +126,7 @@ const ProjectDetail = () => {
               <div className="space-y-6 w-full">
                 <h2 className="text-3xl md:text-4xl font-black">{project.firstTextTitle}</h2>
                 <div className="text-lg text-foreground/80 leading-relaxed">
-                  {project.firstTextBody ? documentToReactComponents(project.firstTextBody, {
-                    renderNode: {
-                      [BLOCKS.PARAGRAPH]: (_node, children) => (
-                        <p className="mb-4">{children}</p>
-                      ),
-                    },
-                  }) : null}
+                  {project.firstTextBody ? documentToReactComponents(project.firstTextBody, richTextOptions) : null}
                 </div>
               </div>
             </div>
@@ -182,13 +179,7 @@ const ProjectDetail = () => {
               // Short content - single column
               return (
                 <div className="text-lg leading-relaxed text-foreground/85">
-                  {documentToReactComponents(project.secondTextBody, {
-                    renderNode: {
-                      [BLOCKS.PARAGRAPH]: (_node, children) => (
-                        <p className="mb-4">{children}</p>
-                      ),
-                    },
-                  })}
+                  {documentToReactComponents(project.secondTextBody, richTextOptions)}
                 </div>
               );
             }
@@ -216,6 +207,25 @@ const ProjectDetail = () => {
           )}
         </div>
       </section>
+
+      {/* Project Video */}
+      {project.videoUrl && !videoError && (
+        <section className="bg-background">
+          <div className="max-w-6xl mx-auto px-6">
+            <video
+              src={project.videoUrl}
+              className="w-full rounded-2xl"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={project.coverImageUrl}
+              onError={handleVideoError}
+            />
+          </div>
+        </section>
+      )}
 
       <HaveProjectCTA className="py-20" variant="dark" />
     </div>

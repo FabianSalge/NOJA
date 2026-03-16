@@ -45,6 +45,7 @@ export type CmsProjectDetail = {
   quote: string;
   secondTextTitle: string;
   secondTextBody?: Document;
+  videoUrl?: string;
 };
 
 export type CmsAboutPage = {

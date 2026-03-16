@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown } from 'lucide-react';
 import { containerVariants, itemVariants } from '@/lib/animations';
@@ -14,16 +14,32 @@ const Hero = ({ onScrollIndicatorClick }: HeroProps) => {
   const { t, language } = useTranslation();
   const { scrollY } = useScroll();
   const heroRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const heroInView = useInView(heroRef, { once: true });
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const tryPlay = () => {
+      video.play().catch(() => {});
+    };
+    tryPlay();
+    document.addEventListener('touchstart', tryPlay, { once: true });
+    document.addEventListener('click', tryPlay, { once: true });
+    return () => {
+      document.removeEventListener('touchstart', tryPlay);
+      document.removeEventListener('click', tryPlay);
+    };
+  }, []);
   const yRange = useTransform(scrollY, [0, 1000], [0, -200]);
-  const opacityRange = useTransform(scrollY, [0, 300], [1, 0]);
+  const opacityRange = useTransform(scrollY, [0, 700], [1, 0]);
 
   const pulseAnimation = {
-    opacity: [1, 0.8, 1],
+    opacity: [1, 0.9, 1],
     textShadow: [
-      '0 0 0 hsl(var(--secondary))',
-      '0 0 12px hsl(var(--secondary) / 0.4)',
-      '0 0 0 hsl(var(--secondary))',
+      '0 0 12px hsl(var(--secondary) / 0.5), 0 0 24px hsl(var(--secondary) / 0.2)',
+      '0 0 32px hsl(var(--secondary) / 0.9), 0 0 64px hsl(var(--secondary) / 0.5), 0 0 96px hsl(var(--secondary) / 0.25)',
+      '0 0 12px hsl(var(--secondary) / 0.5), 0 0 24px hsl(var(--secondary) / 0.2)',
     ],
   };
 
@@ -32,6 +48,7 @@ const Hero = ({ onScrollIndicatorClick }: HeroProps) => {
       {/* Background Video */}
       <motion.div className="absolute inset-0" style={{ y: yRange, opacity: opacityRange }}>
         <video
+          ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           loop
@@ -39,7 +56,7 @@ const Hero = ({ onScrollIndicatorClick }: HeroProps) => {
           playsInline
           disablePictureInPicture
           controlsList="nodownload nofullscreen noremoteplayback"
-          preload="auto"
+          preload="metadata"
         >
           <source src={`${import.meta.env.BASE_URL}videos/background-video.mp4`} type="video/mp4" />
         </video>

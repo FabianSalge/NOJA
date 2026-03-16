@@ -9,6 +9,7 @@ import { LanguageProvider } from "./i18n";
 import ScrollToTop from "./components/ScrollToTop";
 import ConditionalAnalytics from "./components/ConditionalAnalytics";
 import CookieConsent from "./components/CookieConsent";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -19,10 +20,12 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <BrowserRouter basename={import.meta.env.BASE_URL}>
-            <ScrollToTop />
-            <ConditionalAnalytics />
-            <AppRoutes />
-            <CookieConsent />
+            <ErrorBoundary>
+              <ScrollToTop />
+              <ConditionalAnalytics />
+              <AppRoutes />
+              <CookieConsent />
+            </ErrorBoundary>
           </BrowserRouter>
         </TooltipProvider>
       </LanguageProvider>

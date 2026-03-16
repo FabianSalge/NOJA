@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { buildContentfulSrcSet } from '@/lib/images';
 
 type ResponsiveImageProps = {
@@ -21,7 +22,9 @@ const ResponsiveImage = ({
   decoding = 'async',
   style,
 }: ResponsiveImageProps) => {
-  if (!src) return null;
+  const [hasError, setHasError] = useState(false);
+
+  if (!src || hasError) return null;
 
   return (
     <img
@@ -33,6 +36,7 @@ const ResponsiveImage = ({
       loading={eager ? 'eager' : 'lazy'}
       decoding={decoding}
       style={style}
+      onError={() => setHasError(true)}
     />
   );
 };

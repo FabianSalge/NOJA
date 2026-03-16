@@ -20,35 +20,27 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 		? cmsLogos
 		: BRAND_LOGOS.map((logo) => withBase(logo));
 
+	const logoItem = (src: string, idx: number, keyPrefix = '') => (
+		<img
+			key={`${keyPrefix}${idx}`}
+			src={src}
+			alt={useCms ? (brands?.[idx]?.name || 'brand') : 'brand logo'}
+			className="h-10 sm:h-12 md:h-16 max-w-[100px] sm:max-w-[120px] md:max-w-[160px] w-auto object-contain shrink-0"
+			loading="lazy"
+			decoding="async"
+		/>
+	);
+
 	return (
 		<div className={`overflow-hidden w-screen relative left-1/2 -translate-x-1/2 ${className}`}>
-			<div className="relative h-20 md:h-24">
-				{/* Marquee track - isolated for performance */}
-				<div className="absolute top-0 left-0 flex flex-nowrap gap-20 opacity-90 marquee-ltr will-change-transform [contain:layout_paint] [transform:translateZ(0)]" style={{ width: '200%' }}>
-					<div className="flex flex-nowrap gap-20 min-w-max">
-						{items.map((src, idx) => (
-							<img 
-								key={`brand-${idx}`} 
-								src={src} 
-								alt={useCms ? (brands?.[idx]?.name || 'brand') : 'brand logo'} 
-								className="h-12 sm:h-14 md:h-20 w-auto object-contain shrink-0" 
-								loading="lazy"
-								decoding="async"
-							/>
-						))}
-					</div>
-					<div className="flex flex-nowrap gap-20 min-w-max">
-						{items.map((src, idx) => (
-							<img 
-								key={`dup-brand-${idx}`} 
-								src={src} 
-								alt={useCms ? (brands?.[idx]?.name || 'brand') : 'brand logo'} 
-								className="h-12 sm:h-14 md:h-20 w-auto object-contain shrink-0" 
-								loading="lazy"
-								decoding="async"
-							/>
-						))}
-					</div>
+			<div className="relative h-16 md:h-20">
+				{/* Content-sized marquee: items determine width, animation shifts by exactly 50% (one full set) */}
+				<div
+					className="absolute top-0 left-0 flex items-center gap-12 sm:gap-16 md:gap-20 opacity-90 marquee-ltr will-change-transform"
+					style={{ width: 'max-content' }}
+				>
+					{items.map((src, idx) => logoItem(src, idx))}
+					{items.map((src, idx) => logoItem(src, idx, 'dup-'))}
 				</div>
 			</div>
 		</div>
@@ -56,5 +48,3 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 };
 
 export default BrandCarousel;
-
-
