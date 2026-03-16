@@ -1,5 +1,5 @@
 
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
@@ -85,8 +85,8 @@ const Services = () => {
     return (
       <ResponsiveImage
         src={mediaUrl}
-        widths={[640, 1024, 1366, 1600]}
-        sizes="(min-width: 1024px) 50vw, 100vw"
+        widths={[400, 640, 1024, 1366, 1600]}
+        sizes="(min-width: 1024px) 50vw, (min-width: 640px) 80vw, 100vw"
         alt={alt}
         className={className}
       />
@@ -102,8 +102,6 @@ const Services = () => {
 
     const isReverse = service.alternateLayout;
     const textColor = isDark ? 'text-foreground' : 'text-background'; // Dark bg = light text, Beige bg = dark text
-    const subtleTextColor = isDark ? 'text-foreground/80' : 'text-background/80';
-
     return (
       <section 
         ref={sectionRef}
@@ -181,24 +179,6 @@ const Services = () => {
     );
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  // We'll create refs inside the ServiceSection component instead
-
   // German static services data - we'll merge with CMS images
   const germanServicesBase = [
     {
@@ -253,11 +233,14 @@ const Services = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-20">
+    <div className="min-h-screen bg-[hsl(var(--primary))] text-foreground pt-20">
       <Helmet>
         <title>Services — NOJA</title>
         <meta name="description" content="Concepts, creation, and execution — services that turn ideas into scroll-stopping visuals." />
         <link rel="canonical" href={buildCanonical('/services')} />
+        <meta property="og:title" content="Services — NOJA" />
+        <meta property="og:description" content="Concepts, creation, and execution — services that turn ideas into scroll-stopping visuals." />
+        <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
       <SEOJsonLd
         json={{

@@ -11,6 +11,7 @@ import PackageCard from '@/components/PackageCard';
 import { HOME_IMAGES, HOME_VIDEOS } from '@/lib/assets';
 import { fetchHome, type CmsHome } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { richTextOptions } from '@/lib/richtext';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
@@ -21,11 +22,8 @@ const Index = () => {
   const { t, language } = useTranslation();
   const whatWeDoRef = useRef(null);
   const statsRef = useRef(null);
-  const servicesRef = useRef(null);
-  const ctaRef = useRef(null);
-  
+
   const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
-  const servicesInView = useInView(servicesRef, { once: true, margin: "-100px" });
 
   // Hero-style scroll transitions for each section
   const { scrollYProgress: whatWeDoProgress } = useScroll({
@@ -81,6 +79,7 @@ const Index = () => {
         <meta property="og:title" content="NOJA — Content With A Pulse" />
         <meta property="og:description" content="Creative marketing agency crafting scroll-stopping content that drives impact." />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
       <SEOJsonLd
         json={[
@@ -111,7 +110,7 @@ const Index = () => {
       <Hero onScrollIndicatorClick={handleScroll} />
 
       {/* Creative Marketing - What we do best (dark) */}
-      <section id="content" className="min-h-screen flex items-center relative overflow-hidden bg-[hsl(var(--primary))]" ref={whatWeDoRef}>
+      <section id="content" className="min-h-screen flex items-center relative overflow-hidden bg-[hsl(var(--primary))] pt-16 md:pt-0" ref={whatWeDoRef}>
         {/* Hero-style background transition */}
         <motion.div 
           className="absolute inset-0 hidden md:block"
@@ -161,7 +160,7 @@ const Index = () => {
               </div>
               <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">
                 {language === 'en' && home?.whatWeDoBestText ? (
-                  documentToReactComponents(home.whatWeDoBestText)
+                  documentToReactComponents(home.whatWeDoBestText, richTextOptions)
                 ) : (
                   <p>
                     {t.home.pulseEffect.description}
@@ -179,7 +178,7 @@ const Index = () => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="relative mx-auto w-full max-w-[520px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] sm:scale-[1.15] lg:scale-[1.15] xl:scale-[1.3] 2xl:scale-[1.45] rotate-[4deg]">
+              <div className="relative mx-auto w-full max-w-[580px] md:max-w-[560px] lg:max-w-[640px] xl:max-w-[720px] 2xl:max-w-[780px] scale-[1.25] sm:scale-[1.15] lg:scale-[1.15] xl:scale-[1.3] 2xl:scale-[1.45] rotate-[4deg]">
                 {/\.gif$/i.test(HOME_VIDEOS.homePhone) ? (
                   <img
                     src={HOME_VIDEOS.homePhone}
@@ -227,7 +226,7 @@ const Index = () => {
 
           {/* Brand logos marquee */}
           <motion.div 
-            className="mt-28 md:mt-32 lg:mt-36 mb-0 relative z-0"
+            className="mt-16 md:mt-40 lg:mt-44 mb-8 md:mb-0 relative z-0"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -240,7 +239,7 @@ const Index = () => {
       </section>
 
       {/* What you need - Beige section */}
-      <section className="min-h-screen flex items-start relative overflow-hidden bg-background pt-6 md:pt-8 lg:pt-10" ref={statsRef}>
+      <section className="min-h-screen flex items-start relative overflow-hidden bg-background pt-16 md:pt-8 lg:pt-10" ref={statsRef}>
         {/* Static beige background (primary state) */}
         <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
         {/* Hero-style background transition (peels away to reveal dark) */}

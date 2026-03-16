@@ -1,6 +1,6 @@
 import { Document, BLOCKS, TopLevelBlock } from "@contentful/rich-text-types";
 import type { Asset, Entry } from "contentful";
-import { contentfulClient, getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./contentful";
+import { getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./contentful";
 import type {
     CmsAboutPage,
     CmsHome,
@@ -146,6 +146,7 @@ export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail
 		quote: getField<string>(f, "quote") ?? "",
 		secondTextTitle: getField<string>(f, "secondTextTitle") ?? "",
 		secondTextBody: getField<Document>(f, "secondTextBody"),
+		videoUrl: assetUrlFromField(getField<Asset>(f, "video")),
 	};
 }
 

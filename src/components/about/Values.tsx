@@ -3,6 +3,7 @@ import { containerVariants, itemVariants } from '@/lib/animations';
 import { useRef } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 type ValueItem = { icon: LucideIcon; title: string; description: string };
 
@@ -30,7 +31,9 @@ const Values = ({ items }: ValuesProps) => {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground text-center leading-[0.9]">{t.about.values.title}</h2>
           </motion.div>
         </motion.div>
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6" variants={containerVariants} initial="hidden" animate={valuesInView ? 'visible' : 'hidden'}>
+
+        {/* Desktop: grid layout */}
+        <motion.div className="hidden md:grid grid-cols-3 gap-6" variants={containerVariants} initial="hidden" animate={valuesInView ? 'visible' : 'hidden'}>
           {items.map((value, index) => (
             <motion.div key={index} className="group" variants={itemVariants} transition={{ duration: 0.6, ease: 'easeOut' }}>
               <motion.div className="bg-foreground/5 backdrop-blur-sm rounded-2xl p-6 h-full border border-foreground/10 hover:border-foreground/20 transition-all duration-300 text-center" whileHover={{ y: -4 }}>
@@ -43,11 +46,35 @@ const Values = ({ items }: ValuesProps) => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Mobile: accordion layout — icon + title stacked & centred */}
+        <motion.div
+          className="md:hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Accordion type="single" collapsible className="space-y-3">
+            {items.map((value, index) => (
+              <AccordionItem key={index} value={`value-${index}`} className="bg-foreground/5 backdrop-blur-sm rounded-2xl border border-foreground/10 overflow-hidden">
+                <AccordionTrigger className="px-5 py-5 hover:no-underline [&>svg]:mx-auto [&>svg]:mt-1">
+                  <div className="flex flex-col items-center gap-2 w-full">
+                    <div className="w-11 h-11 bg-foreground text-[hsl(var(--primary))] rounded-xl flex items-center justify-center">
+                      <value.icon size={20} />
+                    </div>
+                    <span className="text-base font-bold text-foreground">{value.title}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-5 pb-5">
+                  <p className="text-foreground/70 text-sm leading-relaxed text-center">{value.description}</p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
       </div>
     </section>
   );
 }
 
 export default Values;
-
-

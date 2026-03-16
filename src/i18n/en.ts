@@ -151,8 +151,9 @@ export const en = {
 
   // Footer
   footer: {
+    companyName: 'Noja Productions KLG',
     tagline: 'Creative Marketing Agency',
-    location: 'Based in Zurich & available Worldwide',
+    location: 'Based in Zurich',
     aboutUs: 'About us',
     projects: 'Projects',
     startProject: 'Start a Project',

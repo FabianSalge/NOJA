@@ -3,3 +3,18 @@ dist
 *.log
 .DS_Store
 .env
+.env.*
+.env.local
+
+# Editor / AI tooling
+.claude
+.cursor
+.vscode
+.idea
+
+# OS files
+Thumbs.db
+
+# Build / cache
+*.tsbuildinfo
+.vite

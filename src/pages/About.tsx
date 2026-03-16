@@ -7,7 +7,7 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
  
 import { Helmet } from 'react-helmet-async';
-import { buildCanonical } from '@/lib/seo';
+import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import Story from '@/components/about/Story';
 import Values from '@/components/about/Values';
 import Team from '@/components/about/Team';
@@ -59,7 +59,7 @@ const About = () => {
     {
       name: t.about.team.jamilla.name,
       role: t.about.team.jamilla.role,
-      image: `${import.meta.env.BASE_URL}images/team-pictures/Jamilla_NOJA.jpg`,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Jamilla_NOJA_new.png`,
       description: t.about.team.jamilla.description,
       funFact: t.about.team.jamilla.funFact,
     }
@@ -89,11 +89,14 @@ const About = () => {
   
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] pt-20">
+    <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] pt-12 md:pt-20">
       <Helmet>
         <title>About NOJA — Why Us</title>
         <meta name="description" content="We blend concept, production, and project management to deliver strategic creative content." />
         <link rel="canonical" href={buildCanonical('/about')} />
+        <meta property="og:title" content="About NOJA — Why Us" />
+        <meta property="og:description" content="We blend concept, production, and project management to deliver strategic creative content." />
+        <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
 
       <Story 
@@ -114,7 +117,7 @@ const About = () => {
           <div className="flex w-max marquee-content">
             {[...actionImages, ...actionImages].map((src, index) => (
               <div key={index} className="flex-shrink-0 px-2">
-                <div className="overflow-hidden rounded-2xl w-56 aspect-[9/16]">
+                <div className="overflow-hidden rounded-2xl w-40 sm:w-56 aspect-[9/16]">
                   <img
                     src={src}
                     alt={`Action shot ${index + 1}`}

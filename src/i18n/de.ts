@@ -136,7 +136,7 @@ export const de = {
 
   // Contact page
   contact: {
-    title: 'WE LIKE BOLD BRIEFS',
+    title: 'WIR LIEBEN MUTIGE IDEEN!',
     firstName: 'Vorname',
     lastName: 'Nachname',
     email: 'Email',
@@ -151,6 +151,7 @@ export const de = {
 
   // Footer
   footer: {
+    companyName: 'Noja Productions KLG',
     tagline: 'Kreative Marketing Agentur',
     location: 'Zürich, Schweiz',
     aboutUs: 'Über uns',

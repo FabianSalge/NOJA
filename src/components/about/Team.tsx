@@ -29,14 +29,30 @@ const Team = ({ members }: TeamProps) => {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-background text-center leading-[0.9]">{t.about.team.title}</h2>
           </motion.div>
         </motion.div>
-        <motion.div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6" variants={containerVariants} initial="hidden" animate={teamInView ? 'visible' : 'hidden'}>
+
+        {/* Desktop: 3-column grid with overlay */}
+        <motion.div className="hidden md:grid grid-cols-3 gap-4 md:gap-6" variants={containerVariants} initial="hidden" animate={teamInView ? 'visible' : 'hidden'}>
           {members.map((member) => (
             <motion.div key={member.name} className="relative group overflow-hidden rounded-xl shadow-md" variants={itemVariants} transition={{ duration: 0.5, ease: 'easeOut' }}>
               <img src={member.image} alt={member.name} className="w-full h-auto object-cover object-top transition-transform duration-500 group-hover:scale-105 aspect-[3/4]" />
               <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 text-white">
-                <p className="text-[10px] sm:text-xs opacity-90">{member.role}</p>
-                <h3 className="text-sm sm:text-base font-semibold leading-tight">{member.name}</h3>
+              <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                <p className="text-xs opacity-90">{member.role}</p>
+                <h3 className="text-base font-semibold leading-tight">{member.name}</h3>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Mobile: full-width stacked cards with text overlay, no gaps */}
+        <motion.div className="md:hidden -mx-4 sm:-mx-6" variants={containerVariants} initial="hidden" animate={teamInView ? 'visible' : 'hidden'}>
+          {members.map((member) => (
+            <motion.div key={member.name} className="relative overflow-hidden" variants={itemVariants} transition={{ duration: 0.5, ease: 'easeOut' }}>
+              <img src={member.image} alt={member.name} className="w-full aspect-[3/2] object-cover object-[center_30%]" />
+              <div className="absolute inset-x-0 bottom-0 top-1/3 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-5">
+                <h3 className="text-xl font-bold text-white leading-tight">{member.name}</h3>
+                <p className="text-sm text-white/80 mt-1">{member.role}</p>
               </div>
             </motion.div>
           ))}
@@ -47,5 +63,3 @@ const Team = ({ members }: TeamProps) => {
 }
 
 export default Team;
-
-

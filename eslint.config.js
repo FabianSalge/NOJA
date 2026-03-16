@@ -25,5 +25,11 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     },
+  },
+  {
+    files: ["src/components/ui/**/*.{ts,tsx}", "src/i18n/index.tsx"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
   }
 );
