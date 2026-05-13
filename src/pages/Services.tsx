@@ -93,14 +93,13 @@ const Services = () => {
     );
   };
 
-  const ServiceSection = ({ service, isDark }: { 
-    service: CmsServiceItem; 
+  const ServiceSection = ({ service, isDark, isReverse }: {
+    service: CmsServiceItem;
     isDark: boolean;
+    isReverse: boolean;
   }) => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-150px" });
-
-    const isReverse = service.alternateLayout;
     const textColor = isDark ? 'text-foreground' : 'text-background'; // Dark bg = light text, Beige bg = dark text
     return (
       <section 
@@ -290,16 +289,14 @@ const Services = () => {
       </section>
 
       {/* Services Sections */}
-      {displayServices.map((service, index) => {
-        const isDark = index % 2 === 0; // First service section (index 0) is dark, since hero is beige
-        return (
-          <ServiceSection 
-            key={service.title} 
-            service={service} 
-            isDark={isDark}
-          />
-        );
-      })}
+      {displayServices.map((service, index) => (
+        <ServiceSection
+          key={service.title}
+          service={service}
+          isDark={index % 2 === 0}
+          isReverse={index % 2 !== 0}
+        />
+      ))}
 
       <HaveProjectCTA className="py-20" variant="dark" />
     </div>

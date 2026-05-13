@@ -130,47 +130,43 @@ const Navigation = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center w-full">
-            <div className="flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-8">
-              {/* Left group */}
-              <div className="flex items-center gap-1 justify-end">
-                {navItems.slice(0,2).map((item) => (
-                  <Link key={item.name} to={item.path} className={linkClass(item.path)}>
-                    {item.name}
-                    <span className={underlineClass(item.path)} />
-                  </Link>
-                ))}
-              </div>
-
-              {/* Center logo */}
-              <Link to="/" className="group relative mx-6">
-                <img
-                  src={LOGOS.njWhite}
-                  alt="NOJA"
-                  className="h-8 w-auto transition-all duration-500 group-hover:scale-105"
-                />
-              </Link>
-
-              {/* Right group */}
-              <div className="flex items-center gap-1 justify-start">
-                {navItems.slice(2).map((item) => (
-                  <Link key={item.name} to={item.path} className={linkClass(item.path)}>
-                    {item.name}
-                    <span className={underlineClass(item.path)} />
-                  </Link>
-                ))}
-              </div>
+          <div className="hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-center w-full gap-8">
+            {/* Left group */}
+            <div className="flex items-center gap-1 justify-end">
+              {navItems.slice(0, 2).map((item) => (
+                <Link key={item.name} to={item.path} className={linkClass(item.path)}>
+                  {item.name}
+                  <span className={underlineClass(item.path)} />
+                </Link>
+              ))}
             </div>
 
-            {/* Language toggle */}
-            <button
-              onClick={toggleLanguage}
-              className={`ml-6 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 ${textColorMuted} ${hoverTextColor} ${hoverBgClass}`}
-              aria-label={`Switch to ${language === 'en' ? 'German' : 'English'}`}
-            >
-              <Globe size={15} />
-              <span>{language}</span>
-            </button>
+            {/* Center logo */}
+            <Link to="/" className="group relative mx-6">
+              <img
+                src={LOGOS.njWhite}
+                alt="NOJA"
+                className="h-8 w-auto transition-all duration-500 group-hover:scale-105"
+              />
+            </Link>
+
+            {/* Right group — includes language toggle */}
+            <div className="flex items-center gap-1 justify-start">
+              {navItems.slice(2).map((item) => (
+                <Link key={item.name} to={item.path} className={linkClass(item.path)}>
+                  {item.name}
+                  <span className={underlineClass(item.path)} />
+                </Link>
+              ))}
+              <button
+                onClick={toggleLanguage}
+                className={`ml-4 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 ${textColorMuted} ${hoverTextColor} ${hoverBgClass}`}
+                aria-label={`Switch to ${language === 'en' ? 'German' : 'English'}`}
+              >
+                <Globe size={15} />
+                <span>{language}</span>
+              </button>
+            </div>
           </div>
         </div>
 

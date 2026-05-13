@@ -40,7 +40,11 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 					style={{ width: 'max-content' }}
 				>
 					{items.map((src, idx) => logoItem(src, idx))}
-					{items.map((src, idx) => logoItem(src, idx, 'dup-'))}
+					{items.map((src, idx) => logoItem(src, idx, 'b-'))}
+					{items.map((src, idx) => logoItem(src, idx, 'c-'))}
+					{items.map((src, idx) => logoItem(src, idx, 'd-'))}
+					{items.map((src, idx) => logoItem(src, idx, 'e-'))}
+					{items.map((src, idx) => logoItem(src, idx, 'f-'))}
 				</div>
 			</div>
 		</div>

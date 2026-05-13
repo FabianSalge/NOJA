@@ -226,7 +226,7 @@ const Index = () => {
 
           {/* Brand logos marquee */}
           <motion.div 
-            className="mt-16 md:mt-40 lg:mt-44 mb-8 md:mb-0 relative z-0"
+            className="mt-12 md:mt-24 lg:mt-28 mb-8 md:mb-0 relative z-0"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

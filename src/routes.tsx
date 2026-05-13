@@ -22,6 +22,7 @@ const Projects = lazy(() => import("./pages/Projects"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const Services = lazy(() => import("./pages/Services"));
 const Contact = lazy(() => import("./pages/Contact"));
+const CookieDeclaration = lazy(() => import("./pages/CookieDeclaration"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AppRoutes = () => {
@@ -38,6 +39,7 @@ const AppRoutes = () => {
         <Route path="/projects/:slug" element={<Layout><ProjectDetail /></Layout>} />
         <Route path="/services" element={<Layout><Services /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/cookie-declaration" element={<Layout><CookieDeclaration /></Layout>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>

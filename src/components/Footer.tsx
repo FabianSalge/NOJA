@@ -68,6 +68,12 @@ const Footer = () => {
             >
               {t.footer.impressum}
             </a>
+            <Link
+              to="/cookie-declaration"
+              className="block text-background/90 hover:text-[hsl(var(--primary))]"
+            >
+              {t.footer.cookieSettings}
+            </Link>
           </div>
         </div>
       </div>

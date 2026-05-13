@@ -160,6 +160,7 @@ export const de = {
     terms: 'Allgemeine Geschäftsbedingungen',
     privacy: 'Datenschutz und Sicherheit',
     impressum: 'Impressum',
+    cookieSettings: 'Cookie-Einstellungen',
   },
 
   // CTA
@@ -175,11 +176,10 @@ export const de = {
 
   // Cookie Consent
   cookies: {
-    title: 'Wir schätzen Ihre Privatsphäre',
-    description: 'Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern und den Website-Verkehr zu analysieren. Mit "Akzeptieren" stimmen Sie der Verwendung von Cookies zu.',
-    acceptAll: 'Akzeptieren',
-    decline: 'Ablehnen',
-    privacyLink: 'Datenschutz',
+    title: 'Wir verwenden Cookies',
+    description: 'Diese Website verwendet ausschliesslich technisch notwendige Cookies zur Speicherung Ihrer Spracheinstellung. Es werden keine Tracking- oder Werbe-Cookies verwendet.',
+    acknowledge: 'Alles klar',
+    privacyLink: 'Cookie-Erklärung',
   },
 } as const;
 
