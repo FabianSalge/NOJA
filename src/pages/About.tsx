@@ -45,24 +45,27 @@ const About = () => {
     {
       name: t.about.team.naomi.name,
       role: t.about.team.naomi.role,
-      image: `${import.meta.env.BASE_URL}images/team-pictures/Naomi_NOJA.jpeg`,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Naomi_NOJA_2026.jpg`,
+      video: `${import.meta.env.BASE_URL}images/team-pictures/Naomi_NOJA_2026.mp4`,
       description: t.about.team.naomi.description,
       funFact: t.about.team.naomi.funFact,
     },
     {
       name: t.about.team.talia.name,
       role: t.about.team.talia.role,
-      image: `${import.meta.env.BASE_URL}images/team-pictures/Talia_NOJA.jpeg`,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Talia_NOJA_2026.jpg`,
+      video: `${import.meta.env.BASE_URL}images/team-pictures/Talia_NOJA_2026.mp4`,
       description: t.about.team.talia.description,
       funFact: t.about.team.talia.funFact,
     },
     {
       name: t.about.team.jamilla.name,
       role: t.about.team.jamilla.role,
-      image: `${import.meta.env.BASE_URL}images/team-pictures/Jamilla_NOJA_new.png`,
+      image: `${import.meta.env.BASE_URL}images/team-pictures/Jamilla_NOJA_2026.jpg`,
+      video: `${import.meta.env.BASE_URL}images/team-pictures/Jamilla_NOJA_2026.mp4`,
       description: t.about.team.jamilla.description,
       funFact: t.about.team.jamilla.funFact,
-    }
+    },
   ];
 
   const actionImages = [

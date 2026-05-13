@@ -1,108 +1,48 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ConsentPreferences = {
-  essential: boolean; // Always true, required for site functionality
-  analytics: boolean; // Vercel Analytics, Speed Insights
-};
-
-type ConsentState = {
-  hasConsented: boolean;
-  preferences: ConsentPreferences;
-};
-
 const CONSENT_STORAGE_KEY = 'noja-cookie-consent';
+const CONSENT_VERSION = 2;
 
-const defaultPreferences: ConsentPreferences = {
-  essential: true,
-  analytics: false,
-};
-
-function getStoredConsent(): ConsentState | null {
-  if (typeof window === 'undefined') return null;
-  
+function getStoredAcknowledgement(): boolean {
+  if (typeof window === 'undefined') return false;
   try {
     const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      return {
-        hasConsented: true,
-        preferences: {
-          essential: true, // Always true
-          analytics: parsed.analytics ?? false,
-        },
-      };
+      return parsed.version === CONSENT_VERSION;
     }
   } catch {
-    // Invalid stored data, ignore
+    // ignore corrupt data
   }
-  return null;
+  return false;
 }
 
-function storeConsent(preferences: ConsentPreferences): void {
+function storeAcknowledgement(): void {
   if (typeof window === 'undefined') return;
-  
   localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify({
-    analytics: preferences.analytics,
     timestamp: new Date().toISOString(),
+    version: CONSENT_VERSION,
   }));
 }
 
 export function useConsent() {
-  const [state, setState] = useState<ConsentState>(() => {
-    const stored = getStoredConsent();
-    return stored ?? { hasConsented: false, preferences: defaultPreferences };
-  });
+  const [hasConsented, setHasConsented] = useState<boolean>(() => getStoredAcknowledgement());
 
-  // Check for stored consent on mount (handles SSR)
   useEffect(() => {
-    const stored = getStoredConsent();
-    if (stored) {
-      setState(stored);
-    }
+    setHasConsented(getStoredAcknowledgement());
   }, []);
 
-  const acceptAll = useCallback(() => {
-    const preferences: ConsentPreferences = {
-      essential: true,
-      analytics: true,
-    };
-    storeConsent(preferences);
-    setState({ hasConsented: true, preferences });
-  }, []);
-
-  const declineOptional = useCallback(() => {
-    const preferences: ConsentPreferences = {
-      essential: true,
-      analytics: false,
-    };
-    storeConsent(preferences);
-    setState({ hasConsented: true, preferences });
-  }, []);
-
-  const updatePreferences = useCallback((newPreferences: Partial<ConsentPreferences>) => {
-    setState((prev) => {
-      const preferences: ConsentPreferences = {
-        essential: true, // Always true
-        analytics: newPreferences.analytics ?? prev.preferences.analytics,
-      };
-      storeConsent(preferences);
-      return { hasConsented: true, preferences };
-    });
+  const acknowledge = useCallback(() => {
+    storeAcknowledgement();
+    setHasConsented(true);
   }, []);
 
   const resetConsent = useCallback(() => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(CONSENT_STORAGE_KEY);
     }
-    setState({ hasConsented: false, preferences: defaultPreferences });
+    setHasConsented(false);
   }, []);
 
-  return {
-    hasConsented: state.hasConsented,
-    preferences: state.preferences,
-    acceptAll,
-    declineOptional,
-    updatePreferences,
-    resetConsent,
-  };
+  return { hasConsented, acknowledge, resetConsent };
 }

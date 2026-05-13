@@ -160,6 +160,7 @@ export const en = {
     terms: 'Terms and Conditions',
     privacy: 'Data Protection and Security',
     impressum: 'Impressum',
+    cookieSettings: 'Cookie Settings',
   },
 
   // CTA
@@ -175,11 +176,10 @@ export const en = {
 
   // Cookie Consent
   cookies: {
-    title: 'We value your privacy',
-    description: 'We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept", you consent to our use of cookies.',
-    acceptAll: 'Accept',
-    decline: 'Decline',
-    privacyLink: 'Privacy Policy',
+    title: 'We use cookies',
+    description: 'This site only uses technically necessary cookies to remember your language preference. No tracking or advertising cookies are used.',
+    acknowledge: 'Got it',
+    privacyLink: 'Cookie Declaration',
   },
 } as const;
 
