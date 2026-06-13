@@ -3,6 +3,15 @@ import { useState, useEffect, useCallback } from 'react';
 const CONSENT_STORAGE_KEY = 'noja-cookie-consent';
 const CONSENT_VERSION = 2;
 
+// Module-level subscribers so every useConsent() instance stays in sync.
+// Without this, the banner and the analytics gate hold independent state and
+// acknowledging in one would not load GA in the other until a full reload.
+const listeners = new Set<() => void>();
+
+function notify(): void {
+  listeners.forEach((listener) => listener());
+}
+
 function getStoredAcknowledgement(): boolean {
   if (typeof window === 'undefined') return false;
   try {
@@ -29,12 +38,21 @@ export function useConsent() {
   const [hasConsented, setHasConsented] = useState<boolean>(() => getStoredAcknowledgement());
 
   useEffect(() => {
-    setHasConsented(getStoredAcknowledgement());
+    const sync = () => setHasConsented(getStoredAcknowledgement());
+    sync();
+    listeners.add(sync);
+    // Keep consent consistent across tabs.
+    window.addEventListener('storage', sync);
+    return () => {
+      listeners.delete(sync);
+      window.removeEventListener('storage', sync);
+    };
   }, []);
 
   const acknowledge = useCallback(() => {
     storeAcknowledgement();
     setHasConsented(true);
+    notify();
   }, []);
 
   const resetConsent = useCallback(() => {
@@ -42,6 +60,7 @@ export function useConsent() {
       localStorage.removeItem(CONSENT_STORAGE_KEY);
     }
     setHasConsented(false);
+    notify();
   }, []);
 
   return { hasConsented, acknowledge, resetConsent };
