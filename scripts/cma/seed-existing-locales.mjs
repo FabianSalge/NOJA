@@ -51,16 +51,17 @@ if (services) {
   console.log("seeded de-CH servicesPage hero");
 }
 
-// serviceItem entries by order
+// serviceItem entries — matched by English title (Contentful `order` is 1-based and
+// does not align with COPY indices, so title is the reliable key).
 const { items: serviceItems } = await client.entry.getMany({ ...scope, query: { content_type: "serviceItem", limit: 50 } });
 for (const item of serviceItems) {
-  const order = item.fields.order?.["en-US"];
-  const row = COPY.services.find((s) => s.order === order);
-  if (!row) { console.warn(`  ! no COPY.services for order ${order}`); continue; }
+  const enTitle = item.fields.title?.["en-US"];
+  const row = COPY.services.find((s) => s.title.en === enTitle);
+  if (!row) { console.warn(`  ! no COPY.services match for title ${JSON.stringify(enTitle)}`); continue; }
   setLocale(item, "title", row.title.de);
   setLocale(item, "description", row.description.de);
   setLocale(item, "features", row.features.de);
   await savePublish(item.sys.id, item);
-  console.log(`seeded de-CH serviceItem order=${order}`);
+  console.log(`seeded de-CH serviceItem ${JSON.stringify(enTitle)} -> ${JSON.stringify(row.title.de)}`);
 }
 console.log("seed-existing-locales done");
