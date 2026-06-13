@@ -1,28 +1,40 @@
 import { Document, BLOCKS, TopLevelBlock } from "@contentful/rich-text-types";
 import type { Asset, Entry } from "contentful";
 import { getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./contentful";
+import type { Language } from "@/i18n";
 import type {
     CmsAboutPage,
+    CmsAboutValue,
     CmsHome,
     CmsProjectDetail,
     CmsProjectsPage,
     CmsProjectSummary,
     CmsServiceItem,
     CmsServicesPage,
+    CmsTeamMember,
     CmsWhatYouNeedCard,
     CmsBrand,
 } from "./cms.types";
 export type {
     CmsAboutPage,
+    CmsAboutValue,
     CmsHome,
     CmsProjectDetail,
     CmsProjectsPage,
     CmsProjectSummary,
     CmsServiceItem,
     CmsServicesPage,
+    CmsTeamMember,
     CmsWhatYouNeedCard,
     CmsBrand,
 } from "./cms.types";
+
+export type ContentfulLocale = "en-US" | "de-CH";
+
+// Maps the app language (from src/i18n) to its Contentful locale code.
+export function localeForLanguage(language: Language): ContentfulLocale {
+	return language === "de" ? "de-CH" : "en-US";
+}
 
 // Minimal helper types for Contentful results
 type EntriesResult = { items?: Entry[] };
@@ -59,12 +71,13 @@ export function splitDocumentByParagraphs(doc: Document): [Document, Document] {
 }
 
 // Queries
-export async function fetchHome(): Promise<CmsHome | undefined> {
+export async function fetchHome(locale: ContentfulLocale = "en-US"): Promise<CmsHome | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "homePage",
 		include: 2,
 		limit: 1,
+		locale,
 	});
 	const entry = res.items?.[0];
 	if (!entry) return undefined;
@@ -83,13 +96,17 @@ export async function fetchHome(): Promise<CmsHome | undefined> {
 		}))
 		.sort((a: CmsWhatYouNeedCard, b: CmsWhatYouNeedCard) => (a.order ?? 0) - (b.order ?? 0));
 	return {
+		heroTitle: getField<string>(fields, "heroTitle"),
+		pulseEffectTitle: getField<string>(fields, "pulseEffectTitle"),
 		whatWeDoBestText: getField<Document>(fields, "whatWeDoBestText"),
+		servicesSectionTitle: getField<string>(fields, "servicesSectionTitle"),
+		servicesSectionSubtitle: getField<string>(fields, "servicesSectionSubtitle"),
 		brands,
 		whatYouNeedCards,
 	};
 }
 
-export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
+export async function fetchProjectsPage(locale: ContentfulLocale = "en-US"): Promise<CmsProjectsPage> {
 	if (!isContentfulConfigured()) {
 		return { ourWorkSubtext: undefined, featured: [], all: [] };
 	}
@@ -97,6 +114,7 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 	const settingsRes = await cachedGetEntries<EntriesResult>({
 		content_type: "projectsPageSettings",
 		limit: 1,
+		locale,
 	});
 	const settings = settingsRes.items?.[0]?.fields ?? {};
 
@@ -106,6 +124,7 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 		order: ["-fields.date"],
 		include: 1,
 		limit: 100,
+		locale,
 	});
 	const allSummaries: CmsProjectSummary[] = (projRes.items ?? []).map((p: Entry) => ({
 		slug: getField<string>(p.fields as Record<string, unknown>, "slug") ?? "",
@@ -119,19 +138,24 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 	// 3 featured + 1 stranded in a 6-column grid) and an empty compact grid at low counts.
 	const featuredCount = allSummaries.length > 6 ? 3 : allSummaries.length;
 	return {
+		pageTitle: getField<string>(settings as Record<string, unknown>, "pageTitle"),
+		pageSubtitle: getField<string>(settings as Record<string, unknown>, "pageSubtitle"),
+		moreWorkTitle: getField<string>(settings as Record<string, unknown>, "moreWorkTitle"),
+		allProjectsTitle: getField<string>(settings as Record<string, unknown>, "allProjectsTitle"),
 		ourWorkSubtext: getField<Document>(settings as Record<string, unknown>, "ourWorkSubtext"),
 		featured: allSummaries.slice(0, featuredCount),
 		all: allSummaries.slice(featuredCount),
 	};
 }
 
-export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail | undefined> {
+export async function fetchProjectBySlug(slug: string, locale: ContentfulLocale = "en-US"): Promise<CmsProjectDetail | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "project",
 		"fields.slug": slug,
 		include: 2,
 		limit: 1,
+		locale,
 	});
 	const item = res.items?.[0];
 	if (!item) return undefined;
@@ -153,26 +177,58 @@ export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail
 	};
 }
 
-export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
+export async function fetchAbout(locale: ContentfulLocale = "en-US"): Promise<CmsAboutPage | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "aboutPageSettings",
-		include: 1,
+		include: 2,
 		limit: 1,
+		locale,
 	});
 	const fields = res.items?.[0]?.fields ?? {};
+	const valuesRaw = (getField<Entry[]>(fields as Record<string, unknown>, "aboutValues") ?? []);
+	const values: CmsAboutValue[] = valuesRaw
+		.map((v) => ({
+			title: getField<string>(v.fields as Record<string, unknown>, "title") ?? "",
+			description: getField<string>(v.fields as Record<string, unknown>, "description") ?? "",
+			icon: (getField<string>(v.fields as Record<string, unknown>, "icon") ?? "eye") as CmsAboutValue["icon"],
+			order: getField<number>(v.fields as Record<string, unknown>, "order"),
+		}))
+		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+	const teamRaw = (getField<Entry[]>(fields as Record<string, unknown>, "teamMembers") ?? []);
+	const team: CmsTeamMember[] = teamRaw
+		.map((m) => ({
+			name: getField<string>(m.fields as Record<string, unknown>, "name") ?? "",
+			role: getField<string>(m.fields as Record<string, unknown>, "role") ?? "",
+			description: getField<string>(m.fields as Record<string, unknown>, "description"),
+			funFact: getField<string>(m.fields as Record<string, unknown>, "funFact"),
+			photoUrl: assetUrlFromField(getField<Asset>(m.fields as Record<string, unknown>, "photo")),
+			videoUrl: assetUrlFromField(getField<Asset>(m.fields as Record<string, unknown>, "hoverVideo")),
+			order: getField<number>(m.fields as Record<string, unknown>, "order"),
+		}))
+		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+	const galleryRaw = (getField<Asset[]>(fields as Record<string, unknown>, "inActionImages") ?? []);
+	const inActionImageUrls = galleryRaw.map((a) => assetUrlFromField(a)).filter((u): u is string => Boolean(u));
 	return {
+		aboutEyebrow: getField<string>(fields as Record<string, unknown>, "aboutEyebrow"),
+		aboutHeading: getField<string>(fields as Record<string, unknown>, "aboutHeading"),
+		valuesTitle: getField<string>(fields as Record<string, unknown>, "valuesTitle"),
+		teamTitle: getField<string>(fields as Record<string, unknown>, "teamTitle"),
 		ourStoryText: getField<Document>(fields as Record<string, unknown>, "ourStoryText"),
 		ourStoryImageUrl: assetUrlFromField(getField<Asset>(fields as Record<string, unknown>, "ourStoryImage")),
+		values,
+		team,
+		inActionImageUrls,
 	};
 }
 
-export async function fetchServicesPage(): Promise<CmsServicesPage | undefined> {
+export async function fetchServicesPage(locale: ContentfulLocale = "en-US"): Promise<CmsServicesPage | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "servicesPage",
 		include: 2,
 		limit: 1,
+		locale,
 	});
 	const entry = res.items?.[0];
 	if (!entry) return undefined;

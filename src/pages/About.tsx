@@ -4,7 +4,7 @@ import { Eye, Lightbulb, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
-import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
+import { fetchAbout, localeForLanguage, type CmsAboutPage } from '@/lib/cms';
  
 import { Helmet } from 'react-helmet-async';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
@@ -18,12 +18,14 @@ const About = () => {
 
   const [about, setAbout] = useState<CmsAboutPage | undefined>(undefined);
   useEffect(() => {
-    fetchAbout().then(setAbout).catch(() => {
+    fetchAbout(localeForLanguage(language)).then(setAbout).catch(() => {
       console.warn('Failed to fetch About page content from Contentful. Falling back to static copy.');
     });
-  }, []);
+  }, [language]);
 
-  const values = [
+  const ICONS = { eye: Eye, lightbulb: Lightbulb, users: Users } as const;
+
+  const fallbackValues = [
     {
       icon: Eye,
       title: t.about.values.transparency.title,
@@ -41,7 +43,7 @@ const About = () => {
     }
   ];
 
-  const team = [
+  const fallbackTeam = [
     {
       name: t.about.team.naomi.name,
       role: t.about.team.naomi.role,
@@ -68,7 +70,7 @@ const About = () => {
     },
   ];
 
-  const actionImages = [
+  const fallbackActionImages = [
     `${import.meta.env.BASE_URL}images/action-slider/slide-01.png`,
     `${import.meta.env.BASE_URL}images/action-slider/slide-02.jpg`,
     `${import.meta.env.BASE_URL}images/action-slider/slide-03.png`,
@@ -89,7 +91,17 @@ const About = () => {
     `${import.meta.env.BASE_URL}images/action-slider/slide-18.png`,
   ];
 
-  
+  const values = about?.values?.length
+    ? about.values.map((v) => ({ icon: ICONS[v.icon] ?? Eye, title: v.title, description: v.description }))
+    : fallbackValues;
+
+  const team = about?.team?.length
+    ? about.team.map((m) => ({ name: m.name, role: m.role, image: m.photoUrl ?? '', video: m.videoUrl, description: m.description ?? '', funFact: m.funFact ?? '' }))
+    : fallbackTeam;
+
+  const actionImages = about?.inActionImageUrls?.length ? about.inActionImageUrls : fallbackActionImages;
+
+
 
   return (
     <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] pt-12 md:pt-20">
@@ -102,17 +114,19 @@ const About = () => {
         <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
 
-      <Story 
-        text={language === 'en' ? about?.ourStoryText : undefined} 
+      <Story
+        text={about?.ourStoryText}
         fallbackText={t.about.story.text}
-        imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} 
+        imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`}
+        eyebrow={about?.aboutEyebrow}
+        heading={about?.aboutHeading}
       />
 
       
 
-      <Values items={values} />
+      <Values items={values} title={about?.valuesTitle} />
 
-      <Team members={team} />
+      <Team members={team} title={about?.teamTitle} />
 
       {/* In Action Marquee */}
       <section className="py-20 bg-[hsl(var(--primary))] overflow-hidden">
