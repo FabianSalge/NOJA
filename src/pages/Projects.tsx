@@ -122,7 +122,7 @@ const Projects = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
         </motion.div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <motion.div
             className="text-center mb-16 space-y-8"
             initial="hidden"
@@ -131,12 +131,12 @@ const Projects = () => {
           >
             <motion.div variants={itemVariants}>
              
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9] px-2">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black text-background text-center leading-[0.9] px-2">
                 {t.projects.title}
               </h1>
             </motion.div>
             <motion.div 
-              className="text-lg md:text-xl text-background/80 max-w-3xl mx-auto leading-relaxed"
+              className="text-lg md:text-xl 2xl:text-2xl text-background/80 max-w-3xl 2xl:max-w-4xl mx-auto leading-relaxed"
               variants={itemVariants}
             >
               {language === 'en' && subtext ? (
@@ -177,7 +177,7 @@ const Projects = () => {
                   <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
                     {t.projects.moreWork}
                   </span>
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-background text-center leading-[0.9]">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-black text-background text-center leading-[0.9]">
                     {t.projects.allProjects}
                   </h2>
                 </motion.div>
