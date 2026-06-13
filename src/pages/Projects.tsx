@@ -10,7 +10,6 @@ import { richTextOptions } from '@/lib/richtext';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
-import type { Document } from '@contentful/rich-text-types';
 import { useTranslation } from '@/i18n';
 
 const Projects = () => {
@@ -18,7 +17,6 @@ const Projects = () => {
   const featuredRef = useRef(null);
   const [featured, setFeatured] = useState<CmsProjectSummary[]>([]);
   const [allProjects, setAllProjects] = useState<CmsProjectSummary[]>([]);
-  const [subtext, setSubtext] = useState<Document | undefined>(undefined);
   const [pageText, setPageText] = useState<CmsProjectsPage | undefined>(undefined);
 
   const featuredInView = useInView(featuredRef, { once: true, margin: "-100px" });
@@ -35,7 +33,6 @@ const Projects = () => {
       .then((data) => {
         setFeatured(data.featured);
         setAllProjects(data.all);
-        setSubtext(data.ourWorkSubtext);
         setPageText(data);
       })
       .catch(() => {
@@ -141,8 +138,8 @@ const Projects = () => {
               className="text-lg md:text-xl 2xl:text-2xl text-background/80 max-w-3xl 2xl:max-w-4xl mx-auto leading-relaxed"
               variants={itemVariants}
             >
-              {subtext ? (
-                documentToReactComponents(subtext, richTextOptions)
+              {pageText?.ourWorkSubtext ? (
+                documentToReactComponents(pageText.ourWorkSubtext, richTextOptions)
               ) : (
                 <p>{pageText?.pageSubtitle || t.projects.subtitle}</p>
               )}
