@@ -77,3 +77,57 @@ for (const [ctId, fields] of Object.entries(ADD_FIELDS)) {
   await addFields(ctId, fields);
 }
 console.log("migrate-content-model: add-fields pass done");
+
+// --- Phase C: new content types ---
+const NEW_TYPES = {
+  aboutValue: {
+    name: "About Value", displayField: "title",
+    fields: [
+      { id: "title", name: "Title", type: "Symbol", required: true, localized: true },
+      { id: "description", name: "Description", type: "Text", required: true, localized: true },
+      { id: "icon", name: "Icon", type: "Symbol", required: true, validations: [{ in: ["eye", "lightbulb", "users"] }] },
+      { id: "order", name: "Order", type: "Integer", required: false },
+    ],
+  },
+  teamMember: {
+    name: "Team Member", displayField: "name",
+    fields: [
+      { id: "name", name: "Name", type: "Symbol", required: true },
+      { id: "role", name: "Role", type: "Symbol", required: true, localized: true },
+      { id: "description", name: "Description", type: "Text", required: false, localized: true },
+      { id: "funFact", name: "Fun Fact", type: "Symbol", required: false, localized: true },
+      { id: "photo", name: "Photo", type: "Link", linkType: "Asset", required: true },
+      { id: "hoverVideo", name: "Hover Video", type: "Link", linkType: "Asset", required: false },
+      { id: "order", name: "Order", type: "Integer", required: false },
+    ],
+  },
+};
+
+async function ensureType(contentTypeId, def) {
+  try {
+    await client.contentType.get({ ...scope, contentTypeId });
+    console.log(`  type ${contentTypeId} exists`);
+    return;
+  } catch { /* not found -> create */ }
+  const created = await client.contentType.createWithId({ ...scope, contentTypeId }, {
+    name: def.name, displayField: def.displayField,
+    fields: def.fields.map((f) => ({ required: false, omitted: false, disabled: false, ...f })),
+  });
+  await client.contentType.publish({ ...scope, contentTypeId }, created);
+  console.log(`  created+published type ${contentTypeId}`);
+}
+
+for (const [id, def] of Object.entries(NEW_TYPES)) {
+  await ensureType(id, def);
+}
+
+// reference + asset-array fields on aboutPageSettings
+await addFields("aboutPageSettings", [
+  { id: "aboutValues", name: "Values", type: "Array",
+    items: { type: "Link", linkType: "Entry", validations: [{ linkContentType: ["aboutValue"] }] } },
+  { id: "teamMembers", name: "Team Members", type: "Array",
+    items: { type: "Link", linkType: "Entry", validations: [{ linkContentType: ["teamMember"] }] } },
+  { id: "inActionImages", name: "In Action Images", type: "Array",
+    items: { type: "Link", linkType: "Asset" } },
+]);
+console.log("migrate-content-model: new-types pass done");
