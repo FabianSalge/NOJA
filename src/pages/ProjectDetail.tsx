@@ -22,6 +22,7 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     if (!slug) return;
+    setIsLoading(true);
     fetchProjectBySlug(slug, localeForLanguage(language))
       .then(setProject)
       .catch(() => {

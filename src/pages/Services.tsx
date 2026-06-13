@@ -219,7 +219,9 @@ const Services = () => {
   const heroTitleColor = heroBg ? 'text-white' : 'text-background';
   const heroSubtitleColor = heroBg ? 'text-white/85' : 'text-background/80';
 
-  if (!isDataLoaded || !servicesData) {
+  // Block only while the first fetch is in flight; once settled, fall through to
+  // CMS data when present or the static germanServicesBase fallback when not.
+  if (!isDataLoaded) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
