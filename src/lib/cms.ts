@@ -73,7 +73,6 @@ export async function fetchHome(): Promise<CmsHome | undefined> {
 	const brands: CmsBrand[] = brandsRaw.map((b: Entry) => ({
 		name: getField<string>(b.fields as Record<string, unknown>, "name") ?? "",
 		logoUrl: assetUrlFromField(getField<Asset>(b.fields as Record<string, unknown>, "logo")),
-		websiteUrl: getField<string>(b.fields as Record<string, unknown>, "websiteUrl"),
 	}));
 	const cardsRaw = (fields.whatYouNeedCards as Entry[] | undefined) ?? [];
 	const whatYouNeedCards: CmsWhatYouNeedCard[] = cardsRaw
@@ -115,10 +114,14 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 		dateISO: getField<string>(p.fields as Record<string, unknown>, "date") ?? "",
 		coverImageUrl: assetUrlFromField(getField<Asset>(p.fields as Record<string, unknown>, "coverImage")),
 	}));
+	// Show everything in the main grid until there are enough projects to justify a
+	// separate "more work" section. This avoids a lonely orphan card (e.g. 4 projects =
+	// 3 featured + 1 stranded in a 6-column grid) and an empty compact grid at low counts.
+	const featuredCount = allSummaries.length > 6 ? 3 : allSummaries.length;
 	return {
 		ourWorkSubtext: getField<Document>(settings as Record<string, unknown>, "ourWorkSubtext"),
-		featured: allSummaries.slice(0, 3),
-		all: allSummaries.slice(3),
+		featured: allSummaries.slice(0, featuredCount),
+		all: allSummaries.slice(featuredCount),
 	};
 }
 
