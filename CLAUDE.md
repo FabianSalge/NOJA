@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 NOJA is a creative marketing agency website — a React SPA built with Vite, TypeScript, and Tailwind CSS. Content is managed via Contentful (headless CMS). The site is bilingual (English/German).
 
+## Project Skills
+
+Two project skills in `.claude/skills/` carry deeper, task-specific guidance — load them when relevant:
+- **noja-cms** — editing Contentful content programmatically (token policy, content model, management-SDK patterns). Use for any CMS read/write work.
+- **noja-design-system** — brand tokens, the dark/beige section motif, and the `2xl:` responsive conventions. Use for any UI/styling work.
+
 ## Commands
 
 ```bash
@@ -14,6 +20,7 @@ npm run build     # TypeScript check + Vite build + sitemap generation
 npm run preview   # Preview production build locally
 npm run lint      # ESLint (strict: zero warnings allowed)
 npm run sitemap   # Regenerate sitemap.xml from Contentful projects
+npm run cms:inventory  # List Contentful content types/fields via the CMA (also a write-token connection test)
 ```
 
 No test framework is configured.
@@ -55,6 +62,20 @@ All prefixed with `VITE_` (accessed via `import.meta.env`):
 - `VITE_SITE_URL` — production URL for canonical links and sitemap
 - `VITE_GA_ID` — Google Analytics 4 measurement ID
 - `VITE_GSC_VERIFICATION` — Google Search Console verification token
+
+Non-`VITE_` (dev/scripts only, never bundled to the client):
+- `CONTENTFUL_MANAGEMENT_TOKEN` — CMA write token (`CFPAT-…`) used by `scripts/cma/`. Deliberately unprefixed so Vite never ships it. See the **CMS Writes** section.
+
+## CMS Writes (Content Management API)
+
+The site only ever **reads** Contentful (delivery token). To edit content programmatically (instead of the web UI), use the CMA scripts in `scripts/cma/`:
+- `scripts/cma/client.mjs` exports `getClient()` → `{ client, scope }`; run scripts with `node --env-file=.env scripts/cma/<x>.mjs`.
+- Requires `CONTENTFUL_MANAGEMENT_TOKEN` in `.env`. **Never** use a write token in `src/` or give it a `VITE_` prefix; after env-related changes, confirm `grep -rl "CFPAT" dist/` is empty post-build.
+- Full patterns/gotchas (plain client, locale-keyed fields, version+publish) are in the **noja-cms** skill.
+
+## Responsive Conventions
+
+Mobile-first. Large screens (≥1536px) are handled with **additive `2xl:` utilities only** — do not alter sub-1536px classes. Containers `max-w-7xl → 2xl:max-w-[1600px]`, headings gain one `2xl:` step, body `text-lg md:text-xl → 2xl:text-2xl`. Details in the **noja-design-system** skill.
 
 ## Path Alias
 

@@ -1,0 +1,17 @@
+{
+  "$comment": "Shared project permissions (committed). Machine-local overrides go in settings.local.json (gitignored). Keep this list to safe dev/read-only commands.",
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite build:*)",
+      "Bash(npx eslint:*)",
+      "Bash(node --env-file=.env scripts/cma/*)",
+      "Bash(curl -s http://localhost:8080/*)",
+      "Bash(ls:*)",
+      "Bash(cd:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
