@@ -92,7 +92,11 @@ export async function fetchHome(locale: ContentfulLocale = "en-US"): Promise<Cms
 		}))
 		.sort((a: CmsWhatYouNeedCard, b: CmsWhatYouNeedCard) => (a.order ?? 0) - (b.order ?? 0));
 	return {
+		heroTitle: getField<string>(fields, "heroTitle"),
+		pulseEffectTitle: getField<string>(fields, "pulseEffectTitle"),
 		whatWeDoBestText: getField<Document>(fields, "whatWeDoBestText"),
+		servicesSectionTitle: getField<string>(fields, "servicesSectionTitle"),
+		servicesSectionSubtitle: getField<string>(fields, "servicesSectionSubtitle"),
 		brands,
 		whatYouNeedCards,
 	};
@@ -130,6 +134,10 @@ export async function fetchProjectsPage(locale: ContentfulLocale = "en-US"): Pro
 	// 3 featured + 1 stranded in a 6-column grid) and an empty compact grid at low counts.
 	const featuredCount = allSummaries.length > 6 ? 3 : allSummaries.length;
 	return {
+		pageTitle: getField<string>(settings as Record<string, unknown>, "pageTitle"),
+		pageSubtitle: getField<string>(settings as Record<string, unknown>, "pageSubtitle"),
+		moreWorkTitle: getField<string>(settings as Record<string, unknown>, "moreWorkTitle"),
+		allProjectsTitle: getField<string>(settings as Record<string, unknown>, "allProjectsTitle"),
 		ourWorkSubtext: getField<Document>(settings as Record<string, unknown>, "ourWorkSubtext"),
 		featured: allSummaries.slice(0, featuredCount),
 		all: allSummaries.slice(featuredCount),
@@ -175,6 +183,10 @@ export async function fetchAbout(locale: ContentfulLocale = "en-US"): Promise<Cm
 	});
 	const fields = res.items?.[0]?.fields ?? {};
 	return {
+		aboutEyebrow: getField<string>(fields as Record<string, unknown>, "aboutEyebrow"),
+		aboutHeading: getField<string>(fields as Record<string, unknown>, "aboutHeading"),
+		valuesTitle: getField<string>(fields as Record<string, unknown>, "valuesTitle"),
+		teamTitle: getField<string>(fields as Record<string, unknown>, "teamTitle"),
 		ourStoryText: getField<Document>(fields as Record<string, unknown>, "ourStoryText"),
 		ourStoryImageUrl: assetUrlFromField(getField<Asset>(fields as Record<string, unknown>, "ourStoryImage")),
 	};
