@@ -12,7 +12,11 @@ export type CmsWhatYouNeedCard = {
 };
 
 export type CmsHome = {
+  heroTitle?: string;
+  pulseEffectTitle?: string;
   whatWeDoBestText?: Document;
+  servicesSectionTitle?: string;
+  servicesSectionSubtitle?: string;
   brands: CmsBrand[];
   whatYouNeedCards: CmsWhatYouNeedCard[];
 };
@@ -26,6 +30,10 @@ export type CmsProjectSummary = {
 };
 
 export type CmsProjectsPage = {
+  pageTitle?: string;
+  pageSubtitle?: string;
+  moreWorkTitle?: string;
+  allProjectsTitle?: string;
   ourWorkSubtext?: Document;
   featured: CmsProjectSummary[];
   all: CmsProjectSummary[];
@@ -48,6 +56,10 @@ export type CmsProjectDetail = {
 };
 
 export type CmsAboutPage = {
+  aboutEyebrow?: string;
+  aboutHeading?: string;
+  valuesTitle?: string;
+  teamTitle?: string;
   ourStoryText?: Document;
   ourStoryImageUrl?: string;
 };
