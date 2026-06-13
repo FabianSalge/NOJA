@@ -9,7 +9,7 @@ import BrandCarousel from '@/components/BrandCarousel';
 import PackageCard from '@/components/PackageCard';
  
 import { HOME_IMAGES, HOME_VIDEOS } from '@/lib/assets';
-import { fetchHome, type CmsHome } from '@/lib/cms';
+import { fetchHome, localeForLanguage, type CmsHome } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { richTextOptions } from '@/lib/richtext';
 import { Helmet } from 'react-helmet-async';
@@ -42,10 +42,10 @@ const Index = () => {
 
   const [home, setHome] = useState<CmsHome | undefined>(undefined);
   useEffect(() => {
-    fetchHome().then(setHome).catch(() => {
+    fetchHome(localeForLanguage(language)).then(setHome).catch(() => {
       console.warn('Failed to fetch Home data from Contentful. Falling back to static content.');
     });
-  }, []);
+  }, [language]);
   
   
 
@@ -159,12 +159,10 @@ const Index = () => {
                 </h2>
               </div>
               <div className="text-foreground/80 text-lg md:text-xl 2xl:text-2xl leading-relaxed">
-                {language === 'en' && home?.whatWeDoBestText ? (
+                {home?.whatWeDoBestText ? (
                   documentToReactComponents(home.whatWeDoBestText, richTextOptions)
                 ) : (
-                  <p>
-                    {t.home.pulseEffect.description}
-                  </p>
+                  <p>{t.home.pulseEffect.description}</p>
                 )}
               </div>
               

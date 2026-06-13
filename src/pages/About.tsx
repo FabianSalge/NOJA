@@ -4,7 +4,7 @@ import { Eye, Lightbulb, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
-import { fetchAbout, type CmsAboutPage } from '@/lib/cms';
+import { fetchAbout, localeForLanguage, type CmsAboutPage } from '@/lib/cms';
  
 import { Helmet } from 'react-helmet-async';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
@@ -18,10 +18,10 @@ const About = () => {
 
   const [about, setAbout] = useState<CmsAboutPage | undefined>(undefined);
   useEffect(() => {
-    fetchAbout().then(setAbout).catch(() => {
+    fetchAbout(localeForLanguage(language)).then(setAbout).catch(() => {
       console.warn('Failed to fetch About page content from Contentful. Falling back to static copy.');
     });
-  }, []);
+  }, [language]);
 
   const values = [
     {
@@ -102,10 +102,10 @@ const About = () => {
         <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
       </Helmet>
 
-      <Story 
-        text={language === 'en' ? about?.ourStoryText : undefined} 
+      <Story
+        text={about?.ourStoryText}
         fallbackText={t.about.story.text}
-        imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`} 
+        imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`}
       />
 
       

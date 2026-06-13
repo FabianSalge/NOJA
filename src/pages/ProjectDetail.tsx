@@ -4,7 +4,8 @@ import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical } from '@/lib/seo';
 import ResponsiveImage from '@/components/ResponsiveImage';
-import { fetchProjectBySlug, type CmsProjectDetail } from '@/lib/cms';
+import { fetchProjectBySlug, localeForLanguage, type CmsProjectDetail } from '@/lib/cms';
+import { useTranslation } from '@/i18n';
 import { useEffect, useState, useCallback } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
@@ -13,6 +14,7 @@ import { BLOCKS, type TopLevelBlock } from '@contentful/rich-text-types';
 
 const ProjectDetail = () => {
   const { slug } = useParams();
+  const { language } = useTranslation();
   const [project, setProject] = useState<CmsProjectDetail | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [videoError, setVideoError] = useState(false);
@@ -20,13 +22,13 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     if (!slug) return;
-    fetchProjectBySlug(slug)
+    fetchProjectBySlug(slug, localeForLanguage(language))
       .then(setProject)
       .catch(() => {
         console.warn('Failed to fetch project detail from Contentful.');
       })
       .finally(() => setIsLoading(false));
-  }, [slug]);
+  }, [slug, language]);
 
   if (isLoading) {
     return (

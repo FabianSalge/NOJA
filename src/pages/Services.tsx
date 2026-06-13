@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
-import { fetchServicesPage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
+import { fetchServicesPage, localeForLanguage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
@@ -17,7 +17,7 @@ const Services = () => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
-    fetchServicesPage()
+    fetchServicesPage(localeForLanguage(language))
       .then((data) => {
         setServicesData(data);
         setIsDataLoaded(true);
@@ -26,7 +26,7 @@ const Services = () => {
         console.warn('Failed to fetch Services from Contentful.');
         setIsDataLoaded(true); // Still set to true to prevent infinite loading
       });
-  }, []);
+  }, [language]);
 
   // Media component that handles both images and videos
   const ServiceMedia = ({ mediaUrl, alt, className }: { 
@@ -210,23 +210,16 @@ const Services = () => {
     },
   ];
 
-  // Merge German text with CMS images
-  const germanServices: CmsServiceItem[] = germanServicesBase.map((service, index) => ({
-    ...service,
-    serviceMediaUrl: servicesData?.services?.[index]?.serviceMediaUrl,
-  }));
-
-  // Use German static data when language is German, otherwise use CMS data
-  const displayServices = language === 'de' ? germanServices : (servicesData?.services || []);
-  const displayTitle = language === 'de' ? t.services.title : (servicesData?.heroTitle || t.services.title);
-  const displaySubtitle = language === 'de' ? t.services.subtitle : (servicesData?.heroSubtitle || t.services.subtitle);
+  const displayServices: CmsServiceItem[] = servicesData?.services?.length ? servicesData.services : germanServicesBase;
+  const displayTitle = servicesData?.heroTitle || t.services.title;
+  const displaySubtitle = servicesData?.heroSubtitle || t.services.subtitle;
 
   // Optional hero background image from the CMS. When absent, fall back to the flat beige header.
   const heroBg = servicesData?.heroBackgroundImageUrl;
   const heroTitleColor = heroBg ? 'text-white' : 'text-background';
   const heroSubtitleColor = heroBg ? 'text-white/85' : 'text-background/80';
 
-  if (!isDataLoaded || (!servicesData && language === 'en')) {
+  if (!isDataLoaded || !servicesData) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
