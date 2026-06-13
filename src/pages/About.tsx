@@ -23,7 +23,9 @@ const About = () => {
     });
   }, [language]);
 
-  const values = [
+  const ICONS = { eye: Eye, lightbulb: Lightbulb, users: Users } as const;
+
+  const fallbackValues = [
     {
       icon: Eye,
       title: t.about.values.transparency.title,
@@ -41,7 +43,7 @@ const About = () => {
     }
   ];
 
-  const team = [
+  const fallbackTeam = [
     {
       name: t.about.team.naomi.name,
       role: t.about.team.naomi.role,
@@ -68,7 +70,7 @@ const About = () => {
     },
   ];
 
-  const actionImages = [
+  const fallbackActionImages = [
     `${import.meta.env.BASE_URL}images/action-slider/slide-01.png`,
     `${import.meta.env.BASE_URL}images/action-slider/slide-02.jpg`,
     `${import.meta.env.BASE_URL}images/action-slider/slide-03.png`,
@@ -89,7 +91,17 @@ const About = () => {
     `${import.meta.env.BASE_URL}images/action-slider/slide-18.png`,
   ];
 
-  
+  const values = about?.values?.length
+    ? about.values.map((v) => ({ icon: ICONS[v.icon] ?? Eye, title: v.title, description: v.description }))
+    : fallbackValues;
+
+  const team = about?.team?.length
+    ? about.team.map((m) => ({ name: m.name, role: m.role, image: m.photoUrl ?? '', video: m.videoUrl, description: m.description ?? '', funFact: m.funFact ?? '' }))
+    : fallbackTeam;
+
+  const actionImages = about?.inActionImageUrls?.length ? about.inActionImageUrls : fallbackActionImages;
+
+
 
   return (
     <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] pt-12 md:pt-20">
