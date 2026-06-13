@@ -4,13 +4,12 @@ import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
-import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';
+import { fetchProjectsPage, localeForLanguage, type CmsProjectSummary, type CmsProjectsPage } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { richTextOptions } from '@/lib/richtext';
 import { Helmet } from 'react-helmet-async';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
-import type { Document } from '@contentful/rich-text-types';
 import { useTranslation } from '@/i18n';
 
 const Projects = () => {
@@ -18,7 +17,7 @@ const Projects = () => {
   const featuredRef = useRef(null);
   const [featured, setFeatured] = useState<CmsProjectSummary[]>([]);
   const [allProjects, setAllProjects] = useState<CmsProjectSummary[]>([]);
-  const [subtext, setSubtext] = useState<Document | undefined>(undefined);
+  const [pageText, setPageText] = useState<CmsProjectsPage | undefined>(undefined);
 
   const featuredInView = useInView(featuredRef, { once: true, margin: "-100px" });
   // Hero-style scroll transitions for sections
@@ -30,16 +29,16 @@ const Projects = () => {
   const featuredOpacity = useTransform(featuredProgress, [0.5, 0.95], [1, 0.1]);
 
   useEffect(() => {
-    fetchProjectsPage()
+    fetchProjectsPage(localeForLanguage(language))
       .then((data) => {
         setFeatured(data.featured);
         setAllProjects(data.all);
-        setSubtext(data.ourWorkSubtext);
+        setPageText(data);
       })
       .catch(() => {
         console.warn('Failed to fetch Projects from Contentful.');
       });
-  }, []);
+  }, [language]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -132,19 +131,17 @@ const Projects = () => {
             <motion.div variants={itemVariants}>
              
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black text-background text-center leading-[0.9] px-2">
-                {t.projects.title}
+                {pageText?.pageTitle || t.projects.title}
               </h1>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="text-lg md:text-xl 2xl:text-2xl text-background/80 max-w-3xl 2xl:max-w-4xl mx-auto leading-relaxed"
               variants={itemVariants}
             >
-              {language === 'en' && subtext ? (
-                documentToReactComponents(subtext, richTextOptions)
+              {pageText?.ourWorkSubtext ? (
+                documentToReactComponents(pageText.ourWorkSubtext, richTextOptions)
               ) : (
-                <p>
-                  {t.projects.subtitle}
-                </p>
+                <p>{pageText?.pageSubtitle || t.projects.subtitle}</p>
               )}
             </motion.div>
           </motion.div>
@@ -175,10 +172,10 @@ const Projects = () => {
                   transition={{ duration: 0.6, delay: 0.7 }}
                 >
                   <span className="block text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60 mb-4">
-                    {t.projects.moreWork}
+                    {pageText?.moreWorkTitle || t.projects.moreWork}
                   </span>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-black text-background text-center leading-[0.9]">
-                    {t.projects.allProjects}
+                    {pageText?.allProjectsTitle || t.projects.allProjects}
                   </h2>
                 </motion.div>
               </motion.div>

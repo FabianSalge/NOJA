@@ -8,9 +8,10 @@ import { useTranslation } from '@/i18n';
 
 type HeroProps = {
   onScrollIndicatorClick?: () => void;
+  title?: string;
 };
 
-const Hero = ({ onScrollIndicatorClick }: HeroProps) => {
+const Hero = ({ onScrollIndicatorClick, title }: HeroProps) => {
   const { t, language } = useTranslation();
   const { scrollY } = useScroll();
   const heroRef = useRef<HTMLDivElement>(null);
@@ -75,14 +76,18 @@ const Hero = ({ onScrollIndicatorClick }: HeroProps) => {
 
             <motion.div className="space-y-6" variants={itemVariants} transition={{ duration: 0.8, ease: 'easeOut' }}>
               <motion.h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white tracking-[0.25em] uppercase drop-shadow-lg" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}>
-                {language === 'de' ? 'CONTENT MIT ' : 'CONTENT WITH A '}
-                <motion.span
-                  className="text-secondary"
-                  animate={pulseAnimation}
-                  transition={{ duration: 2.2, repeat: Infinity }}
-                >
-                  {language === 'de' ? 'PULS' : 'PULSE'}
-                </motion.span>
+                {title ? title : (
+                  <>
+                    {language === 'de' ? 'CONTENT MIT ' : 'CONTENT WITH A '}
+                    <motion.span
+                      className="text-secondary"
+                      animate={pulseAnimation}
+                      transition={{ duration: 2.2, repeat: Infinity }}
+                    >
+                      {language === 'de' ? 'PULS' : 'PULSE'}
+                    </motion.span>
+                  </>
+                )}
               </motion.h2>
               <div className="pt-1">
                 <Link to="/projects" className="group inline-flex items-center gap-2 text-white/90 hover:text-white font-semibold text-lg md:text-xl drop-shadow-md">
