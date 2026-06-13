@@ -107,7 +107,7 @@ const Index = () => {
           }
         ]}
       />
-      <Hero onScrollIndicatorClick={handleScroll} />
+      <Hero onScrollIndicatorClick={handleScroll} title={home?.heroTitle} />
 
       {/* Creative Marketing - What we do best (dark) */}
       <section id="content" className="min-h-screen flex items-center relative overflow-hidden bg-[hsl(var(--primary))] pt-16 md:pt-0" ref={whatWeDoRef}>
@@ -155,7 +155,7 @@ const Index = () => {
             >
               <div className="space-y-4">
                 <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black text-foreground tracking-tight leading-[0.9]">
-                  {t.home.pulseEffect.title}
+                  {home?.pulseEffectTitle || t.home.pulseEffect.title}
                 </h2>
               </div>
               <div className="text-foreground/80 text-lg md:text-xl 2xl:text-2xl leading-relaxed">
@@ -283,7 +283,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
                 <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black text-background text-center leading-[0.9]">
-                  {t.home.services.title}
+                  {home?.servicesSectionTitle || t.home.services.title}
                 </h2>
               </motion.div>
               <motion.p 
@@ -292,7 +292,7 @@ const Index = () => {
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                {t.home.services.subtitle}
+                {home?.servicesSectionSubtitle || t.home.services.subtitle}
               </motion.p>
             </div>
 

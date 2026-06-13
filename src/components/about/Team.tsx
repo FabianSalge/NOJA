@@ -7,6 +7,7 @@ type TeamMember = { name: string; role: string; image: string; video?: string };
 
 type TeamProps = {
   members: TeamMember[];
+  title?: string;
 };
 
 const TeamCard = ({ member, isMobile = false }: { member: TeamMember; isMobile?: boolean }) => {
@@ -80,7 +81,7 @@ const TeamCard = ({ member, isMobile = false }: { member: TeamMember; isMobile?:
   );
 };
 
-const Team = ({ members }: TeamProps) => {
+const Team = ({ members, title }: TeamProps) => {
   const { t } = useTranslation();
   const teamRef = useRef(null);
   const teamInView = useInView(teamRef, { once: true, margin: "-100px" });
@@ -103,7 +104,7 @@ const Team = ({ members }: TeamProps) => {
         >
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
             <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-black text-background text-center leading-[0.9]">
-              {t.about.team.title}
+              {title || t.about.team.title}
             </h2>
           </motion.div>
         </motion.div>

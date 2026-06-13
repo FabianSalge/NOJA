@@ -106,13 +106,15 @@ const About = () => {
         text={about?.ourStoryText}
         fallbackText={t.about.story.text}
         imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`}
+        eyebrow={about?.aboutEyebrow}
+        heading={about?.aboutHeading}
       />
 
       
 
-      <Values items={values} />
+      <Values items={values} title={about?.valuesTitle} />
 
-      <Team members={team} />
+      <Team members={team} title={about?.teamTitle} />
 
       {/* In Action Marquee */}
       <section className="py-20 bg-[hsl(var(--primary))] overflow-hidden">
