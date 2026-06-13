@@ -33,11 +33,13 @@ Collections: `project`, `serviceItem`, `whatYouNeedCard`, `brand`.
 Run `npm run cms:inventory` for the live field list. Fetch/transform logic is in `src/lib/cms.ts`; types in `src/lib/cms.types.ts`.
 
 **Frontend ↔ CMS quirks to know:**
-- **German is NOT in Contentful.** Contentful has only `en-US`. German text comes from the app's i18n layer (`src/i18n/de.ts`). Several pages render CMS rich text only when `language === 'en'` and fall back to static German strings — so editing CMS rich text won't change the German site.
+- **Content is bilingual via native Contentful locales.** The space has two locales: `en-US` (default) and `de-CH` (fallback `en-US`). Substantive text fields are `localized`, so each holds an English and a German value; the app fetches the locale matching the current language (`fetchX(localeForLanguage(language))` in `cms.ts`). An empty `de-CH` field falls back to English automatically. The `src/i18n/de.ts`/`en.ts` files now only cover non-CMS UI chrome (nav, footer, form labels, cookie banner, button labels) and act as an offline fallback when Contentful is unconfigured. To translate content, edit the `de-CH` locale in Contentful (or via the `scripts/cma/seed-*.mjs` scripts).
+- **Team cards + "In Action" gallery are CMS-managed.** `teamMember` and `aboutValue` content types are referenced (ordered arrays) from `aboutPageSettings` (`teamMembers`, `aboutValues`), and `aboutPageSettings.inActionImages` is an Array of Assets for the marquee. Reference arrays are stored under `en-US` only (CDA locale fallback resolves the links); the referenced entries' leaf text fields are localized.
 - `servicesPage.heroBackgroundImage` is optional; renders only when set.
+- **`serviceItem` `order` is 1-based** and does not align with array indices — match serviceItems by English title when seeding, not by `order`.
 - Projects page shows everything in the main grid until there are >6 projects, then splits off a "more work" grid (see `fetchProjectsPage` in `cms.ts`).
 
-## SDK patterns & gotchas (contentful-management v11)
+## SDK patterns & gotchas (contentful-management v12)
 
 **Gotcha 1 — plain client:** `createClient(...)` defaults to the scoped "plain" API here, so there is **no `client.getSpace()`**. Always create it as plain (already done in `client.mjs`):
 ```js
