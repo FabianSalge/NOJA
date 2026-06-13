@@ -16,8 +16,8 @@
 NOJA is a Swiss creative agency. This is its real production marketing website:
 a fully responsive, bilingual (English / German) single-page application whose
 content — projects, services, page copy — is managed by editors through a
-headless CMS rather than hardcoded. The site is SEO-optimised, analytics-ready
-with consent gating, and degrades gracefully when the CMS is unreachable.
+headless CMS rather than hardcoded. The site is SEO-optimised, analytics-ready,
+and degrades gracefully when the CMS is unreachable.
 
 ## My role
 
