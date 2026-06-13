@@ -24,6 +24,13 @@ export type {
     CmsBrand,
 } from "./cms.types";
 
+export type AppLanguage = "en" | "de";
+export type ContentfulLocale = "en-US" | "de-CH";
+
+export function localeForLanguage(language: AppLanguage): ContentfulLocale {
+	return language === "de" ? "de-CH" : "en-US";
+}
+
 // Minimal helper types for Contentful results
 type EntriesResult = { items?: Entry[] };
 
@@ -59,12 +66,13 @@ export function splitDocumentByParagraphs(doc: Document): [Document, Document] {
 }
 
 // Queries
-export async function fetchHome(): Promise<CmsHome | undefined> {
+export async function fetchHome(locale: ContentfulLocale = "en-US"): Promise<CmsHome | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "homePage",
 		include: 2,
 		limit: 1,
+		locale,
 	});
 	const entry = res.items?.[0];
 	if (!entry) return undefined;
@@ -89,7 +97,7 @@ export async function fetchHome(): Promise<CmsHome | undefined> {
 	};
 }
 
-export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
+export async function fetchProjectsPage(locale: ContentfulLocale = "en-US"): Promise<CmsProjectsPage> {
 	if (!isContentfulConfigured()) {
 		return { ourWorkSubtext: undefined, featured: [], all: [] };
 	}
@@ -97,6 +105,7 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 	const settingsRes = await cachedGetEntries<EntriesResult>({
 		content_type: "projectsPageSettings",
 		limit: 1,
+		locale,
 	});
 	const settings = settingsRes.items?.[0]?.fields ?? {};
 
@@ -106,6 +115,7 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 		order: ["-fields.date"],
 		include: 1,
 		limit: 100,
+		locale,
 	});
 	const allSummaries: CmsProjectSummary[] = (projRes.items ?? []).map((p: Entry) => ({
 		slug: getField<string>(p.fields as Record<string, unknown>, "slug") ?? "",
@@ -125,13 +135,14 @@ export async function fetchProjectsPage(): Promise<CmsProjectsPage> {
 	};
 }
 
-export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail | undefined> {
+export async function fetchProjectBySlug(slug: string, locale: ContentfulLocale = "en-US"): Promise<CmsProjectDetail | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "project",
 		"fields.slug": slug,
 		include: 2,
 		limit: 1,
+		locale,
 	});
 	const item = res.items?.[0];
 	if (!item) return undefined;
@@ -153,12 +164,13 @@ export async function fetchProjectBySlug(slug: string): Promise<CmsProjectDetail
 	};
 }
 
-export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
+export async function fetchAbout(locale: ContentfulLocale = "en-US"): Promise<CmsAboutPage | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "aboutPageSettings",
 		include: 1,
 		limit: 1,
+		locale,
 	});
 	const fields = res.items?.[0]?.fields ?? {};
 	return {
@@ -167,12 +179,13 @@ export async function fetchAbout(): Promise<CmsAboutPage | undefined> {
 	};
 }
 
-export async function fetchServicesPage(): Promise<CmsServicesPage | undefined> {
+export async function fetchServicesPage(locale: ContentfulLocale = "en-US"): Promise<CmsServicesPage | undefined> {
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "servicesPage",
 		include: 2,
 		limit: 1,
+		locale,
 	});
 	const entry = res.items?.[0];
 	if (!entry) return undefined;
