@@ -13,7 +13,7 @@ export const richTextOptions: Options = {
       <ol className="list-decimal pl-5 mb-4 space-y-1">{children}</ol>
     ),
     [BLOCKS.LIST_ITEM]: (_node, children) => (
-      <li>{children}</li>
+      <li className="[&>p]:mb-0">{children}</li>
     ),
     [BLOCKS.HEADING_1]: (_node, children) => (
       <h1 className="text-3xl font-bold mb-4">{children}</h1>
