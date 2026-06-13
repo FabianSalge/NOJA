@@ -3,7 +3,6 @@ import type { Document } from "@contentful/rich-text-types";
 export type CmsBrand = {
   name: string;
   logoUrl?: string;
-  websiteUrl?: string;
 };
 
 export type CmsWhatYouNeedCard = {

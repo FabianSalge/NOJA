@@ -88,7 +88,7 @@ const ProjectDetail = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
           <div className="absolute left-6 md:left-10 bottom-8 md:bottom-10">
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white"
+              className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold text-white"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
@@ -158,7 +158,7 @@ const ProjectDetail = () => {
 
       {/* Project Text */}
       <section className="py-20 bg-background">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-6">
           <h3 className="text-3xl md:text-4xl font-black">{project.secondTextTitle}</h3>
           <div className="h-[2px] w-24 bg-foreground/40 mt-4 mb-10" />
           {project.secondTextBody ? (() => {
@@ -211,7 +211,7 @@ const ProjectDetail = () => {
       {/* Project Video */}
       {project.videoUrl && !videoError && (
         <section className="bg-background">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-6">
             <video
               src={project.videoUrl}
               className="w-full rounded-2xl"

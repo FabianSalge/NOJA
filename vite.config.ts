@@ -17,4 +17,22 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React runtime + router — needed on every page.
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          // Animation library — large and used widely, but splittable.
+          motion: ["framer-motion"],
+          // CMS client + rich-text rendering — only needed once data loads.
+          contentful: [
+            "contentful",
+            "@contentful/rich-text-react-renderer",
+            "@contentful/rich-text-types",
+          ],
+        },
+      },
+    },
+  },
 });

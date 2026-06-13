@@ -144,7 +144,7 @@ const Index = () => {
         </div>
         
         
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10 w-full">
+        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10 w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <motion.div 
               className="space-y-8"
@@ -154,11 +154,11 @@ const Index = () => {
               transition={{ duration: 0.6 }}
             >
               <div className="space-y-4">
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground tracking-tight leading-[0.9]">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black text-foreground tracking-tight leading-[0.9]">
                   {t.home.pulseEffect.title}
                 </h2>
               </div>
-              <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">
+              <div className="text-foreground/80 text-lg md:text-xl 2xl:text-2xl leading-relaxed">
                 {language === 'en' && home?.whatWeDoBestText ? (
                   documentToReactComponents(home.whatWeDoBestText, richTextOptions)
                 ) : (
@@ -270,7 +270,7 @@ const Index = () => {
         </div>
         
         
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10 w-full">
+        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10 w-full">
           <motion.div 
             className="space-y-16"
             initial={{ opacity: 0, y: 30 }}
@@ -284,12 +284,12 @@ const Index = () => {
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black text-background text-center leading-[0.9]">
                   {t.home.services.title}
                 </h2>
               </motion.div>
               <motion.p 
-                className="text-lg md:text-xl text-background/80 max-w-2xl mx-auto leading-relaxed"
+                className="text-lg md:text-xl 2xl:text-2xl text-background/80 max-w-2xl 2xl:max-w-3xl mx-auto leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 }}

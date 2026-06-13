@@ -7,7 +7,11 @@ dist
 .env.local
 
 # Editor / AI tooling
-.claude
+# Share Claude skills/commands + project settings; keep machine-local settings private.
+.claude/*
+!.claude/skills/
+!.claude/commands/
+!.claude/settings.json
 .cursor
 .vscode
 .idea

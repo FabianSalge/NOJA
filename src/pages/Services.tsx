@@ -104,11 +104,11 @@ const Services = () => {
     return (
       <section 
         ref={sectionRef}
-        className={`py-16 md:py-20 relative overflow-hidden ${
+        className={`py-16 md:py-20 2xl:py-28 relative overflow-hidden ${
           isDark ? 'bg-background' : 'bg-[hsl(var(--primary))]'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <motion.div
         className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center"
         initial={{ opacity: 0, y: 50 }}
@@ -140,7 +140,7 @@ const Services = () => {
                   animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
-                  <h2 className={`text-3xl md:text-4xl lg:text-5xl font-black ${textColor} leading-[0.9]`}>
+                  <h2 className={`text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-black ${textColor} leading-[0.9]`}>
                     {service.title}
                   </h2>
                 </motion.div>
@@ -221,6 +221,11 @@ const Services = () => {
   const displayTitle = language === 'de' ? t.services.title : (servicesData?.heroTitle || t.services.title);
   const displaySubtitle = language === 'de' ? t.services.subtitle : (servicesData?.heroSubtitle || t.services.subtitle);
 
+  // Optional hero background image from the CMS. When absent, fall back to the flat beige header.
+  const heroBg = servicesData?.heroBackgroundImageUrl;
+  const heroTitleColor = heroBg ? 'text-white' : 'text-background';
+  const heroSubtitleColor = heroBg ? 'text-white/85' : 'text-background/80';
+
   if (!isDataLoaded || (!servicesData && language === 'en')) {
     return (
       <div className="min-h-screen bg-background text-foreground">
@@ -258,9 +263,22 @@ const Services = () => {
       />
       
       {/* Compact Header */}
-      <section className="pt-24 pb-16 bg-[hsl(var(--primary))] text-foreground">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+      <section className={`relative overflow-hidden pt-24 pb-16 ${heroBg ? '' : 'bg-[hsl(var(--primary))]'} text-foreground`}>
+        {heroBg && (
+          <>
+            <ResponsiveImage
+              src={heroBg}
+              widths={[768, 1024, 1366, 1600, 1920]}
+              sizes="100vw"
+              alt=""
+              eager
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/50" />
+          </>
+        )}
+        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
             className="text-center space-y-8"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -271,13 +289,13 @@ const Services = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-background text-center leading-[0.9]">
+              <h1 className={`text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black ${heroTitleColor} text-center leading-[0.9]`}>
                 {displayTitle}
               </h1>
             </motion.div>
-            
-            <motion.p 
-              className="text-lg md:text-xl text-background/80 max-w-2xl mx-auto leading-relaxed"
+
+            <motion.p
+              className={`text-lg md:text-xl 2xl:text-2xl ${heroSubtitleColor} max-w-2xl 2xl:max-w-3xl mx-auto leading-relaxed`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}

@@ -79,8 +79,6 @@ const Navigation = () => {
   // All pages use white text + white logo.
   // Homepage: transparent → dark translucent on scroll.
   // Other pages: always dark translucent.
-  const showSolidBg = !isHomePage || scrolled;
-
   const navBg = !isHomePage
     ? 'bg-black/60 backdrop-blur-xl'
     : scrolled
