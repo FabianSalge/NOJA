@@ -1,4 +1,4 @@
-import { Document, BLOCKS, TopLevelBlock } from "@contentful/rich-text-types";
+import { Document } from "@contentful/rich-text-types";
 import type { Asset, Entry } from "contentful";
 import { getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./contentful";
 import type { Language } from "@/i18n";
@@ -48,26 +48,6 @@ function getField<T>(obj: Record<string, unknown> | undefined, key: string): T |
 
 function assetUrlFromField(field: unknown): string | undefined {
 	return getAssetUrl(field as Asset | undefined);
-}
-
-export function splitDocumentByParagraphs(doc: Document): [Document, Document] {
-	const totalParagraphs = doc.content.filter((n: TopLevelBlock) => n.nodeType === BLOCKS.PARAGRAPH).length;
-	const cutoff = Math.ceil(totalParagraphs / 2);
-	let seen = 0;
-	const leftNodes: TopLevelBlock[] = [];
-	const rightNodes: TopLevelBlock[] = [];
-
-	for (const node of doc.content) {
-		const isPara = node.nodeType === BLOCKS.PARAGRAPH;
-		const goesLeft = seen < cutoff;
-		if (goesLeft) leftNodes.push(node); else rightNodes.push(node);
-		if (isPara) seen += 1;
-	}
-
-	return [
-		{ ...doc, content: leftNodes },
-		{ ...doc, content: rightNodes },
-	];
 }
 
 // Queries
