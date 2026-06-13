@@ -1,0 +1,39 @@
+name: Lighthouse
+
+# Non-blocking performance/a11y/SEO audit. Runs on PRs and on demand.
+# Thresholds in lighthouserc.json are warn-only — see the report link in the job log.
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Real Contentful (read-only) creds make this audit the actual site rather
+      # than the maintenance fallback. Add them as repo secrets for meaningful
+      # scores; without them the build still runs (maintenance page).
+      - name: Build
+        run: npm run build
+        env:
+          VITE_CONTENTFUL_SPACE_ID: ${{ secrets.VITE_CONTENTFUL_SPACE_ID }}
+          VITE_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.VITE_CONTENTFUL_ACCESS_TOKEN }}
+          VITE_CONTENTFUL_ENVIRONMENT: ${{ secrets.VITE_CONTENTFUL_ENVIRONMENT }}
+          VITE_SITE_URL: ${{ secrets.VITE_SITE_URL }}
+
+      - name: Run Lighthouse CI
+        run: npx --yes @lhci/cli@0.14.x autorun
