@@ -179,7 +179,9 @@ const Services = () => {
   };
 
   // German static services data - we'll merge with CMS images
-  const germanServicesBase = [
+  // Static fallback for both languages (built from locale-aware t.services.*),
+  // used only when the CMS has no services.
+  const fallbackServices = [
     {
       title: t.services.fullService.title,
       description: t.services.fullService.description,
@@ -210,7 +212,7 @@ const Services = () => {
     },
   ];
 
-  const displayServices: CmsServiceItem[] = servicesData?.services?.length ? servicesData.services : germanServicesBase;
+  const displayServices: CmsServiceItem[] = servicesData?.services?.length ? servicesData.services : fallbackServices;
   const displayTitle = servicesData?.heroTitle || t.services.title;
   const displaySubtitle = servicesData?.heroSubtitle || t.services.subtitle;
 
@@ -220,7 +222,7 @@ const Services = () => {
   const heroSubtitleColor = heroBg ? 'text-white/85' : 'text-background/80';
 
   // Block only while the first fetch is in flight; once settled, fall through to
-  // CMS data when present or the static germanServicesBase fallback when not.
+  // CMS data when present or the static fallbackServices when not.
   if (!isDataLoaded) {
     return (
       <div className="min-h-screen bg-background text-foreground">
