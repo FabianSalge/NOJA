@@ -65,7 +65,7 @@ const Hero = ({ onScrollIndicatorClick }: HeroProps) => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
       </motion.div>
 
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 pt-16" ref={heroRef}>
+      <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 pt-16" ref={heroRef}>
         <motion.div className="space-y-8" variants={containerVariants} initial="hidden" animate={heroInView ? 'visible' : 'hidden'}>
           <motion.div className="space-y-4" variants={itemVariants} transition={{ duration: 0.8, ease: 'easeOut' }}>
             <motion.div className="inline-block relative" animate={{ y: [-8, 8] }} transition={{ duration: 4.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}>

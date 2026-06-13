@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="absolute bottom-20 right-20 w-40 h-40 rounded-full bg-primary blur-3xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-start">
           {/* Left content block */}
           <div className="space-y-2 text-center md:text-left">
