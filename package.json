@@ -1,7 +1,10 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "noja-website",
   "private": true,
   "version": "0.0.0",
+  "description": "Bilingual marketing website for NOJA, a Swiss creative agency — React + Vite + Contentful.",
+  "author": "Fabian Salge",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "scripts": {
     "dev": "vite",
