@@ -38,8 +38,8 @@ layer, SEO, the CI pipeline, and deployment.
 - **Performance** — routes are lazy-loaded with idle-time prefetching, vendors
   are split into their own chunk, and images use responsive `srcset`/lazy
   loading. Performance/a11y/SEO budgets enforced in CI via Lighthouse CI.
-- **Privacy-first analytics** — GA4 loads only when configured *and* the visitor
-  has given cookie consent, in line with Swiss FADP / nDSG.
+- **Analytics** — GA4 loads only when a measurement ID is configured, with IP
+  anonymisation enabled by default; a cookie-consent banner is in place.
 - **Secure token model** — the client uses a read-only Contentful delivery
   token; the management (write) token is dev-only and never bundled.
 - **Graceful degradation** — if CMS credentials are missing, the app serves a
@@ -98,9 +98,9 @@ dev scripts in `scripts/cma/` and is never bundled to the client.
 
 ### Analytics (GA4)
 
-GA4 activates only when `VITE_GA_ID` is set **and** the visitor accepts cookies.
-Create a GA4 web stream, copy the measurement ID into `VITE_GA_ID`, and redeploy.
-IP anonymisation is on by default.
+GA4 activates only when `VITE_GA_ID` is set. Create a GA4 web stream, copy the
+measurement ID into `VITE_GA_ID`, and redeploy. IP anonymisation is on by
+default, and a cookie-consent banner is shown to visitors.
 
 ### Search Console
 
