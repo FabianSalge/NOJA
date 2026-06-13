@@ -21,6 +21,7 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     if (!slug) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset loading state before refetching when slug/language changes
     setIsLoading(true);
     fetchProjectBySlug(slug, localeForLanguage(language))
       .then(setProject)
