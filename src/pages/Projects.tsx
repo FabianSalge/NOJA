@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
  
-import { fetchProjectsPage, type CmsProjectSummary } from '@/lib/cms';
+import { fetchProjectsPage, localeForLanguage, type CmsProjectSummary } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { richTextOptions } from '@/lib/richtext';
 import { Helmet } from 'react-helmet-async';
@@ -30,7 +30,7 @@ const Projects = () => {
   const featuredOpacity = useTransform(featuredProgress, [0.5, 0.95], [1, 0.1]);
 
   useEffect(() => {
-    fetchProjectsPage()
+    fetchProjectsPage(localeForLanguage(language))
       .then((data) => {
         setFeatured(data.featured);
         setAllProjects(data.all);
@@ -39,7 +39,7 @@ const Projects = () => {
       .catch(() => {
         console.warn('Failed to fetch Projects from Contentful.');
       });
-  }, []);
+  }, [language]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -135,16 +135,14 @@ const Projects = () => {
                 {t.projects.title}
               </h1>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="text-lg md:text-xl 2xl:text-2xl text-background/80 max-w-3xl 2xl:max-w-4xl mx-auto leading-relaxed"
               variants={itemVariants}
             >
-              {language === 'en' && subtext ? (
+              {subtext ? (
                 documentToReactComponents(subtext, richTextOptions)
               ) : (
-                <p>
-                  {t.projects.subtitle}
-                </p>
+                <p>{t.projects.subtitle}</p>
               )}
             </motion.div>
           </motion.div>
