@@ -4,23 +4,27 @@ import { getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./content
 import type { Language } from "@/i18n";
 import type {
     CmsAboutPage,
+    CmsAboutValue,
     CmsHome,
     CmsProjectDetail,
     CmsProjectsPage,
     CmsProjectSummary,
     CmsServiceItem,
     CmsServicesPage,
+    CmsTeamMember,
     CmsWhatYouNeedCard,
     CmsBrand,
 } from "./cms.types";
 export type {
     CmsAboutPage,
+    CmsAboutValue,
     CmsHome,
     CmsProjectDetail,
     CmsProjectsPage,
     CmsProjectSummary,
     CmsServiceItem,
     CmsServicesPage,
+    CmsTeamMember,
     CmsWhatYouNeedCard,
     CmsBrand,
 } from "./cms.types";
@@ -177,11 +181,34 @@ export async function fetchAbout(locale: ContentfulLocale = "en-US"): Promise<Cm
 	if (!isContentfulConfigured()) return undefined;
 	const res = await cachedGetEntries<EntriesResult>({
 		content_type: "aboutPageSettings",
-		include: 1,
+		include: 2,
 		limit: 1,
 		locale,
 	});
 	const fields = res.items?.[0]?.fields ?? {};
+	const valuesRaw = (getField<Entry[]>(fields as Record<string, unknown>, "aboutValues") ?? []);
+	const values: CmsAboutValue[] = valuesRaw
+		.map((v) => ({
+			title: getField<string>(v.fields as Record<string, unknown>, "title") ?? "",
+			description: getField<string>(v.fields as Record<string, unknown>, "description") ?? "",
+			icon: (getField<string>(v.fields as Record<string, unknown>, "icon") ?? "eye") as CmsAboutValue["icon"],
+			order: getField<number>(v.fields as Record<string, unknown>, "order"),
+		}))
+		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+	const teamRaw = (getField<Entry[]>(fields as Record<string, unknown>, "teamMembers") ?? []);
+	const team: CmsTeamMember[] = teamRaw
+		.map((m) => ({
+			name: getField<string>(m.fields as Record<string, unknown>, "name") ?? "",
+			role: getField<string>(m.fields as Record<string, unknown>, "role") ?? "",
+			description: getField<string>(m.fields as Record<string, unknown>, "description"),
+			funFact: getField<string>(m.fields as Record<string, unknown>, "funFact"),
+			photoUrl: assetUrlFromField(getField<Asset>(m.fields as Record<string, unknown>, "photo")),
+			videoUrl: assetUrlFromField(getField<Asset>(m.fields as Record<string, unknown>, "hoverVideo")),
+			order: getField<number>(m.fields as Record<string, unknown>, "order"),
+		}))
+		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+	const galleryRaw = (getField<Asset[]>(fields as Record<string, unknown>, "inActionImages") ?? []);
+	const inActionImageUrls = galleryRaw.map((a) => assetUrlFromField(a)).filter((u): u is string => Boolean(u));
 	return {
 		aboutEyebrow: getField<string>(fields as Record<string, unknown>, "aboutEyebrow"),
 		aboutHeading: getField<string>(fields as Record<string, unknown>, "aboutHeading"),
@@ -189,6 +216,9 @@ export async function fetchAbout(locale: ContentfulLocale = "en-US"): Promise<Cm
 		teamTitle: getField<string>(fields as Record<string, unknown>, "teamTitle"),
 		ourStoryText: getField<Document>(fields as Record<string, unknown>, "ourStoryText"),
 		ourStoryImageUrl: assetUrlFromField(getField<Asset>(fields as Record<string, unknown>, "ourStoryImage")),
+		values,
+		team,
+		inActionImageUrls,
 	};
 }
 

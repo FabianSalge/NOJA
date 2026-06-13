@@ -55,6 +55,23 @@ export type CmsProjectDetail = {
   videoUrl?: string;
 };
 
+export type CmsAboutValue = {
+  title: string;
+  description: string;
+  icon: "eye" | "lightbulb" | "users";
+  order?: number;
+};
+
+export type CmsTeamMember = {
+  name: string;
+  role: string;
+  description?: string;
+  funFact?: string;
+  photoUrl?: string;
+  videoUrl?: string;
+  order?: number;
+};
+
 export type CmsAboutPage = {
   aboutEyebrow?: string;
   aboutHeading?: string;
@@ -62,6 +79,9 @@ export type CmsAboutPage = {
   teamTitle?: string;
   ourStoryText?: Document;
   ourStoryImageUrl?: string;
+  values: CmsAboutValue[];
+  team: CmsTeamMember[];
+  inActionImageUrls: string[];
 };
 
 export type CmsServiceItem = {
