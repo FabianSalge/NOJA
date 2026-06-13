@@ -89,12 +89,12 @@ const Team = ({ members }: TeamProps) => {
   const opacity = useTransform(scrollYProgress, [0.5, 0.95], [1, 0.1]);
 
   return (
-    <section className="py-16 sm:py-20 relative overflow-hidden bg-[hsl(var(--primary))]" ref={teamRef}>
+    <section className="py-16 sm:py-20 2xl:py-28 relative overflow-hidden bg-[hsl(var(--primary))]" ref={teamRef}>
       <motion.div className="absolute inset-0" style={{ y, opacity }}>
         <div className="absolute inset-0 bg-[hsl(var(--primary))]" />
         <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))] via-[hsl(var(--primary))]/90 to-transparent" />
       </motion.div>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+      <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <motion.div
           className="text-center mb-12 space-y-4"
           initial={{ opacity: 0, y: 30 }}
@@ -102,7 +102,7 @@ const Team = ({ members }: TeamProps) => {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-background text-center leading-[0.9]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-black text-background text-center leading-[0.9]">
               {t.about.team.title}
             </h2>
           </motion.div>

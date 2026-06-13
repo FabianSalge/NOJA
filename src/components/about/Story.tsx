@@ -37,7 +37,7 @@ const Story = ({ text, fallbackText, imageUrl }: StoryProps) => {
           <motion.div className="space-y-6 max-w-xl" variants={itemVariants} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <div className="space-y-4">
               <span className="block text-xs sm:text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-background/60">{t.about.title}</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-background tracking-tight leading-[0.95]">{t.about.subtitle}</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-black text-background tracking-tight leading-[0.95]">{t.about.subtitle}</h2>
             </div>
             <div className="space-y-4 text-lg text-background/80 leading-relaxed">
               {text ? documentToReactComponents(text, richTextOptions) : <p>{fallbackText}</p>}
