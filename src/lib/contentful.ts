@@ -57,6 +57,8 @@ export function isContentfulConfigured(): boolean {
 // Lightweight SWR-style cache wrapper for GET-only methods
 const swrCache = new Map<string, unknown>();
 
+// Pass `locale` inside `params` (e.g. { content_type, locale: "de-CH" }) to fetch a
+// specific locale. The cache key includes params, so each locale caches separately.
 export async function cachedGetEntries<T = unknown>(params: Record<string, unknown>): Promise<T> {
 	if (!isContentfulConfigured()) {
 		throw new Error("Contentful not configured");
