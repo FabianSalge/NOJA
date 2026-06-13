@@ -10,7 +10,6 @@ import { useEffect, useState, useCallback } from 'react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { richTextOptions } from '@/lib/richtext';
-import { BLOCKS, type TopLevelBlock } from '@contentful/rich-text-types';
 
 const ProjectDetail = () => {
   const { slug } = useParams();
@@ -164,50 +163,11 @@ const ProjectDetail = () => {
         <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-6">
           <h3 className="text-3xl md:text-4xl font-black">{project.secondTextTitle}</h3>
           <div className="h-[2px] w-24 bg-foreground/40 mt-4 mb-10" />
-          {project.secondTextBody ? (() => {
-            // Get the raw text content from the document
-            const getTextFromDocument = (doc: import('@contentful/rich-text-types').Document): string => {
-              return doc.content.map((node: TopLevelBlock) => {
-                if (node.nodeType === BLOCKS.PARAGRAPH && 'content' in node) {
-                  // @ts-expect-error content is present on paragraph nodes
-                  return node.content.map((textNode: { value?: string }) => textNode.value || '').join('');
-                }
-                return '';
-              }).join(' ');
-            };
-
-            const fullText = getTextFromDocument(project.secondTextBody);
-            
-            if (fullText.length < 200) {
-              // Short content - single column
-              return (
-                <div className="text-lg leading-relaxed text-foreground/85">
-                  {documentToReactComponents(project.secondTextBody, richTextOptions)}
-                </div>
-              );
-            }
-
-            // Split long text into sentences for better column balance
-            const sentences = fullText.split(/(?<=[.!?])\s+/).filter((s: string) => s.trim().length > 0);
-            const midPoint = Math.ceil(sentences.length / 2);
-            const leftText = sentences.slice(0, midPoint).join(' ');
-            const rightText = sentences.slice(midPoint).join(' ');
-
-            return (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-lg leading-relaxed text-foreground/85">
-                <div>
-                  <p className="mb-4">{leftText}</p>
-                </div>
-                <div>
-                  <p className="mb-4">{rightText}</p>
-                </div>
-              </div>
-            );
-          })() : (
-            <div className="text-lg leading-relaxed text-foreground/85">
-              <p>No content available</p>
-            </div>
-          )}
+          <div className="text-lg leading-relaxed text-foreground/85">
+            {project.secondTextBody
+              ? documentToReactComponents(project.secondTextBody, richTextOptions)
+              : <p>No content available</p>}
+          </div>
         </div>
       </section>
 
