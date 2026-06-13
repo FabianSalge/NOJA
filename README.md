@@ -1,115 +1,121 @@
-# NOJA Creative Agency
+# NOJA — Creative Agency Website
 
-This project is a React-based website for NOJA, a creative content production studio. It is built with Vite, TypeScript, and Tailwind CSS.
+> Bilingual marketing site for **NOJA**, a Swiss creative & content-production
+> agency. Built as a content-driven React SPA backed by a headless CMS.
 
-## Getting Started
+🔗 **Live:** TODO: <live-url>
 
-To get a local copy up and running, follow these simple steps.
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)
+![Contentful](https://img.shields.io/badge/CMS-Contentful-2478CC?logo=contentful&logoColor=white)
 
-### Prerequisites
+## Overview
 
-*   Node.js (v18 or later recommended)
-*   npm
+NOJA is a Swiss creative agency. This is its real production marketing website:
+a fully responsive, bilingual (English / German) single-page application whose
+content — projects, services, page copy — is managed by editors through a
+headless CMS rather than hardcoded. The site is SEO-optimised, analytics-ready
+with consent gating, and degrades gracefully when the CMS is unreachable.
 
-### Installation
+## My role
 
-1.  Clone the repo
-    ```sh
-    git clone https://github.com/your_username_/pulse-creative-agency.git
-    ```
-2.  Install NPM packages
-    ```sh
-    npm install
-    ```
-3.  Run the development server
-    ```sh
-    npm run dev
-    ```
+Sole developer. I owned the project end to end: architecture, the entire
+frontend, the Contentful integration and content model, the bilingual i18n
+layer, SEO, the CI pipeline, and deployment.
 
-The application will be available at `http://localhost:8080`.
+## Highlights
 
-## About This Project
+- **Headless CMS** — content modelled in Contentful and fetched through a
+  lazily-initialised client with an SWR-style in-memory cache. Rich text is
+  rendered with Contentful's React renderer.
+- **Bilingual (EN/DE)** — a custom React i18n context with `localStorage`
+  persistence; no heavyweight i18n dependency.
+- **SEO** — per-page titles/meta/canonicals via `react-helmet-async`, JSON-LD
+  structured data (Organization, Services, Project breadcrumbs/details), and a
+  sitemap auto-generated from CMS entries after every build.
+- **Performance** — routes are lazy-loaded with idle-time prefetching, vendors
+  are split into their own chunk, and images use responsive `srcset`/lazy
+  loading. Performance/a11y/SEO budgets enforced in CI via Lighthouse CI.
+- **Privacy-first analytics** — GA4 loads only when configured *and* the visitor
+  has given cookie consent, in line with Swiss FADP / nDSG.
+- **Secure token model** — the client uses a read-only Contentful delivery
+  token; the management (write) token is dev-only and never bundled.
+- **Graceful degradation** — if CMS credentials are missing, the app serves a
+  maintenance page instead of crashing.
+- **Quality gate** — CI runs lint (zero-warning policy) and build on every PR;
+  Dependabot keeps dependencies current.
 
-This website was built to showcase the portfolio, services, and team of NOJA. It features a modern, responsive design with smooth animations and a cohesive brand identity.
+## Tech stack
 
-## Deployment
+React 18 · TypeScript · Vite · Tailwind CSS · shadcn/ui (Radix primitives) ·
+Framer Motion · TanStack Query · react-helmet-async · Contentful.
 
-This project is configured for modern SPAs using BrowserRouter.
+## Architecture
 
-- Vercel (recommended)
-  - Framework preset: Vite
-  - Build command: `npm run build`
-  - Output directory: `dist`
-  - SPA routing: Vercel auto-handles this; no extra config needed.
+A React Router v6 SPA. Providers are layered
+`QueryClientProvider → HelmetProvider → LanguageProvider → TooltipProvider →
+BrowserRouter`. CMS access is isolated in `src/lib/contentful.ts` (client +
+cache) and `src/lib/cms.ts` (typed fetchers); UI never talks to Contentful
+directly. The i18n context lives in `src/i18n/`, and SEO concerns are centralised
+in dedicated components. Routes are defined in `src/routes.tsx`.
 
-- Netlify
-  - Build command: `npm run build`
-  - Publish directory: `dist`
-  - Ensure the file `public/_redirects` exists with: `/* /index.html 200` for SPA routing.
+## Local development
+
+**Prerequisites:** Node.js 18+ and npm.
+
+```sh
+npm install
+npm run dev      # http://localhost:8080
+npm run build    # type-check + production build + sitemap
+npm run lint     # ESLint (strict: zero warnings)
+```
+
+The app needs Contentful credentials to show content — see below.
+
+<details>
+<summary><strong>Full configuration (environment variables, analytics, deployment)</strong></summary>
 
 ### Environment variables
 
-Site runs fine without a custom domain. For best SEO and analytics, set these when you have a domain:
+All client variables are prefixed `VITE_` (read via `import.meta.env`):
 
-- `VITE_SITE_URL` (recommended): Your production URL, e.g. `https://nojaagency.com`.
-  - Used for canonical links, absolute OpenGraph/JSON-LD URLs, and future sitemap automation.
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `VITE_CONTENTFUL_SPACE_ID` | yes | Contentful space |
+| `VITE_CONTENTFUL_ACCESS_TOKEN` | yes | Delivery (read-only) token |
+| `VITE_CONTENTFUL_ENVIRONMENT` | no | Defaults to `master` |
+| `VITE_CONTENTFUL_PREVIEW_ACCESS_TOKEN` | no | Preview API token |
+| `VITE_CONTENTFUL_USE_PREVIEW` | no | `true` to use the preview API |
+| `VITE_FORMSPREE_ID` | no | Contact-form endpoint |
+| `VITE_SITE_URL` | no | Production URL for canonical links / sitemap |
+| `VITE_GA_ID` | no | GA4 measurement ID (`G-XXXXXXXXXX`) |
+| `VITE_GSC_VERIFICATION` | no | Google Search Console verification token |
 
-- `VITE_GA_ID` (optional): Google Analytics 4 Measurement ID (format: `G-XXXXXXXXXX`).
-  - Add property at analytics.google.com → Data streams → Web.
-  - If set, GA4 is injected automatically.
+A non-`VITE_` `CONTENTFUL_MANAGEMENT_TOKEN` (write token) is used only by the
+dev scripts in `scripts/cma/` and is never bundled to the client.
 
-- `VITE_GSC_VERIFICATION` (optional): Google Search Console meta verification token.
-  - Add property at search.google.com/search-console → URL prefix → HTML tag.
-  - Paste the meta `content` value as this variable to verify ownership.
+### Analytics (GA4)
 
-On Vercel/Netlify:
-- Add env vars in project settings → Environment Variables.
-- Redeploy to apply changes.
+GA4 activates only when `VITE_GA_ID` is set **and** the visitor accepts cookies.
+Create a GA4 web stream, copy the measurement ID into `VITE_GA_ID`, and redeploy.
+IP anonymisation is on by default.
 
-### Custom domain steps (when ready)
-1. Add your domain in Vercel/Netlify project settings.
-2. Update DNS (A/ALIAS/CNAME) per provider instructions.
-3. Set `VITE_SITE_URL=https://your-domain.com` and redeploy.
-4. Search Console:
-   - Add the same domain property and verify (HTML tag or DNS).
-   - Submit `https://your-domain.com/sitemap.xml`.
-5. Analytics:
-   - Create GA4 web stream for your domain, copy Measurement ID to `VITE_GA_ID`.
-   - Optionally configure consent mode as required for your region.
+### Search Console
 
-## SEO Notes
+Add the production domain in Search Console, verify via the HTML-tag method by
+setting `VITE_GSC_VERIFICATION`, then submit `/sitemap.xml`.
 
-- Per-page titles/descriptions/canonicals are handled via `react-helmet-async`.
-- JSON-LD added for Organization (home), Services, Projects breadcrumbs, and Project details.
-- SPA routing is supported via BrowserRouter with appropriate rewrites.
-- Images use lazy loading and responsive `srcset/sizes` where applicable.
+### Deployment
 
-## Analytics (GA4) Setup
+Deployed on **Vercel** (framework preset: Vite, build `npm run build`, output
+`dist/`). SPA rewrites are configured in `vercel.json`. Set env vars in the
+project settings and redeploy to apply.
 
-This project has built-in GA4 support via `src/components/Analytics.tsx`. It only activates when `VITE_GA_ID` is set.
+</details>
 
-1) Create a GA4 property and Web stream
-- Go to analytics.google.com → Admin → Create Account/Property → Data Streams → Web
-- Enter your site URL (temporary Vercel URL is fine), then create the stream
-- Copy the Measurement ID (format: `G-XXXXXXXXXX`)
+## License
 
-2) Configure environment variables
-- On Vercel/Netlify (Project → Settings → Environment Variables):
-  - `VITE_GA_ID=G-XXXXXXXXXX` (from step 1)
-  - Optional: `VITE_SITE_URL=https://your-domain.com` (canonical URLs)
-  - Optional (Search Console HTML tag verification): `VITE_GSC_VERIFICATION=YOUR_TOKEN`
-- Redeploy the app after saving variables
-
-3) Validate GA is working
-- Open your site and check GA Realtime and DebugView
-- You can also use the GA4 Debugger Chrome extension or network tab for `collect` requests
-
-4) (Optional) Consent mode
-- Depending on your region, implement a Consent UI and call `gtag('consent', ...)` before `config`
-- The current setup anonymizes IP by default (`anonymize_ip: true`)
-
-Search Console (optional but recommended)
-- Visit search.google.com/search-console → Add property (use your final domain)
-- If you pick URL prefix → choose “HTML tag” → copy token into `VITE_GSC_VERIFICATION`
-- Alternatively, verify via DNS (no env var needed)
-- Submit your `sitemap.xml` in Search Console
+This repository is published for portfolio viewing only and is **not** licensed
+for reuse. See [LICENSE](./LICENSE).
