@@ -1,6 +1,7 @@
 import { Document, BLOCKS, TopLevelBlock } from "@contentful/rich-text-types";
 import type { Asset, Entry } from "contentful";
 import { getAssetUrl, cachedGetEntries, isContentfulConfigured } from "./contentful";
+import type { Language } from "@/i18n";
 import type {
     CmsAboutPage,
     CmsHome,
@@ -24,10 +25,10 @@ export type {
     CmsBrand,
 } from "./cms.types";
 
-export type AppLanguage = "en" | "de";
 export type ContentfulLocale = "en-US" | "de-CH";
 
-export function localeForLanguage(language: AppLanguage): ContentfulLocale {
+// Maps the app language (from src/i18n) to its Contentful locale code.
+export function localeForLanguage(language: Language): ContentfulLocale {
 	return language === "de" ? "de-CH" : "en-US";
 }
 
