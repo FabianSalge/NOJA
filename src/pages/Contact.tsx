@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

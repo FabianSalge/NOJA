@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical } from '@/lib/seo';
 import ResponsiveImage from '@/components/ResponsiveImage';

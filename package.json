@@ -15,6 +15,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.2.1",
     "@contentful/rich-text-types": "^17.1.0",
+    "@dr.pogodin/react-helmet": "^3.2.2",
     "@fontsource/syne": "^5.2.7",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.13",
@@ -58,7 +59,6 @@
     "lucide-react": "^1.18.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.0",
-    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.79.0",
     "react-router-dom": "^6.26.2",
     "tailwind-merge": "^2.5.2",

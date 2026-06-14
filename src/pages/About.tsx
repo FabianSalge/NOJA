@@ -6,7 +6,7 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
  
 import { fetchAbout, localeForLanguage, type CmsAboutPage } from '@/lib/cms';
  
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import Story from '@/components/about/Story';
 import Values from '@/components/about/Values';

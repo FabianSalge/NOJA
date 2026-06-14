@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 
 const GA_ID = import.meta.env.VITE_GA_ID as string | undefined;
 const GSC_VERIFICATION = import.meta.env.VITE_GSC_VERIFICATION as string | undefined;
