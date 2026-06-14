@@ -12,7 +12,7 @@ import { HOME_IMAGES, HOME_VIDEOS } from '@/lib/assets';
 import { fetchHome, localeForLanguage, type CmsHome } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { richTextOptions } from '@/lib/richtext';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import Hero from '@/components/home/Hero';

@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
+import { HelmetProvider } from "@dr.pogodin/react-helmet";
 import AppRoutes from "./routes";
 import { LanguageProvider } from "./i18n";
 import ScrollToTop from "./components/ScrollToTop";
