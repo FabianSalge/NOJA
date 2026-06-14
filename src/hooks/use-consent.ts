@@ -49,6 +49,7 @@ export function useConsent() {
     };
   }, []);
 
+
   const acknowledge = useCallback(() => {
     storeAcknowledgement();
     setHasConsented(true);
