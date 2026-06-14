@@ -5,10 +5,10 @@
 
 🔗 **Live:** TODO: <live-url>
 
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![Contentful](https://img.shields.io/badge/CMS-Contentful-2478CC?logo=contentful&logoColor=white)
 
 ## Overview
@@ -32,14 +32,17 @@ layer, SEO, the CI pipeline, and deployment.
   rendered with Contentful's React renderer.
 - **Bilingual (EN/DE)** — a custom React i18n context with `localStorage`
   persistence; no heavyweight i18n dependency.
-- **SEO** — per-page titles/meta/canonicals via `react-helmet-async`, JSON-LD
-  structured data (Organization, Services, Project breadcrumbs/details), and a
-  sitemap auto-generated from CMS entries after every build.
+- **SEO** — per-page titles/meta/canonicals via `@dr.pogodin/react-helmet`,
+  JSON-LD structured data (Organization, Services, Project breadcrumbs/details),
+  and a sitemap auto-generated from CMS entries after every build.
 - **Performance** — routes are lazy-loaded with idle-time prefetching, vendors
   are split into their own chunk, and images use responsive `srcset`/lazy
   loading. Performance/a11y/SEO budgets enforced in CI via Lighthouse CI.
-- **Analytics** — GA4 loads only when a measurement ID is configured, with IP
-  anonymisation enabled by default; a cookie-consent banner is in place.
+- **Analytics & consent** — GA4 is gated behind explicit cookie consent: the
+  tracking script loads only after the visitor accepts the banner *and* a
+  measurement ID is configured, with IP anonymisation on by default. Consent
+  state is versioned, persisted in `localStorage`, and synced across tabs;
+  cookieless Vercel Analytics/Speed Insights run unconditionally.
 - **Secure token model** — the client uses a read-only Contentful delivery
   token; the management (write) token is dev-only and never bundled.
 - **Graceful degradation** — if CMS credentials are missing, the app serves a
@@ -49,8 +52,8 @@ layer, SEO, the CI pipeline, and deployment.
 
 ## Tech stack
 
-React 18 · TypeScript · Vite · Tailwind CSS · shadcn/ui (Radix primitives) ·
-Framer Motion · TanStack Query · react-helmet-async · Contentful.
+React 19 · TypeScript · Vite · Tailwind CSS · shadcn/ui (Radix primitives) ·
+Framer Motion · TanStack Query · `@dr.pogodin/react-helmet` · Contentful.
 
 ## Architecture
 
@@ -98,9 +101,11 @@ dev scripts in `scripts/cma/` and is never bundled to the client.
 
 ### Analytics (GA4)
 
-GA4 activates only when `VITE_GA_ID` is set. Create a GA4 web stream, copy the
-measurement ID into `VITE_GA_ID`, and redeploy. IP anonymisation is on by
-default, and a cookie-consent banner is shown to visitors.
+GA4 activates only when `VITE_GA_ID` is set **and** the visitor has accepted the
+cookie-consent banner — until then the tracking script never loads. Create a GA4
+web stream, copy the measurement ID into `VITE_GA_ID`, and redeploy. IP
+anonymisation is on by default. Consent is handled by `src/hooks/use-consent.ts`
+and `src/components/CookieConsent.tsx`, with a `/cookies` declaration page.
 
 ### Search Console
 

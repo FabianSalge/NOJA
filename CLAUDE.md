@@ -27,7 +27,7 @@ No test framework is configured.
 
 ## Architecture
 
-**Stack**: React 18 + TypeScript + Vite + Tailwind CSS + shadcn/ui (Radix primitives)
+**Stack**: React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui (Radix primitives)
 
 **Routing**: React Router v6 with BrowserRouter. All pages are lazy-loaded (`React.lazy`) with idle-time prefetching. Routes are defined in `src/routes.tsx`. Add new routes above the catch-all `*` route.
 
@@ -45,7 +45,7 @@ QueryClientProvider → HelmetProvider → LanguageProvider → TooltipProvider 
 
 **Styling**: Tailwind with custom design tokens (HSL CSS variables in `src/index.css`). Font: Syne. UI primitives from shadcn/ui in `src/components/ui/`. Animations use both Tailwind Animate and Framer Motion.
 
-**SEO**: Per-page meta tags via react-helmet-async. JSON-LD structured data in `src/components/SEOJsonLd.tsx`. Sitemap auto-generated post-build from Contentful project entries.
+**SEO**: Per-page meta tags via `@dr.pogodin/react-helmet`. JSON-LD structured data in `src/components/SEOJsonLd.tsx`. Sitemap auto-generated post-build from Contentful project entries.
 
 **Analytics**: GA4 loads conditionally when `VITE_GA_ID` is set and user has given cookie consent. Consent state managed by `src/hooks/use-consent.ts` and `src/components/CookieConsent.tsx`.
 
