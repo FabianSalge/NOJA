@@ -7,7 +7,7 @@ import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { fetchProjectsPage, localeForLanguage, type CmsProjectSummary, type CmsProjectsPage } from '@/lib/cms';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { richTextOptions } from '@/lib/richtext';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import { useTranslation } from '@/i18n';

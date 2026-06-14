@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import { buildCanonical } from '@/lib/seo';
 import { useTranslation } from '@/i18n';
 

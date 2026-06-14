@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import HaveProjectCTA from '@/components/HaveProjectCTA';
 import { fetchServicesPage, localeForLanguage, type CmsServicesPage, type CmsServiceItem } from '@/lib/cms';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import SEOJsonLd from '@/components/SEOJsonLd';
 import { buildCanonical, getSiteUrl } from '@/lib/seo';
 import ResponsiveImage from '@/components/ResponsiveImage';
