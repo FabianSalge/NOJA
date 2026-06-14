@@ -28,7 +28,7 @@ const Section = ({
       <ul className="mt-3 space-y-1 list-none">
         {bullets.map((b) => (
           <li key={b} className="flex items-start gap-2 text-background/80">
-            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-background/40 flex-shrink-0" />
+            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-background/40 shrink-0" />
             {b}
           </li>
         ))}

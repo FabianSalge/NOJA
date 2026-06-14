@@ -164,7 +164,7 @@ const Services = () => {
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
               >
-                    <Check className={`w-5 h-5 flex-shrink-0 ${
+                    <Check className={`w-5 h-5 shrink-0 ${
                       isDark ? 'text-foreground' : 'text-background'
                     }`} />
                     <span className={`${textColor} font-medium`}>{feature}</span>

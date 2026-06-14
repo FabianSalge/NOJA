@@ -37,7 +37,7 @@ const Values = ({ items, title }: ValuesProps) => {
         <motion.div className="hidden md:grid grid-cols-3 gap-6" variants={containerVariants} initial="hidden" animate={valuesInView ? 'visible' : 'hidden'}>
           {items.map((value, index) => (
             <motion.div key={index} className="group" variants={itemVariants} transition={{ duration: 0.6, ease: 'easeOut' }}>
-              <motion.div className="bg-foreground/5 backdrop-blur-sm rounded-2xl p-6 h-full border border-foreground/10 hover:border-foreground/20 transition-all duration-300 text-center" whileHover={{ y: -4 }}>
+              <motion.div className="bg-foreground/5 backdrop-blur-xs rounded-2xl p-6 h-full border border-foreground/10 hover:border-foreground/20 transition-all duration-300 text-center" whileHover={{ y: -4 }}>
                 <motion.div className="w-12 h-12 bg-foreground text-[hsl(var(--primary))] rounded-xl flex items-center justify-center mx-auto mb-4" whileHover={{ rotate: 15 }} transition={{ duration: 0.3 }}>
                   <value.icon size={24} />
                 </motion.div>
@@ -57,7 +57,7 @@ const Values = ({ items, title }: ValuesProps) => {
         >
           <Accordion type="single" collapsible className="space-y-3">
             {items.map((value, index) => (
-              <AccordionItem key={index} value={`value-${index}`} className="bg-foreground/5 backdrop-blur-sm rounded-2xl border border-foreground/10 overflow-hidden">
+              <AccordionItem key={index} value={`value-${index}`} className="bg-foreground/5 backdrop-blur-xs rounded-2xl border border-foreground/10 overflow-hidden">
                 <AccordionTrigger className="px-5 py-5 hover:no-underline [&>svg]:mx-auto [&>svg]:mt-1">
                   <div className="flex flex-col items-center gap-2 w-full">
                     <div className="w-11 h-11 bg-foreground text-[hsl(var(--primary))] rounded-xl flex items-center justify-center">

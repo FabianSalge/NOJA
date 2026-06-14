@@ -104,7 +104,7 @@ const Hero = ({ onScrollIndicatorClick, title }: HeroProps) => {
       </div>
 
       <div className="absolute bottom-10 left-0 right-0 flex justify-center z-10">
-        <motion.button className="inline-flex items-center p-3 rounded-full border border-white/50 text-white/90 backdrop-blur-sm transition-colors hover:bg-white/10" animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }} onClick={onScrollIndicatorClick}>
+        <motion.button className="inline-flex items-center p-3 rounded-full border border-white/50 text-white/90 backdrop-blur-xs transition-colors hover:bg-white/10" animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }} onClick={onScrollIndicatorClick}>
           <ArrowDown className="w-4 h-4" />
         </motion.button>
       </div>

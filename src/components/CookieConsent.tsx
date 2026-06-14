@@ -25,7 +25,7 @@ const CookieConsent = () => {
               <div className="p-5 md:p-6">
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(var(--primary))]/10 flex-shrink-0">
+                    <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(var(--primary))]/10 shrink-0">
                       <Cookie className="w-5 h-5 text-[hsl(var(--primary))]" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -44,7 +44,7 @@ const CookieConsent = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 flex-shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
                     <motion.button
                       onClick={acknowledge}
                       className="px-6 py-2.5 text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--background))] rounded-full hover:opacity-90 transition-all duration-200 shadow-lg shadow-[hsl(var(--primary))]/20"

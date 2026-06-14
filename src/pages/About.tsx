@@ -133,7 +133,7 @@ const About = () => {
         <div className="relative w-full">
           <div className="flex w-max marquee-content">
             {[...actionImages, ...actionImages].map((src, index) => (
-              <div key={index} className="flex-shrink-0 px-2">
+              <div key={index} className="shrink-0 px-2">
                 <div className="overflow-hidden rounded-2xl w-40 sm:w-56 aspect-[9/16]">
                   <img
                     src={src}

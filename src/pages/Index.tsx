@@ -208,7 +208,7 @@ const Index = () => {
                     opacity: 0.6,
                   }}
                 />
-                {/* Halo shadow under phone */}
+                {/* Halo shadow-sm under phone */}
                 <div
                   className="pointer-events-none absolute left-1/2 -translate-x-1/2 -bottom-6 w-[80%] h-8 md:h-10 lg:h-12 rounded-full"
                   style={{

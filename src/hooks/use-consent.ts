@@ -39,7 +39,6 @@ export function useConsent() {
 
   useEffect(() => {
     const sync = () => setHasConsented(getStoredAcknowledgement());
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- resync from storage on mount in case it changed before this instance subscribed
     sync();
     listeners.add(sync);
     // Keep consent consistent across tabs.
