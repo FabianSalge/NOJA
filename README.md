@@ -3,7 +3,7 @@
 > Bilingual marketing site for **NOJA**, a Swiss creative & content-production
 > agency. Built as a content-driven React SPA backed by a headless CMS.
 
-🔗 **Live:** TODO: <live-url>
+🔗 **Live:** [nojaagency.com](https://nojaagency.com)
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
