@@ -1,5 +1,4 @@
 
-import { Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LOGOS } from '@/lib/assets';
 import { useTranslation } from '@/i18n';
@@ -29,7 +28,11 @@ const Footer = () => {
             <a href="mailto:team@nojaagency.com" className="inline-block text-background font-semibold underline underline-offset-4 break-words mx-auto md:mx-0">team@nojaagency.com</a>
             <div className="pt-6 flex items-center gap-4 justify-center md:justify-start">
               <a href="https://instagram.com/nojaagency" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-3 bg-background/10 hover:bg-brand-warm rounded-full transition-colors">
-                <Instagram size={20} className="text-background/70" />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-background/70">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                </svg>
               </a>
               <a href="https://tiktok.com/@nojaagency" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="p-3 bg-background/10 hover:bg-brand-warm rounded-full transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-background/70">
