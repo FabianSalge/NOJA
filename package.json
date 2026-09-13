@@ -14,7 +14,7 @@
     "preview": "vite preview",
     "sitemap": "npm run build",
     "cms:inventory": "node --env-file=.env scripts/cma/inventory.mjs",
-    "test:seo": "node --test scripts/test-seo.mjs"
+    "test:seo": "node --test scripts/test-seo.mjs scripts/test-build-errors.mjs"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.2.2",

@@ -2,6 +2,7 @@ import { build, loadEnv } from "vite";
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { describeBuildError } from "./lib/build-error.mjs";
 import { writeSitemap } from "./generate-sitemap.mjs";
 
 const root = process.cwd();
@@ -88,7 +89,7 @@ try {
   // Do not leave a partially generated site that could be deployed accidentally.
   await rm(output, { recursive: true, force: true });
   throw new Error(
-    `SEO build failed: ${error instanceof Error ? error.message.split("\n")[0] : "unknown error"}`,
+    `SEO build failed: ${describeBuildError(error)}`,
   );
 } finally {
   await rm(serverOutput, { recursive: true, force: true });

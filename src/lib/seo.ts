@@ -1,10 +1,8 @@
 import { localizedPath, type Language } from "./locale";
 
 export function getSiteUrl(): string {
-  return (import.meta.env.VITE_SITE_URL || "https://nojaagency.com").replace(
-    /\/$/,
-    "",
-  );
+  const configured = (import.meta.env.VITE_SITE_URL || '').trim();
+  return (configured || 'https://nojaagency.com').replace(/\/$/, '');
 }
 
 export function buildCanonical(

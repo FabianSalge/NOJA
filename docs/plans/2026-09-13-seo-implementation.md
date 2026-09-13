@@ -95,3 +95,19 @@ The three proposed service categories remain separate unpublished drafts.
 A regression check now rejects those misplaced German titles in the English
 prerendered homepage. It reproduced the failure in the previous build before the
 Contentful correction. Rebuild after this content repair to refresh static HTML.
+
+## Follow-up: PR build configuration
+
+Both GitHub Actions workflows failed during the Contentful fetch in prerendering,
+while local and Vercel builds succeeded. The repository's CMS secrets dated from
+August 2025. Synchronized the Actions space, read-only delivery token, environment
+and canonical site URL with the locally verified production configuration.
+No management token was uploaded.
+
+Site URL handling now trims surrounding whitespace (visible in the Actions
+configuration) before constructing canonical URLs. Prerender errors report a
+validated error name and HTTP status, with configuration guidance, rather than
+truncating Contentful's JSON error to an unhelpful opening brace. Error reporting
+never prints the SDK request or headers. Tests cover token/request redaction and
+known validation messages; a complete build with whitespace around VITE_SITE_URL
+passes the SEO suite.
