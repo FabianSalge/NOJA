@@ -78,3 +78,20 @@ accessed, so this work makes no ranking or traffic claims.
 The three proposed service categories remain unpublished CMS drafts. Production
 prerendering continues to use the currently published service references, while
 the established local feedback preview remains available in development.
+
+## Follow-up: homepage service language correction
+
+The homepage's `whatYouNeedCard.title` field was not localized. Its `en-US`
+values contained German copy, so both delivery locales returned German titles.
+Localized routing was correct, but the original SEO checks did not validate the
+language of the service-card content.
+
+`scripts/cma/fix-home-service-translations.mjs` enables localization and publishes
+separate EN/DE values for the four existing cards. It backs up the model/entries,
+refuses unrelated draft changes, and verifies that image/order fields are
+unchanged. The existing German labels and homepage references are preserved.
+The three proposed service categories remain separate unpublished drafts.
+
+A regression check now rejects those misplaced German titles in the English
+prerendered homepage. It reproduced the failure in the previous build before the
+Contentful correction. Rebuild after this content repair to refresh static HTML.

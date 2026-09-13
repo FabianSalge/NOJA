@@ -203,3 +203,18 @@ if (process.env.SEO_TEST_ORIGIN) {
     }
   });
 }
+
+test('English homepage service cards do not contain the misplaced German CMS titles', () => {
+  const html = pages.get('/');
+  const snapshot = JSON.parse(html.match(/<script id="page-data" type="application\/json">(.*?)<\/script>/s)[1]);
+  const misplacedTitles = new Set([
+    'Strategische & Kreative Direktion',
+    'Kampagnen- & Projektmanagement',
+    'Video- & Fotografie',
+    'Bearbeitung',
+  ]);
+  assert.ok(snapshot.data.whatYouNeedCards.length > 0);
+  for (const card of snapshot.data.whatYouNeedCards) {
+    assert.ok(!misplacedTitles.has(card.title), `German title in English homepage content: ${card.title}`);
+  }
+});
