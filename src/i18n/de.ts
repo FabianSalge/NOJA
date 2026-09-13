@@ -1,4 +1,5 @@
 export const de = {
+  media: { pause: 'Video pausieren', play: 'Video abspielen', scroll: 'Zum nächsten Abschnitt scrollen', background: 'Hintergrundvideo', phone: 'Handy-Vorschau' },
   // Navigation
   nav: {
     aboutUs: 'Über uns',
@@ -74,8 +75,22 @@ export const de = {
     },
   },
 
+  carousel: {
+    carousel: 'Karussell', slide: 'Bild', previous: 'Vorheriges Bild', next: 'Nächstes Bild',
+    play: 'Videovorschau abspielen', pause: 'Videovorschau pausieren', selectSlide: 'Bild auswählen',
+    instructions: 'Wischen oder mit der linken und rechten Pfeiltaste navigieren',
+  },
+
   // Projects page
   projects: {
+    viewProject: 'Projekt entdecken',
+    back: 'Alle Projekte',
+    empty: 'Neue Projekte folgen bald.',
+    unavailable: 'Die Projekte konnten nicht geladen werden. Bitte versuche es erneut.',
+    notFound: 'Projekt nicht gefunden',
+    notFoundDescription: 'Dieses Projekt ist nicht verfügbar oder wurde verschoben.',
+    gallery: 'Projektgalerie',
+    retry: 'Erneut versuchen',
     title: 'Ausgewählte Projekte',
     subtitle: 'Der Pulse Effect in Aktion',
     moreWork: 'Mehr Arbeiten',
@@ -84,6 +99,7 @@ export const de = {
 
   // Services page
   services: {
+    deliverables: 'Das bekommst du:',
     title: 'Unsere Services',
     subtitle: 'Von der Idee bis zur Umsetzung bieten wir umfassende Content-Creation-Services.',
     fullService: {
@@ -136,6 +152,8 @@ export const de = {
 
   // Contact page
   contact: {
+    unavailable: 'Schreib uns für dein Projekt an team@nojaagency.com.',
+    requiredFields: 'Bitte fülle die Pflichtfelder aus.',
     title: 'WIR LIEBEN MUTIGE IDEEN!',
     firstName: 'Vorname',
     lastName: 'Nachname',

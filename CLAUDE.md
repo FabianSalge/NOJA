@@ -32,7 +32,7 @@ No test framework is configured.
 **Routing**: React Router v6 with BrowserRouter. All pages are lazy-loaded (`React.lazy`) with idle-time prefetching. Routes are defined in `src/routes.tsx`. Add new routes above the catch-all `*` route.
 
 **Provider hierarchy** (in `src/App.tsx`):
-QueryClientProvider → HelmetProvider → LanguageProvider → TooltipProvider → BrowserRouter
+Entry points supply HelmetProvider, PageDataContext, LanguageProvider and BrowserRouter/StaticRouter; App supplies QueryClientProvider and TooltipProvider.
 
 **CMS (Contentful)**:
 - Client setup in `src/lib/contentful.ts` with lazy initialization and a SWR-style in-memory cache
@@ -41,11 +41,11 @@ QueryClientProvider → HelmetProvider → LanguageProvider → TooltipProvider 
 - Rich text rendered via `@contentful/rich-text-react-renderer`
 - If Contentful env vars are missing, the app shows a maintenance page instead of crashing
 
-**i18n**: Custom React Context in `src/i18n/`. Translations live in `src/i18n/en.ts` and `src/i18n/de.ts`. Access via `useTranslation()` hook which provides `language`, `t`, `setLanguage`, `toggleLanguage`. Language persists in localStorage (`noja-language`).
+**i18n**: Custom React Context in `src/i18n/`. Translations live in `src/i18n/en.ts` and `src/i18n/de.ts`. Access via `useTranslation()` hook which provides `language`, `t`, `setLanguage`, `toggleLanguage`. The URL determines language: existing paths for English and `/de` for German. Language switches use full-page links preserving the current path.
 
 **Styling**: Tailwind with custom design tokens (HSL CSS variables in `src/index.css`). Font: Syne. UI primitives from shadcn/ui in `src/components/ui/`. Animations use both Tailwind Animate and Framer Motion.
 
-**SEO**: Per-page meta tags via `@dr.pogodin/react-helmet`. JSON-LD structured data in `src/components/SEOJsonLd.tsx`. Sitemap auto-generated post-build from Contentful project entries.
+**SEO**: Per-page meta tags via `@dr.pogodin/react-helmet`. JSON-LD structured data in `src/components/SEOJsonLd.tsx`. Complete HTML and per-page CMS snapshots are prerendered post-build for both languages by `scripts/prerender.mjs`; the sitemap is generated from that same page set. Builds require published delivery content.
 
 **Analytics**: GA4 loads conditionally when `VITE_GA_ID` is set and user has given cookie consent. Consent state managed by `src/hooks/use-consent.ts` and `src/components/CookieConsent.tsx`.
 
@@ -89,4 +89,4 @@ Mobile-first. Large screens (≥1536px) are handled with **additive `2xl:` utili
 
 ## Deployment
 
-Deployed on Vercel. SPA rewrites configured in `vercel.json` (`/* → /index.html`). Build output goes to `dist/`.
+Deployed on Vercel. Static clean URLs and native 404 handling are configured in `vercel.json`. Build output goes to `dist/`. Use `npm run build` (including prerender postbuild), then `npm run test:seo`. Contentful publication changes require a rebuild/deploy; no deploy webhook is configured by the SEO implementation.

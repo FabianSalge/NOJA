@@ -1,4 +1,5 @@
 export const en = {
+  media: { pause: 'Pause video', play: 'Play video', scroll: 'Scroll to the next section', background: 'Background video', phone: 'Phone preview' },
   // Navigation
   nav: {
     aboutUs: 'About Us',
@@ -74,8 +75,22 @@ export const en = {
     },
   },
 
+  carousel: {
+    carousel: 'Carousel', slide: 'Slide', previous: 'Previous slide', next: 'Next slide',
+    play: 'Play video preview', pause: 'Pause video preview', selectSlide: 'Choose a slide',
+    instructions: 'Swipe or use the left and right arrow keys to browse',
+  },
+
   // Projects page
   projects: {
+    viewProject: 'Explore project',
+    back: 'All projects',
+    empty: 'New work is on its way.',
+    unavailable: 'Projects could not be loaded. Please try again.',
+    notFound: 'Project not found',
+    notFoundDescription: 'This project is unavailable or has moved.',
+    gallery: 'Project gallery',
+    retry: 'Try again',
     title: 'Featured Projects',
     subtitle: 'The Pulse Effect in Action',
     moreWork: 'More Work',
@@ -84,6 +99,7 @@ export const en = {
 
   // Services page
   services: {
+    deliverables: 'You leave with:',
     title: 'Our Services',
     subtitle: 'From ideation to execution, we offer comprehensive content creation services.',
     fullService: {
@@ -136,6 +152,8 @@ export const en = {
 
   // Contact page
   contact: {
+    unavailable: 'Please email team@nojaagency.com to discuss your project.',
+    requiredFields: 'Please complete the required fields.',
     title: 'WE LIKE BOLD BRIEFS',
     firstName: 'First name',
     lastName: 'Last name',

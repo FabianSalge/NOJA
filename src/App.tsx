@@ -1,11 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "@dr.pogodin/react-helmet";
+import { useLocation } from "react-router-dom";
 import AppRoutes from "./routes";
-import { LanguageProvider } from "./i18n";
+
 import ScrollToTop from "./components/ScrollToTop";
 import ConditionalAnalytics from "./components/ConditionalAnalytics";
 import CookieConsent from "./components/CookieConsent";
@@ -13,23 +11,23 @@ import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
+const LocalizedRoutes = () => {
+  const { pathname } = useLocation();
+  return <AppRoutes key={pathname} />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <HelmetProvider>
-      <LanguageProvider>
-        <TooltipProvider>
-          <Toaster />
-          <BrowserRouter basename={import.meta.env.BASE_URL}>
-            <ErrorBoundary>
-              <ScrollToTop />
-              <ConditionalAnalytics />
-              <AppRoutes />
-              <CookieConsent />
-            </ErrorBoundary>
-          </BrowserRouter>
-        </TooltipProvider>
-      </LanguageProvider>
-    </HelmetProvider>
+    <TooltipProvider>
+      <Toaster />
+
+      <ErrorBoundary>
+        <ScrollToTop />
+        <ConditionalAnalytics />
+        <LocalizedRoutes />
+        <CookieConsent />
+      </ErrorBoundary>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 

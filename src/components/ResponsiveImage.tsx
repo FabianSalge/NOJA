@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { buildContentfulSrcSet } from '@/lib/images';
+import { buildContentfulSrcSet, optimizedImageUrl } from '@/lib/images';
 
 type ResponsiveImageProps = {
   src?: string;
@@ -28,7 +28,7 @@ const ResponsiveImage = ({
 
   return (
     <img
-      src={src}
+      src={optimizedImageUrl(src, Math.max(...widths))}
       srcSet={buildContentfulSrcSet(src, widths)}
       sizes={sizes}
       alt={alt}
@@ -42,5 +42,4 @@ const ResponsiveImage = ({
 };
 
 export default ResponsiveImage;
-
 

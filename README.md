@@ -1,7 +1,7 @@
 # NOJA — Creative Agency Website
 
 > Bilingual marketing site for **NOJA**, a Swiss creative & content-production
-> agency. Built as a content-driven React SPA backed by a headless CMS.
+> agency. Built with React, prerendered in two languages and backed by Contentful.
 
 🔗 **Live:** [nojaagency.com](https://nojaagency.com)
 
@@ -14,7 +14,7 @@
 ## Overview
 
 NOJA is a Swiss creative agency. This is its real production marketing website:
-a fully responsive, bilingual (English / German) single-page application whose
+a fully responsive, bilingual (English / German) website whose
 content — projects, services, page copy — is managed by editors through a
 headless CMS rather than hardcoded. The site is SEO-optimised, analytics-ready,
 and degrades gracefully when the CMS is unreachable.
@@ -30,11 +30,11 @@ layer, SEO, the CI pipeline, and deployment.
 - **Headless CMS** — content modelled in Contentful and fetched through a
   lazily-initialised client with an SWR-style in-memory cache. Rich text is
   rendered with Contentful's React renderer.
-- **Bilingual (EN/DE)** — a custom React i18n context with `localStorage`
-  persistence; no heavyweight i18n dependency.
+- **Bilingual (EN/DE)** — English keeps the existing URLs; German uses `/de`.
+  Crawlable language links preserve the current page. The URL determines the language.
 - **SEO** — per-page titles/meta/canonicals via `@dr.pogodin/react-helmet`,
-  JSON-LD structured data (Organization, Services, Project breadcrumbs/details),
-  and a sitemap auto-generated from CMS entries after every build.
+  JSON-LD structured data, complete HTML generated from published CMS content,
+  reciprocal `hreflang` links and a sitemap generated from the same page set.
 - **Performance** — routes are lazy-loaded with idle-time prefetching, vendors
   are split into their own chunk, and images use responsive `srcset`/lazy
   loading. Performance/a11y/SEO budgets enforced in CI via Lighthouse CI.
@@ -45,8 +45,8 @@ layer, SEO, the CI pipeline, and deployment.
   cookieless Vercel Analytics/Speed Insights run unconditionally.
 - **Secure token model** — the client uses a read-only Contentful delivery
   token; the management (write) token is dev-only and never bundled.
-- **Graceful degradation** — if CMS credentials are missing, the app serves a
-  maintenance page instead of crashing.
+- **Build validation** — production builds require published CMS content and
+  fail if it cannot be loaded. Local development retains the maintenance fallback.
 - **Quality gate** — CI runs lint (zero-warning policy) and build on every PR;
   Dependabot keeps dependencies current.
 
@@ -57,21 +57,26 @@ Framer Motion · TanStack Query · `@dr.pogodin/react-helmet` · Contentful.
 
 ## Architecture
 
-A React Router v6 SPA. Providers are layered
-`QueryClientProvider → HelmetProvider → LanguageProvider → TooltipProvider →
-BrowserRouter`. CMS access is isolated in `src/lib/contentful.ts` (client +
-cache) and `src/lib/cms.ts` (typed fetchers); UI never talks to Contentful
-directly. The i18n context lives in `src/i18n/`, and SEO concerns are centralised
-in dedicated components. Routes are defined in `src/routes.tsx`.
+React Router handles navigation after hydration. `src/entry-server.tsx` loads
+published Contentful content for both languages and renders the same React pages
+at build time. `scripts/prerender.mjs` writes HTML, per-page data snapshots,
+`sitemap.xml` and `robots.txt`. The browser hydrates the matching snapshot;
+subsequent client-side navigation can fetch content normally.
+
+The client and server entry points supply the router, language, Helmet and page
+data providers. CMS access remains isolated in `src/lib/contentful.ts` and
+`src/lib/cms.ts`. Metadata is centralized in `src/components/PageSEO.tsx`;
+routes remain in `src/routes.tsx`.
 
 ## Local development
 
-**Prerequisites:** Node.js 18+ and npm.
+**Prerequisites:** Node.js 24 and npm.
 
 ```sh
 npm install
 npm run dev      # http://localhost:8080
-npm run build    # type-check + production build + sitemap
+npm run build    # type-check + production assets + bilingual prerender + sitemap
+npm run test:seo # verify generated HTML, metadata, links, sitemap and 404 config
 npm run lint     # ESLint (strict: zero warnings)
 ```
 
@@ -105,7 +110,7 @@ GA4 activates only when `VITE_GA_ID` is set **and** the visitor has accepted the
 cookie-consent banner — until then the tracking script never loads. Create a GA4
 web stream, copy the measurement ID into `VITE_GA_ID`, and redeploy. IP
 anonymisation is on by default. Consent is handled by `src/hooks/use-consent.ts`
-and `src/components/CookieConsent.tsx`, with a `/cookies` declaration page.
+and `src/components/CookieConsent.tsx`, with `/cookie-declaration` and `/de/cookie-declaration` pages.
 
 ### Search Console
 
@@ -115,8 +120,19 @@ setting `VITE_GSC_VERIFICATION`, then submit `/sitemap.xml`.
 ### Deployment
 
 Deployed on **Vercel** (framework preset: Vite, build `npm run build`, output
-`dist/`). SPA rewrites are configured in `vercel.json`. Set env vars in the
-project settings and redeploy to apply.
+`dist/`). `vercel.json` uses clean static URLs and a generated `404.html`, so
+unknown URLs return HTTP 404 instead of the homepage. Set the read-only CMS
+environment variables in Vercel and the GitHub Actions secrets before building.
+Preview-API content is rejected by production builds.
+
+Publishing, unpublishing, deleting or changing Contentful content requires a new
+build to update static HTML and the sitemap. Rebuild manually, or connect a
+Contentful publication webhook to a Vercel deploy hook for the deployed branch.
+No deploy hook has been configured by this change. In particular, new project
+URLs will return 404 until their build is deployed. Changing a published slug
+also requires a redirect from the old URL.
+
+See `docs/plans/2026-09-13-seo-implementation.md` for validation and release notes.
 
 </details>
 

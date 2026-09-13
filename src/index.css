@@ -53,8 +53,87 @@ All colors MUST be HSL.
 
     --brand-warm: 25 37% 97%; /* Off-white warm */
     --brand-warm-foreground: 0 0% 12%;
+
+    /* Shared light surfaces, matching the approved project palette. */
+    --surface-sand: #d7c6b9;
+    --project-sand: var(--surface-sand);
+    --surface-ivory: #fbf8f6;
+    --project-ivory: var(--surface-ivory);
   }
 }
+
+.surface-fade,
+.project-fade {
+  background: linear-gradient(
+    to bottom,
+    var(--surface-sand) 0%,
+    var(--surface-sand) 25%,
+    color-mix(in srgb, var(--surface-sand) 65%, var(--surface-ivory)) 70%,
+    var(--surface-ivory) 100%
+  );
+}
+
+.surface-to-dark,
+.project-cta-fade {
+  /* Ease into both adjoining surfaces instead of creating a linear grey band. */
+  height: clamp(160px, 18vw, 256px);
+  background-color: var(--project-ivory);
+  background-image: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0) 0%,
+    hsl(var(--background) / 0.04) 15%,
+    hsl(var(--background) / 0.16) 30%,
+    hsl(var(--background) / 0.5) 50%,
+    hsl(var(--background) / 0.84) 70%,
+    hsl(var(--background) / 0.96) 85%,
+    hsl(var(--background)) 100%
+  );
+}
+
+.media-carousel {
+  --slide-width: min(72vw, 300px);
+  color: hsl(var(--background));
+}
+
+.media-carousel-rail {
+  display: flex;
+  position: relative;
+  gap: clamp(16px, 3vw, 44px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 36px calc((100% - var(--slide-width)) / 2) 54px;
+  cursor: grab;
+  touch-action: pan-x pan-y;
+}
+
+.media-carousel-rail:active { cursor: grabbing; }
+.media-carousel-rail::-webkit-scrollbar { display: none; }
+.media-carousel-rail:focus-visible { outline: 2px solid currentColor; outline-offset: -6px; }
+.media-carousel-slide { flex: 0 0 var(--slide-width); scroll-snap-align: center; scroll-snap-stop: always; perspective: 1000px; }
+.media-carousel-card {
+  display: block;
+  height: 100%;
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  transform: translateY(var(--card-lift)) rotateY(var(--card-angle));
+  transition: transform 450ms ease;
+  box-shadow: 0 12px 24px -18px rgb(32 32 32 / 60%);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.media-carousel-card:focus-visible { outline: 3px solid hsl(var(--background)); outline-offset: 5px; }
+.media-carousel-caption { position: absolute; inset: 35% 0 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; color: white; background: linear-gradient(transparent, rgb(0 0 0 / 80%)); }
+.carousel-control { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 44px; height: 44px; border: 1px solid currentColor; border-radius: 50%; transition: background 150ms; }
+.carousel-control:hover:not(:disabled) { background: rgb(32 32 32 / 8%); }
+.carousel-control:disabled { opacity: 0.25; cursor: default; }
+.carousel-control:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+@media (min-width: 1536px) { .media-carousel { --slide-width: 360px; } }
+@media (prefers-reduced-motion: reduce) { .media-carousel-card { transform: none; } }
 
 @layer base {
   html {

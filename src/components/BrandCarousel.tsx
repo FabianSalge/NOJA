@@ -25,7 +25,7 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 			key={`${keyPrefix}${idx}`}
 			src={src}
 			alt={useCms ? (brands?.[idx]?.name || 'brand') : 'brand logo'}
-			className="h-10 sm:h-12 md:h-16 max-w-[100px] sm:max-w-[120px] md:max-w-[160px] w-auto object-contain shrink-0"
+			className="h-14 sm:h-16 md:h-20 2xl:h-24 max-w-[140px] sm:max-w-[160px] md:max-w-[200px] 2xl:max-w-[240px] w-auto object-contain shrink-0"
 			loading="lazy"
 			decoding="async"
 		/>
@@ -33,7 +33,7 @@ const BrandCarousel = ({ className = '', brands }: BrandCarouselProps) => {
 
 	return (
 		<div className={`overflow-hidden w-screen relative left-1/2 -translate-x-1/2 ${className}`}>
-			<div className="relative h-16 md:h-20">
+			<div className="relative h-20 sm:h-24 md:h-28 2xl:h-32">
 				{/* Content-sized marquee: items determine width, animation shifts by exactly 50% (one full set) */}
 				<div
 					className="absolute top-0 left-0 flex items-center gap-12 sm:gap-16 md:gap-20 opacity-90 marquee-ltr will-change-transform"
