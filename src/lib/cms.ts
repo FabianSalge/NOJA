@@ -112,19 +112,16 @@ export async function fetchProjectsPage(locale: ContentfulLocale = "en-US"): Pro
 		subtitle: getField<string>(p.fields as Record<string, unknown>, "subtitle") ?? "",
 		dateISO: getField<string>(p.fields as Record<string, unknown>, "date") ?? "",
 		coverImageUrl: assetUrlFromField(getField<Asset>(p.fields as Record<string, unknown>, "coverImage")),
+		videoUrl: assetUrlFromField(getField<Asset>(p.fields as Record<string, unknown>, "previewVideo")) ?? assetUrlFromField(getField<Asset>(p.fields as Record<string, unknown>, "video")),
 	}));
-	// Show everything in the main grid until there are enough projects to justify a
-	// separate "more work" section. This avoids a lonely orphan card (e.g. 4 projects =
-	// 3 featured + 1 stranded in a 6-column grid) and an empty compact grid at low counts.
-	const featuredCount = allSummaries.length > 6 ? 3 : allSummaries.length;
 	return {
 		pageTitle: getField<string>(settings as Record<string, unknown>, "pageTitle"),
 		pageSubtitle: getField<string>(settings as Record<string, unknown>, "pageSubtitle"),
 		moreWorkTitle: getField<string>(settings as Record<string, unknown>, "moreWorkTitle"),
 		allProjectsTitle: getField<string>(settings as Record<string, unknown>, "allProjectsTitle"),
 		ourWorkSubtext: getField<Document>(settings as Record<string, unknown>, "ourWorkSubtext"),
-		featured: allSummaries.slice(0, featuredCount),
-		all: allSummaries.slice(featuredCount),
+		featured: allSummaries,
+		all: [],
 	};
 }
 
@@ -140,12 +137,29 @@ export async function fetchProjectBySlug(slug: string, locale: ContentfulLocale 
 	const item = res.items?.[0];
 	if (!item) return undefined;
 	const f = (item as Entry).fields as Record<string, unknown>;
+	const explicitGallery = getField<Asset[]>(f, "galleryMedia") ?? [];
+	const galleryAssets = explicitGallery.length ? explicitGallery : [
+		getField<Asset>(f, "coverImage"), getField<Asset>(f, "secondImage"), getField<Asset>(f, "quoteImage"),
+	].filter((asset): asset is Asset => Boolean(asset));
+	const seen = new Set<string>();
+	const gallery = galleryAssets.flatMap((asset) => {
+		const url = assetUrlFromField(asset);
+		if (!url || seen.has(url)) return [];
+		seen.add(url);
+		const fields = asset.fields as unknown as { title?: string; description?: string; file?: { contentType?: string } };
+		const video = fields.file?.contentType?.startsWith('video/');
+		return [{ id: asset.sys.id, title: fields.description || fields.title || getField<string>(f, "title") || '',
+			imageUrl: video ? assetUrlFromField(getField<Asset>(f, "coverImage")) : url,
+			videoUrl: video ? url : undefined }];
+	});
 	return {
 		slug: getField<string>(f, "slug") ?? "",
 		title: getField<string>(f, "title") ?? "",
 		subtitle: getField<string>(f, "subtitle") ?? "",
 		dateISO: getField<string>(f, "date") ?? "",
 		coverImageUrl: assetUrlFromField(getField<Asset>(f, "coverImage")),
+		heroVideoUrl: assetUrlFromField(getField<Asset>(f, "previewVideo")) ?? assetUrlFromField(getField<Asset>(f, "video")),
+		gallery,
 		secondImageUrl: assetUrlFromField(getField<Asset>(f, "secondImage")),
 		firstTextTitle: getField<string>(f, "firstTextTitle") ?? "",
 		firstTextBody: getField<Document>(f, "firstTextBody"),
@@ -165,7 +179,8 @@ export async function fetchAbout(locale: ContentfulLocale = "en-US"): Promise<Cm
 		limit: 1,
 		locale,
 	});
-	const fields = res.items?.[0]?.fields ?? {};
+	if (!res.items?.[0]) return undefined;
+	const fields = res.items[0].fields;
 	const valuesRaw = (getField<Entry[]>(fields as Record<string, unknown>, "aboutValues") ?? []);
 	const values: CmsAboutValue[] = valuesRaw
 		.map((v) => ({
@@ -219,6 +234,7 @@ export async function fetchServicesPage(locale: ContentfulLocale = "en-US"): Pro
 	const services: CmsServiceItem[] = servicesData
 		.map((service: Entry) => ({
 			title: getField<string>(service.fields as Record<string, unknown>, "title") ?? "",
+			subtitle: getField<string>(service.fields as Record<string, unknown>, "subtitle"),
 			description: getField<string>(service.fields as Record<string, unknown>, "description") ?? "",
 			features: getField<string[]>(service.fields as Record<string, unknown>, "features") ?? [],
 			serviceMediaUrl: assetUrlFromField(getField<Asset>(service.fields as Record<string, unknown>, "serviceImage")),

@@ -4,16 +4,14 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command, isPreview }) => ({
+  appType: command === "serve" && !isPreview ? "spa" : "mpa",
   base: "/",
   server: {
     host: "::",
     port: 8080,
   },
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -26,19 +24,29 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
           // Core React runtime + router — needed on every page.
-          if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|@remix-run[\\/]router|history)[\\/]/.test(id)) {
+          if (
+            /[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|@remix-run[\\/]router|history)[\\/]/.test(
+              id,
+            )
+          ) {
             return "react-vendor";
           }
           // Animation library — large and used widely, but splittable.
-          if (id.includes("node_modules/framer-motion") || id.includes("node_modules/motion")) {
+          if (
+            id.includes("node_modules/framer-motion") ||
+            id.includes("node_modules/motion")
+          ) {
             return "motion";
           }
           // CMS client + rich-text rendering — only needed once data loads.
-          if (id.includes("node_modules/contentful") || id.includes("node_modules/@contentful")) {
+          if (
+            id.includes("node_modules/contentful") ||
+            id.includes("node_modules/@contentful")
+          ) {
             return "contentful";
           }
         },
       },
     },
   },
-});
+}));

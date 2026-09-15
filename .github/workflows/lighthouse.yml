@@ -24,9 +24,7 @@ jobs:
 
       - run: npm ci
 
-      # Real Contentful (read-only) creds make this audit the actual site rather
-      # than the maintenance fallback. Add them as repo secrets for meaningful
-      # scores; without them the build still runs (maintenance page).
+      # Production prerendering requires the read-only CMS secrets below.
       - name: Build
         run: npm run build
         env:

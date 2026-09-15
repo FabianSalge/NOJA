@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-const CONSENT_STORAGE_KEY = 'noja-cookie-consent';
+const CONSENT_STORAGE_KEY = "noja-cookie-consent";
 const CONSENT_VERSION = 2;
 
 // Module-level subscribers so every useConsent() instance stays in sync.
@@ -13,7 +13,7 @@ function notify(): void {
 }
 
 function getStoredAcknowledgement(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   try {
     const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
     if (stored) {
@@ -27,28 +27,31 @@ function getStoredAcknowledgement(): boolean {
 }
 
 function storeAcknowledgement(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify({
-    timestamp: new Date().toISOString(),
-    version: CONSENT_VERSION,
-  }));
+  if (typeof window === "undefined") return;
+  localStorage.setItem(
+    CONSENT_STORAGE_KEY,
+    JSON.stringify({
+      timestamp: new Date().toISOString(),
+      version: CONSENT_VERSION,
+    }),
+  );
 }
 
 export function useConsent() {
-  const [hasConsented, setHasConsented] = useState<boolean>(() => getStoredAcknowledgement());
+  const [hasConsented, setHasConsented] = useState(false);
 
   useEffect(() => {
     const sync = () => setHasConsented(getStoredAcknowledgement());
+    // Read browser storage after hydration so server and client start with the same markup.
     sync();
     listeners.add(sync);
     // Keep consent consistent across tabs.
-    window.addEventListener('storage', sync);
+    window.addEventListener("storage", sync);
     return () => {
       listeners.delete(sync);
-      window.removeEventListener('storage', sync);
+      window.removeEventListener("storage", sync);
     };
   }, []);
-
 
   const acknowledge = useCallback(() => {
     storeAcknowledgement();
@@ -57,7 +60,7 @@ export function useConsent() {
   }, []);
 
   const resetConsent = useCallback(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.removeItem(CONSENT_STORAGE_KEY);
     }
     setHasConsented(false);

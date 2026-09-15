@@ -21,12 +21,20 @@ export type CmsHome = {
   whatYouNeedCards: CmsWhatYouNeedCard[];
 };
 
+export type CmsProjectMedia = {
+  id: string;
+  title: string;
+  imageUrl?: string;
+  videoUrl?: string;
+};
+
 export type CmsProjectSummary = {
   slug: string;
   title: string;
   subtitle: string;
   dateISO: string;
   coverImageUrl?: string;
+  videoUrl?: string;
 };
 
 export type CmsProjectsPage = {
@@ -45,6 +53,8 @@ export type CmsProjectDetail = {
   subtitle: string;
   dateISO: string;
   coverImageUrl?: string;
+  heroVideoUrl?: string;
+  gallery: CmsProjectMedia[];
   secondImageUrl?: string;
   firstTextTitle: string;
   firstTextBody?: Document;
@@ -86,6 +96,7 @@ export type CmsAboutPage = {
 
 export type CmsServiceItem = {
   title: string;
+  subtitle?: string;
   description: string;
   features: string[];
   serviceMediaUrl?: string;

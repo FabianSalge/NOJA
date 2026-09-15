@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe } from 'lucide-react';
-import { LOGOS } from '@/lib/assets';
-import { useTranslation } from '@/i18n';
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Globe } from "lucide-react";
+import { LOGOS } from "@/lib/assets";
+import { useTranslation } from "@/i18n";
+import { localizedPath } from "@/lib/locale";
 
 type NavItem = {
   name: string;
@@ -13,17 +14,17 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const { t, language, toggleLanguage } = useTranslation();
+  const { t, language } = useTranslation();
 
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -33,14 +34,20 @@ const Navigation = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
-  const navItems: NavItem[] = useMemo(() => [
-    { name: t.nav.aboutUs, path: '/about' },
-    { name: t.nav.projects, path: '/projects' },
-    { name: t.nav.services, path: '/services' },
-    { name: t.nav.contact, path: '/contact' },
-  ], [t.nav]);
+  const navItems: NavItem[] = useMemo(
+    () => [
+      { name: t.nav.aboutUs, path: "/about" },
+      { name: t.nav.projects, path: "/projects" },
+      { name: t.nav.services, path: "/services" },
+      { name: t.nav.contact, path: "/contact" },
+    ],
+    [t.nav],
+  );
 
-  const isActive = useCallback((path: string) => location.pathname === path, [location.pathname]);
+  const isActive = useCallback(
+    (path: string) => location.pathname === path,
+    [location.pathname],
+  );
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Focus trap for mobile menu
@@ -50,14 +57,14 @@ const Navigation = () => {
     if (!menu) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsOpen(false);
         return;
       }
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
 
       const focusable = menu.querySelectorAll<HTMLElement>(
-        'a[href], button, [tabindex]:not([tabindex="-1"])'
+        'a[href], button, [tabindex]:not([tabindex="-1"])',
       );
       if (focusable.length === 0) return;
 
@@ -73,24 +80,24 @@ const Navigation = () => {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   // All pages use white text + white logo.
   // Homepage: transparent → dark translucent on scroll.
   // Other pages: always dark translucent.
   const navBg = !isHomePage
-    ? 'bg-black/60 backdrop-blur-xl'
+    ? "bg-black/60 backdrop-blur-xl"
     : scrolled
-      ? 'bg-black/60 backdrop-blur-xl'
-      : 'bg-transparent';
+      ? "bg-black/60 backdrop-blur-xl"
+      : "bg-transparent";
 
-  const textColor = 'text-white';
-  const textColorMuted = 'text-white/80';
-  const hoverTextColor = 'hover:text-white';
-  const underlineBg = 'bg-white';
-  const hoverBgClass = 'hover:bg-white/10';
+  const textColor = "text-white";
+  const textColorMuted = "text-white/80";
+  const hoverTextColor = "hover:text-white";
+  const underlineBg = "bg-white";
+  const hoverBgClass = "hover:bg-white/10";
 
   const linkClass = (path: string) =>
     `relative px-3 py-2 text-[13px] font-semibold tracking-[0.18em] uppercase transition-colors duration-300 group ${
@@ -99,7 +106,7 @@ const Navigation = () => {
 
   const underlineClass = (path: string) =>
     `absolute bottom-0.5 left-1/2 -translate-x-1/2 h-[1.5px] transition-all duration-300 ${underlineBg} ${
-      isActive(path) ? 'w-full' : 'w-0 group-hover:w-full'
+      isActive(path) ? "w-full" : "w-0 group-hover:w-full"
     }`;
 
   return (
@@ -122,7 +129,7 @@ const Navigation = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={`p-2 transition-colors duration-300 ${textColor}`}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
             >
               {isOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -133,7 +140,11 @@ const Navigation = () => {
             {/* Left group */}
             <div className="flex items-center gap-1 justify-end">
               {navItems.slice(0, 2).map((item) => (
-                <Link key={item.name} to={item.path} className={linkClass(item.path)}>
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={linkClass(item.path)}
+                >
                   {item.name}
                   <span className={underlineClass(item.path)} />
                 </Link>
@@ -152,26 +163,41 @@ const Navigation = () => {
             {/* Right group — includes language toggle */}
             <div className="flex items-center gap-1 justify-start">
               {navItems.slice(2).map((item) => (
-                <Link key={item.name} to={item.path} className={linkClass(item.path)}>
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={linkClass(item.path)}
+                >
                   {item.name}
                   <span className={underlineClass(item.path)} />
                 </Link>
               ))}
-              <button
-                onClick={toggleLanguage}
+              <a
+                href={
+                  localizedPath(
+                    location.pathname,
+                    language === "en" ? "de" : "en",
+                  ) +
+                  location.search +
+                  location.hash
+                }
+                hrefLang={language === "en" ? "de-CH" : "en"}
                 className={`ml-4 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 ${textColorMuted} ${hoverTextColor} ${hoverBgClass}`}
-                aria-label={`Switch to ${language === 'en' ? 'German' : 'English'}`}
+                aria-label={`Switch to ${language === "en" ? "German" : "English"}`}
               >
                 <Globe size={15} />
                 <span>{language}</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div ref={mobileMenuRef} className="md:hidden absolute top-full left-0 right-0 bg-black/85 backdrop-blur-xl border-b border-white/10">
+          <div
+            ref={mobileMenuRef}
+            className="md:hidden absolute top-full left-0 right-0 bg-black/85 backdrop-blur-xl border-b border-white/10"
+          >
             <div className="px-6 pt-8 pb-10 space-y-1">
               {navItems.map((item, index) => (
                 <Link
@@ -179,10 +205,12 @@ const Navigation = () => {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={`block px-2 py-3.5 text-[15px] font-semibold tracking-[0.15em] uppercase transition-colors duration-300 ${
-                    isActive(item.path) ? 'text-white' : 'text-white/70 hover:text-white'
+                    isActive(item.path)
+                      ? "text-white"
+                      : "text-white/70 hover:text-white"
                   }`}
                   style={{
-                    transform: 'translateY(10px)',
+                    transform: "translateY(10px)",
                     opacity: 0,
                     animation: `slideUp 0.4s ease-out forwards ${index * 0.06}s`,
                   }}
@@ -191,18 +219,26 @@ const Navigation = () => {
                 </Link>
               ))}
               <div className="h-px my-2 bg-white/10" />
-              <button
-                onClick={toggleLanguage}
+              <a
+                href={
+                  localizedPath(
+                    location.pathname,
+                    language === "en" ? "de" : "en",
+                  ) +
+                  location.search +
+                  location.hash
+                }
+                hrefLang={language === "en" ? "de-CH" : "en"}
                 className="flex items-center gap-2.5 px-2 py-3.5 text-[15px] font-semibold tracking-[0.15em] uppercase transition-colors duration-300 w-full text-white/70 hover:text-white"
                 style={{
-                  transform: 'translateY(10px)',
+                  transform: "translateY(10px)",
                   opacity: 0,
                   animation: `slideUp 0.4s ease-out forwards ${navItems.length * 0.06}s`,
                 }}
               >
                 <Globe size={16} />
-                <span>{language === 'en' ? 'Deutsch' : 'English'}</span>
-              </button>
+                <span>{language === "en" ? "Deutsch" : "English"}</span>
+              </a>
             </div>
           </div>
         )}

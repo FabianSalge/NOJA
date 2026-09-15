@@ -1,201 +1,218 @@
-import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Helmet } from '@dr.pogodin/react-helmet';
-import SEOJsonLd from '@/components/SEOJsonLd';
-import { buildCanonical } from '@/lib/seo';
-import ResponsiveImage from '@/components/ResponsiveImage';
-import { fetchProjectBySlug, localeForLanguage, type CmsProjectDetail } from '@/lib/cms';
-import { useTranslation } from '@/i18n';
-import { useEffect, useState, useCallback } from 'react';
-import HaveProjectCTA from '@/components/HaveProjectCTA';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { richTextOptions } from '@/lib/richtext';
+import { usePageData } from "@/lib/page-data";
+import { useParams, Link } from "react-router-dom";
+import { useReducedMotion } from "framer-motion";
+import PageSEO from "@/components/PageSEO";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import SEOJsonLd from "@/components/SEOJsonLd";
+import ResponsiveImage from "@/components/ResponsiveImage";
+import MediaPreview from "@/components/MediaPreview";
+import MediaCarousel from "@/components/MediaCarousel";
+import HaveProjectCTA from "@/components/HaveProjectCTA";
+import { richTextDescription } from "@/lib/seo";
+import {
+  fetchProjectBySlug,
+  localeForLanguage,
+  type CmsProjectDetail,
+} from "@/lib/cms";
+import { richTextOptions } from "@/lib/richtext";
+import { useTranslation } from "@/i18n";
 
-const ProjectDetail = () => {
-  const { slug } = useParams();
-  const { language } = useTranslation();
-  const [project, setProject] = useState<CmsProjectDetail | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [videoError, setVideoError] = useState(false);
-  const handleVideoError = useCallback(() => setVideoError(true), []);
-
+function ProjectContent({ slug }: { slug: string }) {
+  const { t, language } = useTranslation();
+  const initialData = usePageData<CmsProjectDetail>();
+  const [project, setProject] = useState<CmsProjectDetail | undefined>(
+    initialData,
+  );
+  const [loading, setLoading] = useState(!initialData);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const reducedMotion = useReducedMotion();
+  const shouldPlay = !reducedMotion;
   useEffect(() => {
-    if (!slug) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset loading state before refetching when slug/language changes
-    setIsLoading(true);
+    if (initialData) return;
+    let cancelled = false;
     fetchProjectBySlug(slug, localeForLanguage(language))
-      .then(setProject)
-      .catch(() => {
-        console.warn('Failed to fetch project detail from Contentful.');
+      .then((result) => {
+        if (!cancelled) {
+          setProject(result);
+          setFailed(false);
+        }
       })
-      .finally(() => setIsLoading(false));
-  }, [slug, language]);
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, language, attempt, initialData]);
 
-  if (isLoading) {
+  if (loading)
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-4xl font-bold mb-4">Loading…</h1>
-        </div>
+      <div
+        className="min-h-screen bg-background pt-40 px-6 text-center"
+        role="status"
+      >
+        {t.common.loading}
       </div>
     );
-  }
-
-  if (!project) {
+  if (!project)
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <div className="pt-36 pb-24 max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-4xl font-bold mb-4">Project not found</h1>
-          <p className="text-foreground/80 mb-8">The project you're looking for doesn't exist or has been moved.</p>
-          <Link to="/projects" className="underline">Back to Projects</Link>
-        </div>
+      <div className="min-h-screen bg-background pt-40 px-6 text-center">
+        <PageSEO noindex title={`${t.projects.notFound} — NOJA`} />
+        <h1 className="text-4xl font-bold">
+          {failed ? t.projects.unavailable : t.projects.notFound}
+        </h1>
+        <p className="mt-5">{!failed && t.projects.notFoundDescription}</p>
+        {failed && (
+          <button
+            className="block mx-auto mt-6 underline"
+            onClick={() => setAttempt((value) => value + 1)}
+          >
+            {t.projects.retry}
+          </button>
+        )}
+        <Link className="inline-block mt-8 underline" to="/projects">
+          {t.projects.back}
+        </Link>
       </div>
     );
-  }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Helmet>
-        <title>{project.title} — NOJA</title>
-        <meta name="description" content={project.subtitle} />
-        <link rel="canonical" href={buildCanonical(`/projects/${project.slug}`)} />
-        <meta property="og:title" content={`${project.title} — NOJA`} />
-        <meta property="og:description" content={project.subtitle} />
-        {project.coverImageUrl && <meta property="og:image" content={project.coverImageUrl} />}
-      </Helmet>
+    <div className="min-h-screen bg-background pt-20">
+      <PageSEO
+        title={`${project.title} | ${project.subtitle || t.nav.projects} — NOJA`}
+        description={
+          richTextDescription(project.firstTextBody) ||
+          `${project.title} — ${project.subtitle}. ${language === "de" ? "Ein Projekt von NOJA: Entdecke die Idee, die Umsetzung und das Ergebnis." : "A project by NOJA. Explore the idea, the production and the finished work."}`
+        }
+        image={project.coverImageUrl}
+      />
       <SEOJsonLd
         json={{
-          '@context': 'https://schema.org',
-          '@type': 'CreativeWork',
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
           name: project.title,
           datePublished: project.dateISO,
           image: project.coverImageUrl,
-          headline: project.title,
-          description: project.subtitle
+          description:
+            richTextDescription(project.firstTextBody) || project.subtitle,
         }}
       />
-
-      {/* Header Image with title overlay */}
-      <section className="pt-20 md:pt-20 relative overflow-hidden bg-[hsl(var(--primary))]">
-        <div className="relative h-[48vh] md:h-[60vh]">
-          {project.coverImageUrl && (
-            <ResponsiveImage
-              src={project.coverImageUrl}
-              widths={[640, 1024, 1366, 1600, 1920]}
-              sizes="100vw"
-              alt={`${project.title} cover image`}
-              className="absolute inset-0 w-full h-full object-cover"
-              eager
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-          <div className="absolute left-6 md:left-10 bottom-8 md:bottom-10">
-            <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold text-white"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {project.title}
-            </motion.h1>
-            <p className="text-white/85 mt-2">{project.subtitle} · {new Date(project.dateISO).getFullYear()}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Image | Text */}
-      <section className="pt-0 pb-0 bg-background -mt-px">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch">
-            {/* Left image column - Smart aspect ratio handling */}
-            <div className="relative">
-              {project.secondImageUrl && (
-                <div className="relative overflow-hidden">
-                  <ResponsiveImage
-                    src={project.secondImageUrl}
-                    widths={[640, 1024, 1366, 1600]}
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    alt={`${project.title} visual`}
-                    className="block w-full h-auto min-h-[360px] md:min-h-[480px] max-h-[600px] object-cover"
-                    style={{
-                      aspectRatio: 'auto',
-                      objectFit: 'cover',
-                      objectPosition: 'center'
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-            {/* Right text column */}
-            <div className="px-6 md:px-10 lg:px-16 py-10 md:py-12 flex items-center">
-              <div className="space-y-6 w-full">
-                <h2 className="text-3xl md:text-4xl font-black">{project.firstTextTitle}</h2>
-                <div className="text-lg text-foreground/80 leading-relaxed">
-                  {project.firstTextBody ? documentToReactComponents(project.firstTextBody, richTextOptions) : null}
-                </div>
+      <section className="project-fade overflow-hidden text-background">
+        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-6 md:px-10 pt-8 md:pt-10">
+          <Link
+            to="/projects"
+            className="inline-flex gap-2 items-center text-xs uppercase tracking-[0.15em] font-semibold hover:!text-background"
+          >
+            <ArrowLeft size={15} />
+            {t.projects.back}
+          </Link>
+          <div className="grid md:grid-cols-[0.9fr_1.1fr] items-center gap-10 lg:gap-20 pt-10 md:pt-12">
+            <div className="order-2 md:order-1 relative h-[340px] sm:h-[420px] md:h-[470px] 2xl:h-[550px] overflow-hidden">
+              <div className="relative w-[210px] sm:w-[250px] md:w-[275px] 2xl:w-[320px] aspect-[9/18.5] mx-auto mt-5 -rotate-[11deg] rounded-[38px] border-[7px] border-background bg-background shadow-2xl overflow-hidden">
+                <MediaPreview
+                  key={project.heroVideoUrl || project.coverImageUrl}
+                  imageUrl={project.coverImageUrl}
+                  videoUrl={project.heroVideoUrl}
+                  alt={project.title}
+                  enabled={shouldPlay}
+                  eager
+                  sizes="320px"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute top-2 left-1/2 -translate-x-1/2 w-[35%] h-5 rounded-full bg-background"
+                />
               </div>
             </div>
+            <div className="order-1 md:order-2 pb-2 md:pb-16 max-w-2xl">
+              <p className="mb-5 text-xs md:text-sm uppercase tracking-[0.25em] text-background/65">
+                NOJA / {project.dateISO.slice(0, 4)}
+              </p>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl 2xl:text-7xl font-bold leading-[1.05] tracking-tight">
+                {project.title}
+              </h1>
+              <p className="mt-6 text-base md:text-lg 2xl:text-xl text-background/75 leading-relaxed">
+                {project.subtitle}
+              </p>
+            </div>
           </div>
+        </div>
       </section>
 
-      {/* Quote with Image in the Back */}
-      {(project.quote || project.quoteImageUrl) && (
-        <section className="relative overflow-hidden">
-          <div className="relative h-[36vh] md:h-[44vh]">
-            {project.quoteImageUrl ? (
+      {(project.secondImageUrl || project.firstTextBody) && (
+        <section className="grid md:grid-cols-2 bg-background text-foreground">
+          {project.secondImageUrl && (
+            <div className="min-h-[320px] md:min-h-[500px] relative">
               <ResponsiveImage
-                src={project.quoteImageUrl}
-                widths={[640, 1024, 1366, 1600]}
-                sizes="100vw"
-                alt={`${project.title} background`}
-                className="absolute inset-0 w-full h-full object-cover"
+                src={project.secondImageUrl}
+                alt={`${project.title} — ${project.firstTextTitle}`}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="absolute inset-0 h-full w-full object-cover"
               />
-            ) : null}
-            <div className="absolute inset-0 bg-black/25" />
-            <div className="absolute inset-0 flex items-center justify-center px-6">
-              <blockquote className="text-3xl md:text-5xl font-semibold text-white text-center tracking-wide">
-                {project.quote}
-              </blockquote>
+            </div>
+          )}
+          <div
+            className={`px-6 md:px-10 lg:px-16 2xl:px-24 py-12 md:py-16 flex flex-col justify-center ${!project.secondImageUrl ? "md:col-span-2 max-w-4xl mx-auto" : ""}`}
+          >
+            {project.firstTextTitle && (
+              <h2 className="text-2xl md:text-3xl 2xl:text-4xl font-bold mb-6">
+                {project.firstTextTitle}
+              </h2>
+            )}
+            <div className="text-sm md:text-base 2xl:text-lg leading-relaxed text-foreground/85">
+              {project.firstTextBody &&
+                documentToReactComponents(
+                  project.firstTextBody,
+                  richTextOptions,
+                )}
             </div>
           </div>
         </section>
       )}
 
-      {/* Project Text */}
-      <section className="py-20 bg-background">
-        <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-6">
-          <h3 className="text-3xl md:text-4xl font-black">{project.secondTextTitle}</h3>
-          <div className="h-[2px] w-24 bg-foreground/40 mt-4 mb-10" />
-          <div className="text-lg leading-relaxed text-foreground/85">
-            {project.secondTextBody
-              ? documentToReactComponents(project.secondTextBody, richTextOptions)
-              : <p>No content available</p>}
-          </div>
+      <section className="project-fade text-background pt-16 md:pt-24 pb-12 overflow-hidden">
+        <div className="max-w-3xl 2xl:max-w-4xl mx-auto px-6 mb-7 md:mb-10 text-center">
+          {project.quote && (
+            <p className="text-xs uppercase tracking-[0.2em] text-background/60 mb-5">
+              {project.quote}
+            </p>
+          )}
+          {project.secondTextTitle && (
+            <h2 className="text-2xl md:text-3xl 2xl:text-4xl font-semibold mb-5">
+              {project.secondTextTitle}
+            </h2>
+          )}
+          {project.secondTextBody && (
+            <div className="text-sm md:text-base 2xl:text-lg leading-relaxed text-background/75">
+              {documentToReactComponents(
+                project.secondTextBody,
+                richTextOptions,
+              )}
+            </div>
+          )}
         </div>
+        {project.gallery.length > 0 && (
+          <MediaCarousel
+            key={project.gallery.map((item) => item.id).join("|")}
+            label={`${project.title} — ${t.projects.gallery}`}
+            items={project.gallery}
+            showCaptions={false}
+          />
+        )}
       </section>
-
-      {/* Project Video */}
-      {project.videoUrl && !videoError && (
-        <section className="bg-background">
-          <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-6">
-            <video
-              src={project.videoUrl}
-              className="w-full rounded-2xl"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={project.coverImageUrl}
-              onError={handleVideoError}
-            />
-          </div>
-        </section>
-      )}
-
-      <HaveProjectCTA className="py-20" variant="dark" />
+      <HaveProjectCTA variant="dark" fadeFromLight />
     </div>
   );
-};
+}
 
-export default ProjectDetail;
-
-
+export default function ProjectDetail() {
+  const { slug = "" } = useParams();
+  const { language } = useTranslation();
+  return <ProjectContent key={`${slug}-${language}`} slug={slug} />;
+}

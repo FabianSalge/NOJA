@@ -1,9 +1,14 @@
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { containerVariants, itemVariants } from '@/lib/animations';
-import { useRef } from 'react';
-import type { LucideIcon } from 'lucide-react';
-import { useTranslation } from '@/i18n';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { motion, useInView } from "framer-motion";
+import { containerVariants, itemVariants } from "@/lib/animations";
+import { useRef } from "react";
+import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "@/i18n";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type ValueItem = { icon: LucideIcon; title: string; description: string };
 
@@ -16,33 +21,61 @@ const Values = ({ items, title }: ValuesProps) => {
   const { t } = useTranslation();
   const valuesRef = useRef(null);
   const valuesInView = useInView(valuesRef, { once: true, margin: "-100px" });
-  const { scrollYProgress } = useScroll({ target: valuesRef, offset: ["start center", "end start"] });
-  const y = useTransform(scrollYProgress, [0.3, 1], [0, -150]);
-  const opacity = useTransform(scrollYProgress, [0.5, 0.95], [1, 0.1]);
 
   return (
-    <section className="pt-20 sm:pt-24 pb-24 sm:pb-40 relative overflow-hidden bg-[hsl(var(--primary))]" ref={valuesRef}>
-      <motion.div className="absolute inset-0" style={{ y, opacity }}>
-        <div className="absolute inset-0 bg-background" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-transparent" />
-      </motion.div>
+    <section
+      className="py-16 md:py-20 2xl:py-28 relative overflow-hidden bg-background"
+      ref={valuesRef}
+    >
       <div className="max-w-6xl 2xl:max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <motion.div className="text-center mb-8 sm:mb-12 space-y-4" initial={{ opacity: 0, y: 30 }} animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} transition={{ duration: 0.8 }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-black text-foreground text-center leading-[0.9]">{title || t.about.values.title}</h2>
+        <motion.div
+          className="text-center mb-8 sm:mb-12 space-y-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-black text-foreground text-center leading-[0.9]">
+              {title || t.about.values.title}
+            </h2>
           </motion.div>
         </motion.div>
 
         {/* Desktop: grid layout */}
-        <motion.div className="hidden md:grid grid-cols-3 gap-6" variants={containerVariants} initial="hidden" animate={valuesInView ? 'visible' : 'hidden'}>
+        <motion.div
+          className="hidden md:grid grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate={valuesInView ? "visible" : "hidden"}
+        >
           {items.map((value, index) => (
-            <motion.div key={index} className="group" variants={itemVariants} transition={{ duration: 0.6, ease: 'easeOut' }}>
-              <motion.div className="bg-foreground/5 backdrop-blur-xs rounded-2xl p-6 h-full border border-foreground/10 hover:border-foreground/20 transition-all duration-300 text-center" whileHover={{ y: -4 }}>
-                <motion.div className="w-12 h-12 bg-foreground text-[hsl(var(--primary))] rounded-xl flex items-center justify-center mx-auto mb-4" whileHover={{ rotate: 15 }} transition={{ duration: 0.3 }}>
+            <motion.div
+              key={index}
+              className="group"
+              variants={itemVariants}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <motion.div
+                className="bg-foreground/5 backdrop-blur-xs rounded-2xl p-6 h-full border border-foreground/10 hover:border-foreground/20 transition-all duration-300 text-center"
+                whileHover={{ y: -4 }}
+              >
+                <motion.div
+                  className="w-12 h-12 bg-foreground text-background rounded-xl flex items-center justify-center mx-auto mb-4"
+                  whileHover={{ rotate: 15 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <value.icon size={24} />
                 </motion.div>
-                <h3 className="text-lg font-bold text-foreground mb-3">{value.title}</h3>
-                <p className="text-foreground/70 text-sm leading-relaxed">{value.description}</p>
+                <h3 className="text-lg font-bold text-foreground mb-3">
+                  {value.title}
+                </h3>
+                <p className="text-foreground/70 text-sm leading-relaxed">
+                  {value.description}
+                </p>
               </motion.div>
             </motion.div>
           ))}
@@ -57,17 +90,25 @@ const Values = ({ items, title }: ValuesProps) => {
         >
           <Accordion type="single" collapsible className="space-y-3">
             {items.map((value, index) => (
-              <AccordionItem key={index} value={`value-${index}`} className="bg-foreground/5 backdrop-blur-xs rounded-2xl border border-foreground/10 overflow-hidden">
+              <AccordionItem
+                key={index}
+                value={`value-${index}`}
+                className="bg-foreground/5 backdrop-blur-xs rounded-2xl border border-foreground/10 overflow-hidden"
+              >
                 <AccordionTrigger className="px-5 py-5 hover:no-underline [&>svg]:mx-auto [&>svg]:mt-1">
                   <div className="flex flex-col items-center gap-2 w-full">
-                    <div className="w-11 h-11 bg-foreground text-[hsl(var(--primary))] rounded-xl flex items-center justify-center">
+                    <div className="w-11 h-11 bg-foreground text-background rounded-xl flex items-center justify-center">
                       <value.icon size={20} />
                     </div>
-                    <span className="text-base font-bold text-foreground">{value.title}</span>
+                    <span className="text-base font-bold text-foreground">
+                      {value.title}
+                    </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-5">
-                  <p className="text-foreground/70 text-sm leading-relaxed text-center">{value.description}</p>
+                  <p className="text-foreground/70 text-sm leading-relaxed text-center">
+                    {value.description}
+                  </p>
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -76,6 +117,6 @@ const Values = ({ items, title }: ValuesProps) => {
       </div>
     </section>
   );
-}
+};
 
 export default Values;

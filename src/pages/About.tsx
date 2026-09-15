@@ -1,27 +1,33 @@
-import { Eye, Lightbulb, Users } from 'lucide-react';
- 
- 
-import { useEffect, useState } from 'react';
-import HaveProjectCTA from '@/components/HaveProjectCTA';
- 
-import { fetchAbout, localeForLanguage, type CmsAboutPage } from '@/lib/cms';
- 
-import { Helmet } from '@dr.pogodin/react-helmet';
-import { buildCanonical, getSiteUrl } from '@/lib/seo';
-import Story from '@/components/about/Story';
-import Values from '@/components/about/Values';
-import Team from '@/components/about/Team';
-import { useTranslation } from '@/i18n';
+import { usePageData } from "@/lib/page-data";
+import { Eye, Lightbulb, Users } from "lucide-react";
+
+import { useEffect, useState } from "react";
+import HaveProjectCTA from "@/components/HaveProjectCTA";
+
+import { fetchAbout, localeForLanguage, type CmsAboutPage } from "@/lib/cms";
+
+import PageSEO from "@/components/PageSEO";
+import Story from "@/components/about/Story";
+import Values from "@/components/about/Values";
+import Team from "@/components/about/Team";
+import ActionGallery from "@/components/about/ActionGallery";
+import { useTranslation } from "@/i18n";
 
 const About = () => {
   const { t, language } = useTranslation();
+  const initialData = usePageData<CmsAboutPage>();
 
-  const [about, setAbout] = useState<CmsAboutPage | undefined>(undefined);
+  const [about, setAbout] = useState<CmsAboutPage | undefined>(initialData);
   useEffect(() => {
-    fetchAbout(localeForLanguage(language)).then(setAbout).catch(() => {
-      console.warn('Failed to fetch About page content from Contentful. Falling back to static copy.');
-    });
-  }, [language]);
+    if (initialData) return;
+    fetchAbout(localeForLanguage(language))
+      .then(setAbout)
+      .catch(() => {
+        console.warn(
+          "Failed to fetch About page content from Contentful. Falling back to static copy.",
+        );
+      });
+  }, [language, initialData]);
 
   const ICONS = { eye: Eye, lightbulb: Lightbulb, users: Users } as const;
 
@@ -40,7 +46,7 @@ const About = () => {
       icon: Users,
       title: t.about.values.community.title,
       description: t.about.values.community.description,
-    }
+    },
   ];
 
   const fallbackTeam = [
@@ -92,62 +98,51 @@ const About = () => {
   ];
 
   const values = about?.values?.length
-    ? about.values.map((v) => ({ icon: ICONS[v.icon] ?? Eye, title: v.title, description: v.description }))
+    ? about.values.map((v) => ({
+        icon: ICONS[v.icon] ?? Eye,
+        title: v.title,
+        description: v.description,
+      }))
     : fallbackValues;
 
   const team = about?.team?.length
-    ? about.team.map((m) => ({ name: m.name, role: m.role, image: m.photoUrl ?? '', video: m.videoUrl, description: m.description ?? '', funFact: m.funFact ?? '' }))
+    ? about.team.map((m) => ({
+        name: m.name,
+        role: m.role,
+        image: m.photoUrl ?? "",
+        video: m.videoUrl,
+        description: m.description ?? "",
+        funFact: m.funFact ?? "",
+      }))
     : fallbackTeam;
 
-  const actionImages = about?.inActionImageUrls?.length ? about.inActionImageUrls : fallbackActionImages;
-
-
+  const actionImages = about?.inActionImageUrls?.length
+    ? about.inActionImageUrls
+    : fallbackActionImages;
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] pt-12 md:pt-20">
-      <Helmet>
-        <title>About NOJA — Why Us</title>
-        <meta name="description" content="We blend concept, production, and project management to deliver strategic creative content." />
-        <link rel="canonical" href={buildCanonical('/about')} />
-        <meta property="og:title" content="About NOJA — Why Us" />
-        <meta property="og:description" content="We blend concept, production, and project management to deliver strategic creative content." />
-        <meta property="og:image" content={`${getSiteUrl()}/Logos/Noja_Productions.png`} />
-      </Helmet>
+    <div className="min-h-screen bg-background text-background pt-20">
+      <PageSEO />
 
       <Story
         text={about?.ourStoryText}
         fallbackText={t.about.story.text}
-        imageUrl={about?.ourStoryImageUrl || `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`}
+        imageUrl={
+          about?.ourStoryImageUrl ||
+          `${import.meta.env.BASE_URL}uploads/98ba3b82-16aa-4114-baf8-100af2d90634.png`
+        }
         eyebrow={about?.aboutEyebrow}
         heading={about?.aboutHeading}
       />
 
-      
-
       <Values items={values} title={about?.valuesTitle} />
 
-      <Team members={team} title={about?.teamTitle} />
+      <div className="surface-fade">
+        <Team members={team} title={about?.teamTitle} />
+        <ActionGallery images={actionImages} />
+      </div>
 
-      {/* In Action Marquee */}
-      <section className="py-20 bg-[hsl(var(--primary))] overflow-hidden">
-        <div className="relative w-full">
-          <div className="flex w-max marquee-content">
-            {[...actionImages, ...actionImages].map((src, index) => (
-              <div key={index} className="shrink-0 px-2">
-                <div className="overflow-hidden rounded-2xl w-40 sm:w-56 aspect-[9/16]">
-                  <img
-                    src={src}
-                    alt={`Action shot ${index + 1}`}
-                    className="w-full h-full object-cover object-center"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <HaveProjectCTA className="py-24" variant="dark" />
+      <HaveProjectCTA variant="dark" fadeFromLight />
     </div>
   );
 };
