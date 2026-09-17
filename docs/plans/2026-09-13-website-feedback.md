@@ -1,5 +1,11 @@
 # NOJA website feedback implementation plan
 
+> Services status update — 17 September 2026: the three categories and matching
+> homepage teasers are now published and connected. The local-only preview has
+> been removed. See [completed Services rollout](2026-09-17-services-rollout.md).
+> References below to unpublished service drafts describe the earlier state.
+
+
 Status: first implementation pass available locally on `codex/website-feedback`; content and CMS rollout items remain open.
 
 Source: `202601_WebsitePitch-FabianSalge_NOJA.pdf`, feedback dated 11 September 2026, slides 2–7. The feedback and visual mockups define the proposed scope. Placeholder text and example images are not final content. Repository baseline: `aa9025b`. Contentful project entries, project model, locales, and asset metadata were inspected read-only on 13 September 2026. Local browser verification now covers the changed pages at 390, 768, 1440, and 1600px widths.

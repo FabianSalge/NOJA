@@ -204,17 +204,86 @@ if (process.env.SEO_TEST_ORIGIN) {
   });
 }
 
-test('English homepage service cards do not contain the misplaced German CMS titles', () => {
-  const html = pages.get('/');
-  const snapshot = JSON.parse(html.match(/<script id="page-data" type="application\/json">(.*?)<\/script>/s)[1]);
+test("English homepage service cards do not contain the misplaced German CMS titles", () => {
+  const html = pages.get("/");
+  const snapshot = JSON.parse(
+    html.match(
+      /<script id="page-data" type="application\/json">(.*?)<\/script>/s,
+    )[1],
+  );
   const misplacedTitles = new Set([
-    'Strategische & Kreative Direktion',
-    'Kampagnen- & Projektmanagement',
-    'Video- & Fotografie',
-    'Bearbeitung',
+    "Strategische & Kreative Direktion",
+    "Kampagnen- & Projektmanagement",
+    "Video- & Fotografie",
+    "Bearbeitung",
   ]);
   assert.ok(snapshot.data.whatYouNeedCards.length > 0);
   for (const card of snapshot.data.whatYouNeedCards) {
-    assert.ok(!misplacedTitles.has(card.title), `German title in English homepage content: ${card.title}`);
+    assert.ok(
+      !misplacedTitles.has(card.title),
+      `German title in English homepage content: ${card.title}`,
+    );
   }
+});
+
+test("published Services and homepage match the approved three-category rollout in both languages", () => {
+  const titles = ["Brand & Design", "Film & Photo", "Content & Campaigns"];
+  const snapshot = (pathname) =>
+    JSON.parse(
+      pages
+        .get(pathname)
+        .match(
+          /<script id="page-data" type="application\/json">(.*?)<\/script>/s,
+        )[1],
+    ).data;
+  for (const prefix of ["", "/de"]) {
+    const services = snapshot(`${prefix}/services`);
+    const home = snapshot(prefix || "/");
+    assert.deepEqual(
+      services.services.map((service) => service.title),
+      titles,
+    );
+    assert.deepEqual(
+      home.whatYouNeedCards.map((card) => card.title),
+      titles,
+    );
+    assert.equal(
+      services.heroSubtitle,
+      prefix
+        ? "Einzeln stark. Zusammen noch besser."
+        : "Built to work alone. Better together.",
+    );
+    assert.equal(home.servicesSectionSubtitle, services.heroSubtitle);
+    for (const service of services.services) {
+      assert.ok(
+        service.subtitle && service.description && service.features.length >= 6,
+      );
+      assert.ok(service.serviceMediaUrl?.startsWith("https://"));
+    }
+    for (const card of home.whatYouNeedCards)
+      assert.ok(card.imageUrl?.startsWith("https://"));
+  }
+  const english = snapshot("/services");
+  assert.ok(
+    english.services[0].features.some((value) =>
+      value.includes("Social Media Templates"),
+    ),
+  );
+  assert.ok(
+    english.services[0].features.some(
+      (value) => value.includes("Print Design") && value.includes("Packaging"),
+    ),
+  );
+  assert.ok(
+    english.services[0].features.some((value) =>
+      value.includes("Presentations & Pitch Decks"),
+    ),
+  );
+  assert.ok(
+    english.services[1].features.some(
+      (value) => value.includes("Brand Films") && value.includes("Image Films"),
+    ),
+  );
+  assert.ok(english.services[2].features.includes("Community Management"));
+  assert.ok(english.services[2].features.includes("Performance & Reporting"));
 });

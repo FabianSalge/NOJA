@@ -1,7 +1,7 @@
 import type { Language } from '@/i18n';
 import type { CmsServiceItem } from '@/lib/cms.types';
 
-/** Slide 6–7 copy prepared for review and subsequent CMS entry updates. */
+/** Approved slide 6–7 copy: used by the CMS rollout script and offline fallbacks. */
 const categories = {
   en: [
     {
