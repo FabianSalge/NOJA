@@ -226,7 +226,7 @@ test("English homepage service cards do not contain the misplaced German CMS tit
   }
 });
 
-test("published Services and homepage match the approved three-category rollout in both languages", () => {
+test("Services retains the three main categories and matching homepage teasers in both languages", () => {
   const titles = ["Brand & Design", "Film & Photo", "Content & Campaigns"];
   const snapshot = (pathname) =>
     JSON.parse(
@@ -240,7 +240,7 @@ test("published Services and homepage match the approved three-category rollout 
     const services = snapshot(`${prefix}/services`);
     const home = snapshot(prefix || "/");
     assert.deepEqual(
-      services.services.map((service) => service.title),
+      services.services.slice(0, 3).map((service) => service.title),
       titles,
     );
     assert.deepEqual(
@@ -254,7 +254,7 @@ test("published Services and homepage match the approved three-category rollout 
         : "Built to work alone. Better together.",
     );
     assert.equal(home.servicesSectionSubtitle, services.heroSubtitle);
-    for (const service of services.services) {
+    for (const service of services.services.slice(0, 3)) {
       assert.ok(
         service.subtitle && service.description && service.features.length >= 6,
       );
@@ -286,4 +286,89 @@ test("published Services and homepage match the approved three-category rollout 
   );
   assert.ok(english.services[2].features.includes("Community Management"));
   assert.ok(english.services[2].features.includes("Performance & Reporting"));
+});
+
+test("slide 6 additions are standalone Services sections with the exact copy and three deliverables", () => {
+  const expected = {
+    "/services": [
+      [
+        "Brand & Identity",
+        "Design paired with strategy — so the visuals remain timeless.",
+        [
+          "Brand Strategy & Positioning",
+          "Visual Identity & Logo Design",
+          "Brand Guidelines",
+        ],
+      ],
+      [
+        "Graphic Design",
+        "Different formats, same standard: social, print, decks.",
+        [
+          "Social Media Templates & Assets",
+          "Print Design (Flyers, Posters, Packaging)",
+          "Presentations & Pitch Decks",
+        ],
+      ],
+    ],
+    "/de/services": [
+      [
+        "Marke & Identität",
+        "Design trifft Strategie — damit die Gestaltung zeitlos bleibt.",
+        [
+          "Markenstrategie & Positionierung",
+          "Visuelle Identität & Logodesign",
+          "Brand Guidelines",
+        ],
+      ],
+      [
+        "Grafikdesign",
+        "Verschiedene Formate, derselbe Anspruch: Social Media, Print, Präsentationen.",
+        [
+          "Social-Media-Vorlagen & Assets",
+          "Printdesign (Flyer, Poster, Verpackungen)",
+          "Präsentationen & Pitch Decks",
+        ],
+      ],
+    ],
+  };
+  for (const [pathname, additions] of Object.entries(expected)) {
+    const source = pages.get(pathname);
+    const services = JSON.parse(
+      source.match(
+        /<script id="page-data" type="application\/json">(.*?)<\/script>/s,
+      )[1],
+    ).data.services;
+    assert.equal(
+      services.length,
+      5,
+      `${pathname}: three categories plus two added sections`,
+    );
+    // Verify actual section markup, excluding the hydration JSON snapshot.
+    const html = decode(
+      source.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ""),
+    );
+    const sections = [
+      ...html.matchAll(/<section\b[^>]*>([\s\S]*?)<\/section>/g),
+    ].map(([, body]) => body);
+    for (const [index, [title, description, features]] of additions.entries()) {
+      const service = services[index + 3];
+      assert.equal(service.title, title);
+      assert.equal(service.description, description);
+      assert.deepEqual(service.features, features);
+      assert.equal(service.order, index + 4);
+      assert.ok(service.serviceMediaUrl?.startsWith("https://"));
+      assert.ok(
+        !service.groups,
+        "No nested substitutes for the requested sections",
+      );
+      const body = sections.find(
+        (section) => section.match(/<h2[^>]*>(.*?)<\/h2>/s)?.[1] === title,
+      );
+      assert.ok(body, `${pathname}: missing standalone H2 section ${title}`);
+      assert.equal((body.match(/<h2\b/g) || []).length, 1);
+      assert.equal(body.match(/<p[^>]*>(.*?)<\/p>/s)?.[1], description);
+      for (const feature of features)
+        assert.ok(body.includes(feature), `${title}: missing ${feature}`);
+    }
+  }
 });

@@ -1,6 +1,8 @@
 # Services rollout — 17 September 2026
 
-The user approved completion of the three-category Services rollout.
+The user approved completion of the three-category Services rollout, then
+clarified that slide 6's Brand & Identity and Graphic Design must be added as
+standalone sections, with the exact supplied descriptions and three deliverables.
 
 ## Published Contentful changes
 
@@ -49,3 +51,24 @@ replace already-deployed HTML.
   deliverables; switching to German preserves the route and localizes copy;
   navigating to German Home shows exactly the three matching cards and subtitle.
 - No browser hydration errors or management-token markers were found.
+
+## Standalone additions from slide 6
+
+Services now contains the original three categories plus two independent service
+sections: Brand & Identity and Graphic Design. Each addition uses its own H2,
+description, three-item feature list and media, in the existing alternating
+dark/beige section layout. They are not nested under Brand & Design. English copy
+matches slide 6 verbatim; German copy is localized. The homepage retains the
+three high-level category teasers, and Web Design stays in Brand & Design.
+
+`scripts/cma/publish-additional-services.mjs` creates and publishes
+`feedback-brand-identity` and `feedback-graphic-design`, then appends them to the
+Services page references. Existing published Notebook and Computer Typing assets
+provide the media. The script backs up content, checks versions and unrelated
+draft edits, and removes the temporary nested content from Brand & Design. The
+optional `groups` model field is unused and is not read or rendered by the site.
+Publication backup: `/tmp/noja-contentful-review/additional-services-1789641701107.json`.
+
+Regression coverage asserts five services and checks the actual standalone H2
+sections, exact descriptions and three deliverables in both languages. It fails
+against the former three-category/nested-section output.

@@ -41,6 +41,18 @@ Edit the English and German fields on these entries:
 - [Film & Photo](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-film-photo)
 - [Content & Campaigns](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-content-campaigns)
 
+Slide 6 adds two standalone sections after these categories:
+
+- [Brand & Identity](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-brand-identity)
+- [Graphic Design](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-graphic-design)
+
+Each is a regular Service Item with a title, description, three features and an
+image, localized in English and German. Keep them as independent page references,
+not subsections inside Brand & Design. Their order values are 4 and 5. The
+additional sections currently reuse the published Notebook and Computer Typing
+images; editors can replace these through Service Image. The unused optional
+Service subsections field on the content model does not affect the site.
+
 The homepage uses the matching `services-card-brand-design`,
 `services-card-film-photo` and `services-card-content-campaigns` entries. Keep their
 titles aligned if categories are renamed. Publish edits, then rebuild/deploy the

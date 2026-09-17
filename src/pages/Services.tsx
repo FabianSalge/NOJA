@@ -19,6 +19,7 @@ import {
   feedbackServicesSubtitle,
 } from "@/content/service-categories";
 import { useTranslation } from "@/i18n";
+import { additionalServices } from "@/content/additional-services";
 
 const Services = () => {
   const { t, language } = useTranslation();
@@ -180,7 +181,7 @@ const Services = () => {
 
   const displayServices: CmsServiceItem[] = servicesData?.services?.length
     ? servicesData.services
-    : feedbackServices(language);
+    : [...feedbackServices(language), ...additionalServices(language)];
   const displayTitle = servicesData?.heroTitle || t.services.title;
   const displaySubtitle =
     servicesData?.heroSubtitle || feedbackServicesSubtitle[language];
