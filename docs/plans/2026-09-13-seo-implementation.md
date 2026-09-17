@@ -1,5 +1,11 @@
 # SEO implementation — 13 September 2026
 
+> Services status update — 17 September 2026: the three categories and matching
+> homepage teasers are now published and connected. The local-only preview has
+> been removed. See [completed Services rollout](2026-09-17-services-rollout.md).
+> References below to unpublished service drafts describe the earlier state.
+
+
 Implemented in the working branch; not deployed.
 
 ## Pages and language

@@ -52,45 +52,22 @@ const Index = () => {
     }
   };
 
-  const defaultPackages = [
-    {
-      title: "Content Strategy & Creative Direction",
-      image: HOME_IMAGES.contentStrategy,
-      link: "/services",
-    },
-    {
-      title: "Video & Photography Production",
-      image: HOME_IMAGES.videoPhotography,
-      link: "/services",
-    },
-    {
-      title: "Post-Production & Editing",
-      image: HOME_IMAGES.postProduction,
-      link: "/services",
-    },
-  ];
-
-  const currentPackages =
-    (home?.whatYouNeedCards?.length ? home.whatYouNeedCards : undefined)?.map(
-      (c) => ({
-        title: c.title || "What you need",
-        image: c.imageUrl || HOME_IMAGES.contentStrategy,
-        link: "/services",
-      }),
-    ) || defaultPackages;
-
-  const previewCategories =
-    import.meta.env.DEV &&
-    import.meta.env.VITE_FEEDBACK_SERVICES_PREVIEW === "true";
-  const packages = previewCategories
-    ? feedbackServices(language).map((category, index) => ({
-        title: category.title,
-        image:
-          currentPackages[[0, 2, 1][index]]?.image ||
-          HOME_IMAGES.contentStrategy,
+  const defaultPackages = feedbackServices(language).map((service, index) => ({
+    title: service.title,
+    image: [
+      HOME_IMAGES.contentStrategy,
+      HOME_IMAGES.videoPhotography,
+      HOME_IMAGES.postProduction,
+    ][index],
+    link: "/services",
+  }));
+  const packages = home?.whatYouNeedCards?.length
+    ? home.whatYouNeedCards.map((card) => ({
+        title: card.title,
+        image: card.imageUrl || HOME_IMAGES.contentStrategy,
         link: "/services",
       }))
-    : currentPackages;
+    : defaultPackages;
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">

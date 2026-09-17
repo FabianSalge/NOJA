@@ -19,6 +19,7 @@ import {
   feedbackServicesSubtitle,
 } from "@/content/service-categories";
 import { useTranslation } from "@/i18n";
+import { additionalServices } from "@/content/additional-services";
 
 const Services = () => {
   const { t, language } = useTranslation();
@@ -178,20 +179,12 @@ const Services = () => {
     );
   };
 
-  // Draft categories are visible only in an explicitly enabled local review.
-  // Published CMS entries stay authoritative in production.
-  const previewCategories =
-    import.meta.env.DEV &&
-    import.meta.env.VITE_FEEDBACK_SERVICES_PREVIEW === "true";
-  const displayServices: CmsServiceItem[] = previewCategories
-    ? feedbackServices(language, servicesData?.services)
-    : servicesData?.services?.length
-      ? servicesData.services
-      : feedbackServices(language);
+  const displayServices: CmsServiceItem[] = servicesData?.services?.length
+    ? servicesData.services
+    : [...feedbackServices(language), ...additionalServices(language)];
   const displayTitle = servicesData?.heroTitle || t.services.title;
-  const displaySubtitle = previewCategories
-    ? feedbackServicesSubtitle[language]
-    : servicesData?.heroSubtitle || feedbackServicesSubtitle[language];
+  const displaySubtitle =
+    servicesData?.heroSubtitle || feedbackServicesSubtitle[language];
 
   // Optional hero background image from the CMS. When absent, fall back to the flat beige header.
   const heroBg = servicesData?.heroBackgroundImageUrl;

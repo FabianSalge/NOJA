@@ -31,21 +31,33 @@ Applied to `master` with `--apply` on 13 September 2026 after backing up all 10 
 
 ## Services review and publication
 
-The local development setting `VITE_FEEDBACK_SERVICES_PREVIEW=true` shows the proposed three categories at `/services`. It only takes effect in Vite development mode. Published CMS content remains authoritative in production.
+The three service categories are now published and connected to both Services
+and the homepage (17 September 2026). Development and production use the same
+published CMS content; the local preview flag has been removed.
 
-English copy is based on slides 6–7; German copy is a proposed translation. Review the copy in `src/content/service-categories.ts`. The bilingual drafts now exist in Contentful, with provisional media matching the local preview:
-
-1. Review or replace the provisional image/video assigned to each service category.
-2. Review both locales, all deliverables, and the proposed category subtitles.
-3. Publish the three approved service entries.
-4. Replace `servicesPage.services` references with Brand & Design, Film & Photo, and Content & Campaigns in order. Set the approved hero subtitle in both locales and publish the page settings.
-5. Confirm the production view and update home-page service teaser labels where needed.
-
-Management access is working. The three entries remain unpublished, and the live page references have not changed:
+Edit the English and German fields on these entries:
 
 - [Brand & Design](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-brand-design)
 - [Film & Photo](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-film-photo)
 - [Content & Campaigns](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-content-campaigns)
+
+Slide 6 adds two standalone sections after these categories:
+
+- [Brand & Identity](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-brand-identity)
+- [Graphic Design](https://app.contentful.com/spaces/6dr1u4cu03yu/environments/master/entries/feedback-graphic-design)
+
+Each is a regular Service Item with a title, description, three features and an
+image, localized in English and German. Keep them as independent page references,
+not subsections inside Brand & Design. Their order values are 4 and 5. The
+additional sections currently reuse the published Notebook and Computer Typing
+images; editors can replace these through Service Image. The unused optional
+Service subsections field on the content model does not affect the site.
+
+The homepage uses the matching `services-card-brand-design`,
+`services-card-film-photo` and `services-card-content-campaigns` entries. Keep their
+titles aligned if categories are renamed. Publish edits, then rebuild/deploy the
+site to update the generated HTML. Old service entries are retained but unlinked.
+See [Services rollout](../plans/2026-09-17-services-rollout.md) for details.
 
 Existing project entries are unchanged; editors can now populate the optional preview video and gallery fields.
 

@@ -14,8 +14,8 @@ const metadata = {
       "Meet NOJA, the Zurich creative team bringing together strategy, concepts and production to create distinctive visual content for brands.",
     ],
     "/services": [
-      "Creative Services | Film, Photography & Design — NOJA",
-      "Explore NOJA’s creative services: strategy, creative direction, film, photography, design and post-production for brands in Zurich and beyond.",
+      "Brand & Design, Film & Content Services — NOJA",
+      "Explore Brand & Design, Film & Photo, and Content & Campaigns from NOJA in Zurich. From brand identity and image films to social media and campaign production.",
     ],
     "/projects": [
       "Our Work | Film, Brand & Content Projects — NOJA",
@@ -40,8 +40,8 @@ const metadata = {
       "Lerne NOJA kennen: Unser Kreativteam aus Zürich verbindet Strategie, Konzeption und Produktion zu unverwechselbaren visuellen Inhalten für Marken.",
     ],
     "/services": [
-      "Leistungen | Film, Fotografie & Design — NOJA",
-      "Entdecke die Leistungen von NOJA: Strategie, kreative Konzepte, Film, Fotografie, Design und Postproduktion für Marken in Zürich und darüber hinaus.",
+      "Brand, Design, Film & Content | Leistungen — NOJA",
+      "Brand & Design, Film & Photo und Content & Campaigns von NOJA aus Zürich: von Markenidentität und Imagefilmen bis zu Social Media und Kampagnen.",
     ],
     "/projects": [
       "Unsere Arbeit | Film, Marken & Content — NOJA",

@@ -204,17 +204,171 @@ if (process.env.SEO_TEST_ORIGIN) {
   });
 }
 
-test('English homepage service cards do not contain the misplaced German CMS titles', () => {
-  const html = pages.get('/');
-  const snapshot = JSON.parse(html.match(/<script id="page-data" type="application\/json">(.*?)<\/script>/s)[1]);
+test("English homepage service cards do not contain the misplaced German CMS titles", () => {
+  const html = pages.get("/");
+  const snapshot = JSON.parse(
+    html.match(
+      /<script id="page-data" type="application\/json">(.*?)<\/script>/s,
+    )[1],
+  );
   const misplacedTitles = new Set([
-    'Strategische & Kreative Direktion',
-    'Kampagnen- & Projektmanagement',
-    'Video- & Fotografie',
-    'Bearbeitung',
+    "Strategische & Kreative Direktion",
+    "Kampagnen- & Projektmanagement",
+    "Video- & Fotografie",
+    "Bearbeitung",
   ]);
   assert.ok(snapshot.data.whatYouNeedCards.length > 0);
   for (const card of snapshot.data.whatYouNeedCards) {
-    assert.ok(!misplacedTitles.has(card.title), `German title in English homepage content: ${card.title}`);
+    assert.ok(
+      !misplacedTitles.has(card.title),
+      `German title in English homepage content: ${card.title}`,
+    );
+  }
+});
+
+test("Services retains the three main categories and matching homepage teasers in both languages", () => {
+  const titles = ["Brand & Design", "Film & Photo", "Content & Campaigns"];
+  const snapshot = (pathname) =>
+    JSON.parse(
+      pages
+        .get(pathname)
+        .match(
+          /<script id="page-data" type="application\/json">(.*?)<\/script>/s,
+        )[1],
+    ).data;
+  for (const prefix of ["", "/de"]) {
+    const services = snapshot(`${prefix}/services`);
+    const home = snapshot(prefix || "/");
+    assert.deepEqual(
+      services.services.slice(0, 3).map((service) => service.title),
+      titles,
+    );
+    assert.deepEqual(
+      home.whatYouNeedCards.map((card) => card.title),
+      titles,
+    );
+    assert.equal(
+      services.heroSubtitle,
+      prefix
+        ? "Einzeln stark. Zusammen noch besser."
+        : "Built to work alone. Better together.",
+    );
+    assert.equal(home.servicesSectionSubtitle, services.heroSubtitle);
+    for (const service of services.services.slice(0, 3)) {
+      assert.ok(
+        service.subtitle && service.description && service.features.length >= 6,
+      );
+      assert.ok(service.serviceMediaUrl?.startsWith("https://"));
+    }
+    for (const card of home.whatYouNeedCards)
+      assert.ok(card.imageUrl?.startsWith("https://"));
+  }
+  const english = snapshot("/services");
+  assert.ok(
+    english.services[0].features.some((value) =>
+      value.includes("Social Media Templates"),
+    ),
+  );
+  assert.ok(
+    english.services[0].features.some(
+      (value) => value.includes("Print Design") && value.includes("Packaging"),
+    ),
+  );
+  assert.ok(
+    english.services[0].features.some((value) =>
+      value.includes("Presentations & Pitch Decks"),
+    ),
+  );
+  assert.ok(
+    english.services[1].features.some(
+      (value) => value.includes("Brand Films") && value.includes("Image Films"),
+    ),
+  );
+  assert.ok(english.services[2].features.includes("Community Management"));
+  assert.ok(english.services[2].features.includes("Performance & Reporting"));
+});
+
+test("slide 6 additions are standalone Services sections with the exact copy and three deliverables", () => {
+  const expected = {
+    "/services": [
+      [
+        "Brand & Identity",
+        "Design paired with strategy — so the visuals remain timeless.",
+        [
+          "Brand Strategy & Positioning",
+          "Visual Identity & Logo Design",
+          "Brand Guidelines",
+        ],
+      ],
+      [
+        "Graphic Design",
+        "Different formats, same standard: social, print, decks.",
+        [
+          "Social Media Templates & Assets",
+          "Print Design (Flyers, Posters, Packaging)",
+          "Presentations & Pitch Decks",
+        ],
+      ],
+    ],
+    "/de/services": [
+      [
+        "Marke & Identität",
+        "Design trifft Strategie — damit die Gestaltung zeitlos bleibt.",
+        [
+          "Markenstrategie & Positionierung",
+          "Visuelle Identität & Logodesign",
+          "Brand Guidelines",
+        ],
+      ],
+      [
+        "Grafikdesign",
+        "Verschiedene Formate, derselbe Anspruch: Social Media, Print, Präsentationen.",
+        [
+          "Social-Media-Vorlagen & Assets",
+          "Printdesign (Flyer, Poster, Verpackungen)",
+          "Präsentationen & Pitch Decks",
+        ],
+      ],
+    ],
+  };
+  for (const [pathname, additions] of Object.entries(expected)) {
+    const source = pages.get(pathname);
+    const services = JSON.parse(
+      source.match(
+        /<script id="page-data" type="application\/json">(.*?)<\/script>/s,
+      )[1],
+    ).data.services;
+    assert.equal(
+      services.length,
+      5,
+      `${pathname}: three categories plus two added sections`,
+    );
+    // Verify actual section markup, excluding the hydration JSON snapshot.
+    const html = decode(
+      source.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ""),
+    );
+    const sections = [
+      ...html.matchAll(/<section\b[^>]*>([\s\S]*?)<\/section>/g),
+    ].map(([, body]) => body);
+    for (const [index, [title, description, features]] of additions.entries()) {
+      const service = services[index + 3];
+      assert.equal(service.title, title);
+      assert.equal(service.description, description);
+      assert.deepEqual(service.features, features);
+      assert.equal(service.order, index + 4);
+      assert.ok(service.serviceMediaUrl?.startsWith("https://"));
+      assert.ok(
+        !service.groups,
+        "No nested substitutes for the requested sections",
+      );
+      const body = sections.find(
+        (section) => section.match(/<h2[^>]*>(.*?)<\/h2>/s)?.[1] === title,
+      );
+      assert.ok(body, `${pathname}: missing standalone H2 section ${title}`);
+      assert.equal((body.match(/<h2\b/g) || []).length, 1);
+      assert.equal(body.match(/<p[^>]*>(.*?)<\/p>/s)?.[1], description);
+      for (const feature of features)
+        assert.ok(body.includes(feature), `${title}: missing ${feature}`);
+    }
   }
 });
